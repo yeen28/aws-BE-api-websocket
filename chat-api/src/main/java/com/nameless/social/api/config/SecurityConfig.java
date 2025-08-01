@@ -15,7 +15,7 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable) // CSRF 비활성화 (JWT 사용 시)
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/api/**").authenticated() // /api/** 경로는 인증 필요
+//                        .requestMatchers("/api/**").authenticated() // /api/** 경로는 인증 필요
                         .anyRequest().permitAll()
                 );
 //				.oauth2ResourceServer(oauth2 -> oauth2.jwt()); // JWT 기반 리소스 서버 설정

@@ -6,6 +6,7 @@ import com.nameless.social.consumer.repository.UserRepository;
 import com.nameless.social.core.entity.ChatMessage;
 import com.nameless.social.core.entity.ChatRoom;
 import com.nameless.social.core.entity.User;
+import com.nameless.social.core.dto.ChatMessageDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -22,19 +23,18 @@ public class KafkaMessageConsumer {
 
     @KafkaListener(topics = "chat-messages", groupId = "chat-consumer-group", containerFactory = "kafkaListenerContainerFactory")
     @Transactional
-    public void listen(ChatMessage message) {
-        log.info("Received Message in group chat-consumer-group: {}", message.getMessage());
+    public void listen(ChatMessageDto messageDto) { // Change parameter type to ChatMessageDto
+        log.info("Received Message in group chat-consumer-group: {}", messageDto.getMessage());
 
-        // Retrieve ChatRoom and User entities based on IDs from the message
-        ChatRoom chatRoom = chatRoomRepository.findById(message.getChatRoomId())
-                .orElseThrow(() -> new IllegalArgumentException("ChatRoom not found with ID: " + message.getChatRoomId()));
-        User sender = userRepository.findById(message.getSenderId())
-                .orElseThrow(() -> new IllegalArgumentException("User not found with ID: " + message.getSenderId()));
+        // Retrieve ChatRoom and User entities based on IDs from the messageDto
+        ChatRoom chatRoom = chatRoomRepository.findById(messageDto.getChatRoomId())
+                .orElseThrow(() -> new IllegalArgumentException("ChatRoom not found with ID: " + messageDto.getChatRoomId()));
+        User sender = userRepository.findById(messageDto.getSenderId())
+                .orElseThrow(() -> new IllegalArgumentException("User not found with ID: " + messageDto.getSenderId()));
 
-        // Set the retrieved entities to the message object
-        message.setChatRoom(chatRoom);
-        message.setSender(sender);
+        // Create ChatMessage entity from ChatMessageDto
+        ChatMessage chatMessage = new ChatMessage(chatRoom, sender, messageDto.getMessage());
 
-        chatMessageRepository.save(message);
+        chatMessageRepository.save(chatMessage);
     }
 }
