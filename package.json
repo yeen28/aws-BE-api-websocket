@@ -1,0 +1,29 @@
+{
+  "name": "aws-websocket",
+  "version": "1.0.0",
+  "description": "This project is a serverless chat application using AWS API Gateway (WebSocket), Lambda, DynamoDB, and Cognito.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yeen28/aws-websocket.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/yeen28/aws-websocket/issues"
+  },
+  "homepage": "https://github.com/yeen28/aws-websocket#readme",
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.152",
+    "@types/uuid": "^10.0.0",
+    "aws-sdk": "^2.1692.0",
+    "serverless-plugin-typescript": "^2.1.5"
+  },
+  "dependencies": {
+    "uuid": "^11.1.0"
+  }
+}
