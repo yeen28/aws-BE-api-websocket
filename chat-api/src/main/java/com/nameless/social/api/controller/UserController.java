@@ -1,10 +1,9 @@
 package com.nameless.social.api.controller;
 
 import com.nameless.social.api.dto.UserDto;
-import com.nameless.social.api.model.UserModel;
+import com.nameless.social.api.model.user.UserModel;
 import com.nameless.social.api.response.CommonResponse;
 import com.nameless.social.api.service.UserService;
-import com.nameless.social.core.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,28 +11,18 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
 public class UserController {
-    private final UserService userService;
+	private final UserService userService;
 
-    @PostMapping
-    public CommonResponse<UserModel> createUser(@RequestBody UserDto userDto) {
-        User user = userService.getOrCreateUser(userDto.getSocialId(), userDto.getUsername());
-        return CommonResponse.success(toModel(user));
-    }
+	// TODO 사용자 생성을 위한 임시 코드. 추후 제거.
+	@PostMapping
+	public CommonResponse<UserModel> createUser(@RequestBody UserDto userDto) {
+		return CommonResponse.success(userService.getOrCreateUser(userDto));
+	}
 
-    @GetMapping("/{id}")
-    public CommonResponse<UserModel> getUserById(@PathVariable Long id) {
-        User user = userService.findById(id);
-        return CommonResponse.success(toModel(user));
-    }
+	@GetMapping("/{id}")
+	public CommonResponse<UserModel> getUserById(@PathVariable Long id) {
+		return CommonResponse.success(userService.findById(id));
+	}
 
-    private UserModel toModel(User user) {
-        return UserModel.builder()
-                .id(user.getId())
-                .username(user.getUsername())
-                .createdAt(user.getCreatedAt())
-                .updatedAt(user.getUpdatedAt())
-                .build();
-    }
-
-    // TODO: Add endpoint for user registration/login using AWS Cognito
+	// TODO: Add endpoint for user registration/login using AWS Cognito
 }

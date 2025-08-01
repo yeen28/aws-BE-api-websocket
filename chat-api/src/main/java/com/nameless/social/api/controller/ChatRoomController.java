@@ -1,7 +1,7 @@
 package com.nameless.social.api.controller;
 
 import com.nameless.social.api.dto.ChatRoomDto;
-import com.nameless.social.api.model.ChatRoomModel;
+import com.nameless.social.api.model.chat.ChatRoomModel;
 import com.nameless.social.api.response.CommonResponse;
 import com.nameless.social.api.service.ChatRoomService;
 import lombok.RequiredArgsConstructor;
