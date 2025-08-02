@@ -2,25 +2,25 @@ server:
   port: 8082
 
 spring:
+  application:
+    name: chat-consumer
   kafka:
     bootstrap-servers: ${KAFKA_HOST:localhost}:9092 # Kafka 브로커 주소
     consumer:
-      group-id: chat-consumer-group # 컨슈머 그룹 ID
-      auto-offset-reset: earliest # 오프셋 리셋 정책
+      group-id: chat-consumer-group
+      auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer # JSON 메시지를 ChatMessage 객체로 역직렬화
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:
-        spring.json.trusted.packages: "com.nameless.social.core.entity" # JSON 역직렬화 시 신뢰할 패키지 지정
+        spring.json.trusted.packages: "*"
 
-  datasource:
-    url: jdbc:mariadb://${DB_HOST:localhost}:3306/social_chat
-    username: ${DB_USER:root}
-    password: ${DB_PASSWORD:password}
-    driver-class-name: org.mariadb.jdbc.Driver
-
-  jpa:
-    hibernate:
-      ddl-auto: update
-
-jpa.auditing:
-  enabled: true
+cloud:
+  aws:
+    region:
+      static: ${AWS_REGION:ap-northeast-2}
+    credentials:
+      access-key: ${AWS_ACCESS_KEY:your-access-key}
+      secret-key: ${AWS_SECRET_KEY:your-secret-key}
+    dynamodb:
+      endpoint: ${AWS_DYNAMODB_ENDPOINT:http://localhost}:8000 # For local DynamoDB, remove for AWS
+      tableName: ChatMessage

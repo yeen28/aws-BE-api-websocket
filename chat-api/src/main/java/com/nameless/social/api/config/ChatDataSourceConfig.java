@@ -1,7 +1,9 @@
 package com.nameless.social.api.config;
 
+import liquibase.integration.spring.SpringLiquibase;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
+import org.springframework.boot.autoconfigure.liquibase.LiquibaseProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
 import org.springframework.context.annotation.Bean;
@@ -54,5 +56,22 @@ public class ChatDataSourceConfig {
 	public PlatformTransactionManager chatTransactionManager(
 			@Qualifier("chatEntityManagerFactory") LocalContainerEntityManagerFactoryBean chatEntityManagerFactory) {
 		return new JpaTransactionManager(chatEntityManagerFactory.getObject());
+	}
+
+	@Bean
+	@ConfigurationProperties(prefix = "chat.liquibase")
+	public LiquibaseProperties chatLiquibaseProperties() {
+		return new LiquibaseProperties();
+	}
+
+	@Bean
+	public SpringLiquibase chatLiquibase(@Qualifier("chatDataSource") DataSource chatDataSource,
+										 @Qualifier("chatLiquibaseProperties") LiquibaseProperties liquibaseProperties) {
+		SpringLiquibase liquibase = new SpringLiquibase();
+		liquibase.setDataSource(chatDataSource);
+		liquibase.setChangeLog(liquibaseProperties.getChangeLog());
+		liquibase.setContexts("chat"); // Set the context for chat-related changes
+		liquibase.setShouldRun(liquibaseProperties.isEnabled());
+		return liquibase;
 	}
 }
