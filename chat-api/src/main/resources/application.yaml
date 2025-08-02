@@ -17,12 +17,12 @@ spring:
   user:
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yaml
-    enabled: true
+    enabled: false
 
 chat:
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yaml
-    enabled: true
+    enabled: false
 
 #  security:
 #    oauth2:

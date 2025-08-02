@@ -10,20 +10,20 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "chat_room_id"}))
 public class ChatRoomUser extends BaseTimeEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "user_id", nullable = false)
+	private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "chat_room_id", nullable = false)
-    private ChatRoom chatRoom;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "chat_room_id", nullable = false)
+	private ChatRoom chatRoom;
 
-    public ChatRoomUser(User user, ChatRoom chatRoom) {
-        this.user = user;
-        this.chatRoom = chatRoom;
-    }
+	public ChatRoomUser(User user, ChatRoom chatRoom) {
+		this.user = user;
+		this.chatRoom = chatRoom;
+	}
 }

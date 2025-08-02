@@ -29,7 +29,9 @@ public class ChatDataSourceConfig {
 	@Bean
 	@ConfigurationProperties("spring.chat-datasource")
 	public DataSourceProperties chatDataSourceProperties() {
-		return new DataSourceProperties();
+		DataSourceProperties properties = new DataSourceProperties();
+		properties.setDriverClassName("org.mariadb.jdbc.Driver");
+		return properties;
 	}
 
 	@Primary
@@ -46,7 +48,7 @@ public class ChatDataSourceConfig {
 			EntityManagerFactoryBuilder builder, @Qualifier("chatDataSource") DataSource chatDataSource) {
 		return builder
 				.dataSource(chatDataSource)
-				.packages("com.nameless.social.api.model.chat")
+				.packages("com.nameless.social.core.entity")
 				.persistenceUnit("chat")
 				.build();
 	}
@@ -65,8 +67,10 @@ public class ChatDataSourceConfig {
 	}
 
 	@Bean
-	public SpringLiquibase chatLiquibase(@Qualifier("chatDataSource") DataSource chatDataSource,
-										 @Qualifier("chatLiquibaseProperties") LiquibaseProperties liquibaseProperties) {
+	public SpringLiquibase chatLiquibase(
+			@Qualifier("chatDataSource") DataSource chatDataSource,
+			@Qualifier("chatLiquibaseProperties") LiquibaseProperties liquibaseProperties
+	) {
 		SpringLiquibase liquibase = new SpringLiquibase();
 		liquibase.setDataSource(chatDataSource);
 		liquibase.setChangeLog(liquibaseProperties.getChangeLog());

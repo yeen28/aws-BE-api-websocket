@@ -6,6 +6,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class UserDto {
-	private String socialId;
+	private String token;
 	private String username;
 }

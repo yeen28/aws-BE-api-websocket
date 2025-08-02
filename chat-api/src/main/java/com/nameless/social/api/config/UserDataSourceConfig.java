@@ -40,7 +40,7 @@ public class UserDataSourceConfig {
 			EntityManagerFactoryBuilder builder, @Qualifier("userDataSource") DataSource userDataSource) {
 		return builder
 				.dataSource(userDataSource)
-				.packages("com.nameless.social.api.model.user")
+				.packages("com.nameless.social.core.entity")
 				.persistenceUnit("user")
 				.build();
 	}

@@ -20,10 +20,10 @@ public class UserService {
 
 	@Transactional
 	public UserModel getOrCreateUser(final UserDto userDto) {
-		Optional<User> userOptional = userRepository.findBySocialId(userDto.getSocialId());
+		Optional<User> userOptional = userRepository.findByToken(userDto.getToken());
 		return UserModel.of(
 				userOptional.orElseGet(() ->
-						userRepository.save(new User(userDto.getSocialId(), userDto.getUsername()))
+						userRepository.save(new User(userDto.getToken(), userDto.getUsername()))
 				)
 		);
 	}

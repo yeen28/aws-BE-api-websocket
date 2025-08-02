@@ -28,8 +28,8 @@ public class User extends BaseTimeEntity {
 	@Transient
 	private List<ChatRoomUser> chatRooms = new ArrayList<>();
 
-	public User(String socialId, String username) {
-		this.token = socialId;
+	public User(String token, String username) {
+		this.token = token;
 		this.username = username;
 	}
 }
