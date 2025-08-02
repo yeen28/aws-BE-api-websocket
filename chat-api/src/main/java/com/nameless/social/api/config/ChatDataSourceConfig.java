@@ -32,7 +32,9 @@ public class ChatDataSourceConfig {
 
 	@Primary
 	@Bean
-	public DataSource chatDataSource(@Qualifier("chatDataSourceProperties") DataSourceProperties chatDataSourceProperties) {
+	public DataSource chatDataSource(
+			@Qualifier("chatDataSourceProperties") DataSourceProperties chatDataSourceProperties
+	) {
 		return chatDataSourceProperties.initializeDataSourceBuilder().build();
 	}
 

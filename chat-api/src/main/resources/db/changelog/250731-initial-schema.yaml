@@ -1,8 +1,7 @@
-# TODO DB 구조 다시 확인 필요
 databaseChangeLog:
   - changeSet:
       id: 1
-      author: your_name
+      author: yeeun
       changes:
         - createTable:
             tableName: users
