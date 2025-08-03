@@ -1,6 +1,6 @@
 # websocket
 
-- Java 21+
+- Java 17+
 - SpringBoot 3.x.x
 - Gradle
 

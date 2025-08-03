@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,23 +14,22 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "users")
 public class User extends BaseTimeEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @Column(unique = true, nullable = false)
-    private String socialId; // AWS Cognito User-sub
+	@Column(unique = true, nullable = false)
+	private String token; // AWS Cognito User-sub
 
-    @Column(nullable = false)
-    private String username;
+	@Column(nullable = false)
+	private String username;
 
-    private String profileImageUrl; // TODO 삭제하기
+	@Setter
+	@Transient
+	private List<ChatRoomUser> chatRooms = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ChatRoomUser> chatRooms = new ArrayList<>();
-
-    public User(String socialId, String username) {
-        this.socialId = socialId;
-        this.username = username;
-    }
+	public User(String token, String username) {
+		this.token = token;
+		this.username = username;
+	}
 }

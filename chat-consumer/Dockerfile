@@ -1,5 +1,5 @@
 FROM amazoncorretto:17-alpine-jre
 WORKDIR /app
-COPY chat-consumer/build/libs/*-SNAPSHOT.jar app.jar
+COPY build/libs/*-SNAPSHOT.jar app.jar
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-Xms512m", "-Xmx1024m", "-jar", "app.jar"]

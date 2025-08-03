@@ -1,4 +1,4 @@
-package com.nameless.social.api.repository;
+package com.nameless.social.api.repository.user;
 
 import com.nameless.social.core.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -8,5 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-	Optional<User> findBySocialId(String socialId);
+	Optional<User> findByToken(String token);
 }

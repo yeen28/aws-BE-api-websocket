@@ -3,10 +3,10 @@ plugins {
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-web' // For REST endpoints if needed, or remove if not
     implementation 'org.springframework.kafka:spring-kafka'
     implementation 'org.springframework.boot:spring-boot-starter-json'
-    runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
+//    implementation 'com.amazonaws:aws-java-sdk-dynamodb'
     implementation project(':chat-core')
 }
 
