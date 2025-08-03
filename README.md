@@ -1,8 +1,8 @@
 # websocket
 
 - Java 17+
-- SpringBoot 3.x.x
-- Gradle
+- SpringBoot 3.3.2
+- Gradle 8.4
 
 Open API 문서
 - Swagger UI: http://localhost:8080/swagger-ui.html
