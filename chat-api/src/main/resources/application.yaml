@@ -14,15 +14,15 @@ spring:
     hibernate:
       ddl-auto: update
 
-  user:
+user:
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yaml
-    enabled: false
+    enabled: true
 
 chat:
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yaml
-    enabled: false
+    enabled: true
 
 #  security:
 #    oauth2:
