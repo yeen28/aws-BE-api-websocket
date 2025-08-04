@@ -24,8 +24,7 @@ public class User extends BaseTimeEntity {
 	@Column(nullable = false)
 	private String username;
 
-	@Setter
-	@Transient
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<ChatRoomUser> chatRooms = new ArrayList<>();
 
 	public User(String token, String username) {
