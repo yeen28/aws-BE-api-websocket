@@ -3,12 +3,12 @@ spring:
     url: jdbc:mariadb://${USER_DB_HOST:localhost}:3306/social_user
     username: ${USER_DB_USER:root}
     password: ${USER_DB_PASSWORD:password}
-    driver-class-name: org.mariadb.jdbc.Driver
+    driver-class-name: com.mysql.cj.jdbc.Driver
   chat-datasource:
     url: jdbc:mariadb://${CHAT_DB_HOST:localhost}:3306/social_chat
     username: ${CHAT_DB_USER:root}
     password: ${CHAT_DB_PASSWORD:password}
-    driver-class-name: org.mariadb.jdbc.Driver
+    driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
     hibernate:
