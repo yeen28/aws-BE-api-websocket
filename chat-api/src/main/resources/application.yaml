@@ -1,13 +1,8 @@
 spring:
-  user-datasource:
-    url: jdbc:mysql://${USER_DB_HOST:localhost}:3306/social_user
+  datasource:
+    url: jdbc:mysql://${USER_DB_HOST:localhost}:3306/nameless
     username: ${USER_DB_USER:root}
     password: ${USER_DB_PASSWORD:password}
-    driver-class-name: com.mysql.cj.jdbc.Driver
-  chat-datasource:
-    url: jdbc:mysql://${CHAT_DB_HOST:localhost}:3306/social_chat
-    username: ${CHAT_DB_USER:root}
-    password: ${CHAT_DB_PASSWORD:password}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
@@ -15,15 +10,9 @@ spring:
     hibernate:
       ddl-auto: update
 
-user:
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yaml
-    enabled: false
-
-chat:
-  liquibase:
-    change-log: classpath:db/changelog/db.changelog-master.yaml
-    enabled: false
+    enabled: true
 
 #  security:
 #    oauth2:
