@@ -3,8 +3,10 @@ package com.nameless.social.api.response;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.nameless.social.api.exception.ErrorResponse;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
 @Getter
+@Slf4j
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CommonResponse<T> {
 	private final String result;
@@ -35,6 +37,7 @@ public class CommonResponse<T> {
 	}
 
 	public static CommonResponse<ErrorResponse> error(ErrorResponse error) {
+		log.warn(">>> CommonResponse Error: {}", error.getMessage());
 		return new CommonResponse<>(error);
 	}
 }
