@@ -1,4 +1,4 @@
-package com.nameless.social.api.model.user;
+package com.nameless.social.api.model;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
-public class UserModelApi {
+public class QuestModel {
 	private String id; // email 값
-	private List<JoinListModelApi> joinList;
+	private List<CurQuestTotalModel> curQuestTotalList;
 }
