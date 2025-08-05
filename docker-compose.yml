@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8
+    container_name: mysql-container
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: nameless
+    ports:
+      - "3306:3306"
+
+  # Spring Boot Applications
+  chat-api:
+    container_name: chat-api
+    build:
+      context: ./chat-api
+      dockerfile: Dockerfile
+    ports:
+      - "9000:9000"
+    depends_on:
+      - db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://localhost:3306/nameless
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=password
+
+  chat-websocket:
+    container_name: chat-websocket
+    build:
+      context: ./chat-websocket
+      dockerfile: Dockerfile
+    ports:
+      - "9001:9001"
+
+#  chat-consumer:
+#    build:
+#      context: ./chat-consumer
+#      dockerfile: Dockerfile
+#    depends_on:
+#      - db
+#    environment:
+#      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/social
+#      - SPRING_DATASOURCE_USERNAME=user
+#      - SPRING_DATASOURCE_PASSWORD=password
