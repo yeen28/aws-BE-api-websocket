@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -13,9 +15,11 @@ import lombok.Setter;
 @Builder
 public class ChatPayloadDto {
 	private Long clubId;
+	private String messageId;
 	private String senderEmail;
 	private String senderUsername; // Display purposes
 	private String message;
+	private LocalDateTime timestamp;
 	private MessageType type; // JOIN, CHAT, LEAVE
 
 	public enum MessageType {

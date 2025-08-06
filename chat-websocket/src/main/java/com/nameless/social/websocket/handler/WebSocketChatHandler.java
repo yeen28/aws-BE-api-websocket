@@ -23,7 +23,7 @@ public class WebSocketChatHandler {
 
 		// DynamoDB에 채팅 메시지 저장
 		if (chatPayloadDto.getType() == ChatPayloadDto.MessageType.CHAT) {
-			chatMessageService.saveChatMessage(chatPayloadDto);
+			chatMessageService.save(chatPayloadDto);
 		}
 
 		// 채팅방 구독자들에게 메시지 전송
