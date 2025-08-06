@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   mysql:
-    image: mysql:8
+    image: mysql
     container_name: mysql-container
     environment:
       MYSQL_ROOT_PASSWORD: password
@@ -21,7 +21,7 @@ services:
     depends_on:
       - mysql
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:mysql://localhost:3306/nameless
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-container:3306/nameless
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=password
 
