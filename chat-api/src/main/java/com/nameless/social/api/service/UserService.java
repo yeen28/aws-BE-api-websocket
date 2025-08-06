@@ -37,7 +37,7 @@ public class UserService {
 	public void getUserQuestContinuous(final String email) {
 	}
 
-	public UserModel getUserByEmail(final String email) {
+	public UserModel getUserInfo(final String email) {
 		// TODO User 유효성 검증
 		return UserModel.of(userRepository.findByEmail(email)
 				.orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND))

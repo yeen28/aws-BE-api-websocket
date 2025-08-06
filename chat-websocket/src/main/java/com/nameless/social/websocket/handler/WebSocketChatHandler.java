@@ -17,12 +17,12 @@ public class WebSocketChatHandler {
 	@MessageMapping("/chat.sendMessage")
 	public void sendMessage(@Payload ChatMessageDto chatMessage) {
 		log.info("Received message: {}", chatMessage);
-		messagingTemplate.convertAndSend("/topic/chatroom/" + chatMessage.getChatRoomId(), chatMessage);
+		messagingTemplate.convertAndSend("/topic/chatroom/" + chatMessage.getClubId(), chatMessage);
 	}
 
 	@MessageMapping("/chat.addUser")
 	public void addUser(@Payload ChatMessageDto chatMessage) {
 		log.info("User joined: {}", chatMessage);
-		messagingTemplate.convertAndSend("/topic/chatroom/" + chatMessage.getChatRoomId(), chatMessage);
+		messagingTemplate.convertAndSend("/topic/chatroom/" + chatMessage.getClubId(), chatMessage);
 	}
 }

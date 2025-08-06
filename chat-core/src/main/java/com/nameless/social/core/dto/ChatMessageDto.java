@@ -12,7 +12,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 public class ChatMessageDto {
-	private Long chatRoomId;
+	private Long clubId;
 	private Long senderId;
 	private String senderUsername; // Display purposes
 	private String message;

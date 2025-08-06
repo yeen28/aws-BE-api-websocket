@@ -11,7 +11,7 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ChatRoom extends BaseTimeEntity {
+public class Club extends BaseTimeEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -19,13 +19,17 @@ public class ChatRoom extends BaseTimeEntity {
 	@Column(nullable = false)
 	private String name;
 
-	@OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<ChatRoomUser> participants = new ArrayList<>();
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "group_id")
+	private Group group;
 
-//	@OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "club")
+	private List<ClubUser> participants = new ArrayList<>();
+
+//	@OneToMany(mappedBy = "club")
 //	private List<ChatMessage> messages = new ArrayList<>();
 
-	public ChatRoom(String name) {
+	public Club(String name) {
 		this.name = name;
 	}
 }

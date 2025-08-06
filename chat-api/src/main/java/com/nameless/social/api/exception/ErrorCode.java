@@ -16,8 +16,11 @@ public enum ErrorCode {
 	// User
 	USER_NOT_FOUND(HttpStatus.NOT_FOUND, "U001", "User not found"),
 
-	// ChatRoom
-	CHAT_ROOM_NOT_FOUND(HttpStatus.NOT_FOUND, "CR001", "ChatRoom not found"),
+	// Group
+	GROUP_NOT_FOUND(HttpStatus.NOT_FOUND, "GR001", "Group not found"),
+
+	// Club
+	CLUB_NOT_FOUND(HttpStatus.NOT_FOUND, "CR001", "Club not found"),
 	;
 
 	private final HttpStatus status;

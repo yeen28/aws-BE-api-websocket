@@ -22,7 +22,7 @@ public class GroupController {
 	@GetMapping("/user/getUserJoinList")
 	public CommonResponse<List<GroupModel>> getGroupListByUserEmail(
 			final HttpServletRequest request, // TODO ArgumentResolver로 Authorization 인증확인하도록 하기 -> final User user
-			@RequestParam(value = "id", required = false) final String email
+			@RequestParam(value = "email", required = false) final String email
 	) {
 		// TODO Email을 클라이언트에서 가지고 있기 때문에 서버에서 또 이베일을 전달해줄 필요가 없음.
 		// TODO 그리고 헤더에 인증 토큰을 보내기 때문에 email을 전달할 필요가 없음.
