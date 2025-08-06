@@ -19,7 +19,7 @@ public class GroupInfoModel {
 	private List<String> questList;
 	private List<Long> questSuccessNum;
 	private List<String> tag;
-	private List<ClubModel> clubList;
+	private List<ClubGroupInfoModel> clubList;
 	private LocalDate questCreateTime;
 
 	public static GroupInfoModel of(Group group) {

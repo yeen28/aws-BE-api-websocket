@@ -3,7 +3,7 @@ package com.nameless.social.api.service;
 import com.nameless.social.api.dto.ClubDto;
 import com.nameless.social.api.exception.CustomException;
 import com.nameless.social.api.exception.ErrorCode;
-import com.nameless.social.api.model.chat.ClubModel;
+import com.nameless.social.api.model.ClubModel;
 import com.nameless.social.api.repository.ClubRepository;
 import com.nameless.social.api.repository.ClubUserRepository;
 import com.nameless.social.api.repository.user.UserRepository;

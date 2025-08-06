@@ -23,7 +23,7 @@ public class GroupService {
 
 	public List<GroupModel> getGroupListByUserEmail(final String email) {
 		User user = userRepository.findByEmail(email).orElseThrow(EntityNotFoundException::new);
-		List<ClubUser> chatRooms = user.getChatRooms();
+		List<ClubUser> chatRooms = user.getClubs();
 		return chatRooms.stream()
 				.map(chatRoomUser -> GroupModel.of(email, chatRoomUser)).toList();
 	}
