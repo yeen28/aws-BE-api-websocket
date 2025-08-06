@@ -2,10 +2,9 @@ package com.nameless.social.api.service;
 
 import com.nameless.social.api.model.GroupInfoModel;
 import com.nameless.social.api.model.GroupModel;
-import com.nameless.social.api.repository.chat.ClubRepository;
+import com.nameless.social.api.repository.GroupRepository;
 import com.nameless.social.api.repository.user.UserRepository;
-import com.nameless.social.core.entity.Club;
-import com.nameless.social.core.entity.ClubUser;
+import com.nameless.social.core.entity.Group;
 import com.nameless.social.core.entity.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -30,17 +29,15 @@ class GroupServiceTest {
 	private UserRepository userRepository;
 
 	@Mock
-	private ClubRepository groupRepository;
+	private GroupRepository groupRepository;
 
 	private User user;
-	private Club chatRoom;
+	private Group group;
 
 	@BeforeEach
 	void setUp() {
 		user = new User("test token", "test", "test@test.com");
-		chatRoom = new Club("test chat room");
-		ClubUser chatRoomUser = new ClubUser(user, chatRoom);
-		user.getChatRooms().add(chatRoomUser);
+		group = new Group("test Group");
 	}
 
 	@Test
@@ -60,12 +57,12 @@ class GroupServiceTest {
 	@DisplayName("그룹 정보 조회")
 	void getGroupInfoTest() {
 		// given
-		given(groupRepository.findByName(chatRoom.getName())).willReturn(Optional.of(chatRoom));
+		given(groupRepository.findByName(group.getName())).willReturn(Optional.of(group));
 
 		// when
-		GroupInfoModel groupInfo = groupService.getGroupInfo(chatRoom.getName());
+		GroupInfoModel groupInfo = groupService.getGroupInfo(group.getName());
 
 		// then
-		assertThat(groupInfo.getName()).isEqualTo("test chat room");
+		assertThat(groupInfo.getName()).isEqualTo("test Group");
 	}
 }

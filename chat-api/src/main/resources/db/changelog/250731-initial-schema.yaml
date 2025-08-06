@@ -57,6 +57,9 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
+                  name: description
+                  type: VARCHAR(255)
+              - column:
                   name: user_id
                   type: BIGINT
               - column:
@@ -79,7 +82,7 @@ databaseChangeLog:
             columns:
               - column:
                   name: name
-                  value: "test1"
+                  value: "j처럼 살기"
               - column:
                   name: created_at
                   valueComputed: "NOW()"
@@ -91,7 +94,7 @@ databaseChangeLog:
             columns:
               - column:
                   name: name
-                  value: "test2"
+                  value: "0원 챌린지"
               - column:
                   name: created_at
                   valueComputed: "NOW()"
@@ -103,7 +106,7 @@ databaseChangeLog:
             columns:
               - column:
                   name: name
-                  value: "test3"
+                  value: "작심삼일"
               - column:
                   name: created_at
                   valueComputed: "NOW()"

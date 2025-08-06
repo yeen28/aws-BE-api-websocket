@@ -27,7 +27,7 @@ public class User extends BaseTimeEntity {
 	private String name;
 
 	@OneToMany(mappedBy = "user")
-	private List<ClubUser> chatRooms = new ArrayList<>();
+	private List<ClubUser> clubs = new ArrayList<>();
 
 	@OneToMany(mappedBy = "user")
 	private List<Group> groups = new ArrayList<>();

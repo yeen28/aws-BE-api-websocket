@@ -3,10 +3,11 @@ package com.nameless.social.api.service;
 import com.nameless.social.api.dto.ClubDto;
 import com.nameless.social.api.exception.CustomException;
 import com.nameless.social.api.exception.ErrorCode;
-import com.nameless.social.api.model.chat.ClubModel;
-import com.nameless.social.api.repository.chat.ClubRepository;
-import com.nameless.social.api.repository.chat.ClubUserRepository;
+import com.nameless.social.api.model.ClubModel;
+import com.nameless.social.api.repository.ClubRepository;
+import com.nameless.social.api.repository.ClubUserRepository;
 import com.nameless.social.api.repository.user.UserRepository;
+import com.nameless.social.core.entity.Club;
 import com.nameless.social.core.entity.ClubUser;
 import com.nameless.social.core.entity.User;
 import lombok.RequiredArgsConstructor;
@@ -22,20 +23,20 @@ import java.util.stream.Collectors;
 public class ClubService {
 	private final ClubRepository clubRepository;
 	private final UserRepository userRepository;
-	private final ClubUserRepository chatRoomUserRepository;
+	private final ClubUserRepository clubUserRepository;
 
 	@Transactional
 	public ClubModel createClub(final ClubDto chatRoomDto) {
-		com.nameless.social.core.entity.Club chatRoom = new com.nameless.social.core.entity.Club(chatRoomDto.getName());
-		clubRepository.save(chatRoom);
+		Club club = new Club(chatRoomDto.getName());
+		clubRepository.save(club);
 
 		List<User> participants = userRepository.findAllById(chatRoomDto.getParticipantIds());
 		for (User user : participants) {
-			ClubUser chatRoomUser = new ClubUser(user, chatRoom);
-			chatRoomUserRepository.save(chatRoomUser);
+			ClubUser chatRoomUser = new ClubUser(user, club);
+			clubUserRepository.save(chatRoomUser);
 		}
 
-		return ClubModel.of(chatRoom);
+		return ClubModel.of(club);
 	}
 
 	public ClubModel findById(final Long id) {
