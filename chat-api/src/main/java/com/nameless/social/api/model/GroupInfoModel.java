@@ -1,6 +1,6 @@
 package com.nameless.social.api.model;
 
-import com.nameless.social.core.entity.ChatRoom;
+import com.nameless.social.core.entity.Club;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,7 +22,7 @@ public class GroupInfoModel {
 	private List<ClubModel> clubList;
 	private LocalDate questCreateTime;
 
-	public static GroupInfoModel of(ChatRoom group) {
+	public static GroupInfoModel of(Club group) {
 		return GroupInfoModel.builder()
 				.name(group.getName())
 				.build();

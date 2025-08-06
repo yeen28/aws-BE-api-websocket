@@ -7,7 +7,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class ChatRoomDto {
+public class ClubDto {
 	private String name;
 	private List<Long> participantIds;
 }

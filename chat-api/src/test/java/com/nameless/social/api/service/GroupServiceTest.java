@@ -2,10 +2,10 @@ package com.nameless.social.api.service;
 
 import com.nameless.social.api.model.GroupInfoModel;
 import com.nameless.social.api.model.GroupModel;
-import com.nameless.social.api.repository.chat.ChatRoomRepository;
+import com.nameless.social.api.repository.chat.ClubRepository;
 import com.nameless.social.api.repository.user.UserRepository;
-import com.nameless.social.core.entity.ChatRoom;
-import com.nameless.social.core.entity.ChatRoomUser;
+import com.nameless.social.core.entity.Club;
+import com.nameless.social.core.entity.ClubUser;
 import com.nameless.social.core.entity.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -30,16 +30,16 @@ class GroupServiceTest {
 	private UserRepository userRepository;
 
 	@Mock
-	private ChatRoomRepository groupRepository;
+	private ClubRepository groupRepository;
 
 	private User user;
-	private ChatRoom chatRoom;
+	private Club chatRoom;
 
 	@BeforeEach
 	void setUp() {
 		user = new User("test token", "test", "test@test.com");
-		chatRoom = new ChatRoom("test chat room");
-		ChatRoomUser chatRoomUser = new ChatRoomUser(user, chatRoom);
+		chatRoom = new Club("test chat room");
+		ClubUser chatRoomUser = new ClubUser(user, chatRoom);
 		user.getChatRooms().add(chatRoomUser);
 	}
 

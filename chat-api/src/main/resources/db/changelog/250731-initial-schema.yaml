@@ -5,31 +5,6 @@ databaseChangeLog:
       context: chat
       changes:
         - createTable:
-            tableName: chat_room
-            columns:
-              - column:
-                  name: id
-                  type: BIGINT
-                  autoIncrement: true
-                  constraints:
-                    primaryKey: true
-                    nullable: false
-              - column:
-                  name: name
-                  type: VARCHAR(255)
-                  constraints:
-                    nullable: false
-              - column:
-                  name: created_at
-                  type: DATETIME(6)
-                  constraints:
-                    nullable: false
-              - column:
-                  name: updated_at
-                  type: DATETIME(6)
-                  constraints:
-                    nullable: false
-        - createTable:
             tableName: users
             columns:
               - column:
@@ -46,17 +21,110 @@ databaseChangeLog:
                     unique: true
                     nullable: false
               - column:
-                  name: username
+                  name: email
+                  type: VARCHAR(255)
+                  constraints:
+                    unique: true
+                    nullable: false
+              - column:
+                  name: name
                   type: VARCHAR(255)
                   constraints:
                     nullable: false
               - column:
                   name: created_at
-                  type: DATETIME(6)
+                  type: DATETIME
                   constraints:
                     nullable: false
               - column:
                   name: updated_at
-                  type: DATETIME(6)
+                  type: DATETIME
                   constraints:
                     nullable: false
+        - createTable:
+            tableName: "group"
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: BIGINT
+              - column:
+                  name: created_at
+                  type: DATETIME
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: DATETIME
+                  constraints:
+                    nullable: false
+  - changeSet:
+      id: 2
+      author: yeeun
+      context: chat
+      changes:
+        - insert:
+            tableName: "group"
+            columns:
+              - column:
+                  name: name
+                  value: "test1"
+              - column:
+                  name: created_at
+                  valueComputed: "NOW()"
+              - column:
+                  name: updated_at
+                  valueComputed: "NOW()"
+        - insert:
+            tableName: "group"
+            columns:
+              - column:
+                  name: name
+                  value: "test2"
+              - column:
+                  name: created_at
+                  valueComputed: "NOW()"
+              - column:
+                  name: updated_at
+                  valueComputed: "NOW()"
+        - insert:
+            tableName: "group"
+            columns:
+              - column:
+                  name: name
+                  value: "test3"
+              - column:
+                  name: created_at
+                  valueComputed: "NOW()"
+              - column:
+                  name: updated_at
+                  valueComputed: "NOW()"
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: email
+                  value: "admin@nameless.com"
+              - column:
+                  name: name
+                  value: "admin"
+              - column:
+                  name: token
+                  value: "adminToken"
+              - column:
+                  name: created_at
+                  valueComputed: "NOW()"
+              - column:
+                  name: updated_at
+                  valueComputed: "NOW()"

@@ -26,8 +26,11 @@ public class User extends BaseTimeEntity {
 	@Column(nullable = false)
 	private String name;
 
-	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<ChatRoomUser> chatRooms = new ArrayList<>();
+	@OneToMany(mappedBy = "user")
+	private List<ClubUser> chatRooms = new ArrayList<>();
+
+	@OneToMany(mappedBy = "user")
+	private List<Group> groups = new ArrayList<>();
 
 	public User(String token, String name, String email) {
 		this.token = token;

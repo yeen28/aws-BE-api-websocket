@@ -8,8 +8,8 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "chat_room_id"}))
-public class ChatRoomUser extends BaseTimeEntity {
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "club_id"}))
+public class ClubUser extends BaseTimeEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -19,8 +19,8 @@ public class ChatRoomUser extends BaseTimeEntity {
 	private User user;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "chat_room_id", nullable = false)
-	private ChatRoom chatRoom;
+	@JoinColumn(name = "club_id", nullable = false)
+	private Club club;
 
 	@Column(name = "role")
 	private String role; // 유저의 역할 (e.g., admin, member)
@@ -31,8 +31,8 @@ public class ChatRoomUser extends BaseTimeEntity {
 	@Column(name = "notification_settings")
 	private String notificationSettings; // 알림 설정 (e.g., on, off)
 
-	public ChatRoomUser(User user, ChatRoom chatRoom) {
+	public ClubUser(User user, Club club) {
 		this.user = user;
-		this.chatRoom = chatRoom;
+		this.club = club;
 	}
 }
