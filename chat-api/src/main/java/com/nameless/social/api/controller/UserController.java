@@ -1,8 +1,8 @@
 package com.nameless.social.api.controller;
 
+import com.nameless.social.api.dto.DepartUserDto;
+import com.nameless.social.api.dto.JoinUserDto;
 import com.nameless.social.api.dto.UserDto;
-import com.nameless.social.api.model.CurQuestTotalModel;
-import com.nameless.social.api.model.QuestModel;
 import com.nameless.social.api.model.user.*;
 import com.nameless.social.api.response.CommonResponse;
 import com.nameless.social.api.service.UserService;
@@ -38,27 +38,18 @@ public class UserController {
 	@GetMapping("/user/getUserCredentials")
 	public CommonResponse<Object> getUserCredentials(
 			final HttpServletRequest request,
-			@RequestParam(value = "id", required = false) String email
+			@RequestParam(value = "email", required = false) String email
 	) {
-		return CommonResponse.success(userService.getUserByEmail(email));
+		return CommonResponse.success(userService.getUserInfo(email));
 	}
 
 	@Operation(summary = "사용자 정보 조회")
 	@GetMapping("/user/getUserStatus")
-	public CommonResponse<UserModel> getUserStatus(
+	public CommonResponse<Object> getUserInfo(
 			final HttpServletRequest request,
-			@RequestParam(value = "id", required = false) String email
+			@RequestParam(value = "email", required = false) String email
 	) {
-
-		// TODO 응답에 다음 값들이 포함되어야 함.
-//		id: string(email)
-//		name: string,
-//		avatar: base64 encode + json stringify
-//		status: online | offline → 확장 기능용. 현재는 그냥 “online” string으로 주세요
-//		joinDate: Date(YYYY-MM-DD)
-//		lastSeen: Date(YYYY-MM-DD)
-
-		return CommonResponse.success(userService.getUserByEmail(email));
+		return CommonResponse.success(userService.getUserInfo(email));
 	}
 
 	@Operation(summary = "사용자가 특정 클럽(소모임, 특정 그룹 내에 존재) 탈퇴")
@@ -100,7 +91,7 @@ public class UserController {
 	@PostMapping("/user/joinGroup")
 	public CommonResponse<Object> joinGroup(
 			final HttpServletRequest request,
-			@RequestParam(value = "id", required = false) String email
+			@RequestParam(value = "email", required = false) String email
 	) {
 		return CommonResponse.success(HttpStatus.OK);
 	}
@@ -108,7 +99,7 @@ public class UserController {
 	@PostMapping("/user/setUsername")
 	public CommonResponse<Object> setUsername(
 			final HttpServletRequest request,
-			@RequestParam(value = "id", required = false) String email
+			@RequestParam(value = "email", required = false) String email
 	) {
 		return CommonResponse.success(HttpStatus.OK);
 	}
@@ -116,32 +107,21 @@ public class UserController {
 	@PostMapping("/user/setAvatar")
 	public CommonResponse<Object> setAvatar(
 			final HttpServletRequest request,
-			@RequestParam(value = "id", required = false) String email
+			@RequestParam(value = "email", required = false) String email
 	) {
 		return CommonResponse.success(HttpStatus.OK);
 	}
 
 	@GetMapping("/group/getGroupList")
-	public CommonResponse<Object> getGroupList(
-			final HttpServletRequest request,
-			@RequestParam(value = "id", required = false) String email
-	) {
-		List<CurQuestTotalModel> curQuestTotalModelApis = List.of(CurQuestTotalModel.builder()
-				.quest("questTest")
-				.isSuccess(true)
-				.group("GroupTest")
-				.build());
-		QuestModel questModelApi = QuestModel.builder()
-				.id("email@test.com")
-				.curQuestTotalList(curQuestTotalModelApis)
-				.build();
-		return CommonResponse.success(questModelApi);
+	public CommonResponse<Object> getGroupList(final HttpServletRequest request) {
+		String[] result = {"\\n  \\\"j처럼 살기\\\",\\n  \\\"0원 챌린지\\\",\\n  \\\"작심삼일\\\"\\n"};
+		return CommonResponse.success(result);
 	}
 
 	@PostMapping("/group/joinUser")
 	public CommonResponse<Object> joinUser(
 			final HttpServletRequest request,
-			@RequestParam(value = "groupname", required = false) String groupName
+			@RequestBody JoinUserDto joinUserDto
 	) {
 		return CommonResponse.success(HttpStatus.OK);
 	}
@@ -149,7 +129,7 @@ public class UserController {
 	@PostMapping("/group/departUser")
 	public CommonResponse<Object> departUser(
 			final HttpServletRequest request,
-			@RequestParam(value = "groupname", required = false) String groupName
+			@RequestBody DepartUserDto departUserDto
 	) {
 		return CommonResponse.success(HttpStatus.OK);
 	}

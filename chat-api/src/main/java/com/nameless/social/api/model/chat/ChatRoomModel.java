@@ -33,10 +33,11 @@ public class ChatRoomModel {
 
 	private static UserModel toUserModel(ChatRoomUser chatRoomUser) {
 		return UserModel.builder()
-				.id(chatRoomUser.getUser().getId())
-				.username(chatRoomUser.getUser().getName())
-				.createdAt(chatRoomUser.getUser().getCreatedAt())
-				.updatedAt(chatRoomUser.getUser().getUpdatedAt())
+				.id(chatRoomUser.getUser().getEmail())
+				.name(chatRoomUser.getUser().getName())
+				.status(UserModel.Status.ONLINE)
+				.joinDate(chatRoomUser.getUser().getCreatedAt())
+				.lastSeen(chatRoomUser.getUser().getUpdatedAt())
 				.build();
 	}
 }
