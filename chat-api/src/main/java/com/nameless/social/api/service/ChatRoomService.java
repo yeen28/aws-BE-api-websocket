@@ -4,16 +4,20 @@ import com.nameless.social.api.dto.ChatRoomDto;
 import com.nameless.social.api.exception.CustomException;
 import com.nameless.social.api.exception.ErrorCode;
 import com.nameless.social.api.model.chat.ChatRoomModel;
+import com.nameless.social.api.model.GroupModel;
 import com.nameless.social.api.repository.chat.ChatRoomRepository;
 import com.nameless.social.api.repository.chat.ChatRoomUserRepository;
 import com.nameless.social.api.repository.user.UserRepository;
 import com.nameless.social.core.entity.ChatRoom;
 import com.nameless.social.core.entity.ChatRoomUser;
 import com.nameless.social.core.entity.User;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 

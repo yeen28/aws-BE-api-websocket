@@ -34,7 +34,7 @@ public class ChatRoomModel {
 	private static UserModel toUserModel(ChatRoomUser chatRoomUser) {
 		return UserModel.builder()
 				.id(chatRoomUser.getUser().getId())
-				.username(chatRoomUser.getUser().getUsername())
+				.username(chatRoomUser.getUser().getName())
 				.createdAt(chatRoomUser.getUser().getCreatedAt())
 				.updatedAt(chatRoomUser.getUser().getUpdatedAt())
 				.build();

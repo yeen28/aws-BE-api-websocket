@@ -13,13 +13,15 @@ import java.time.LocalDateTime;
 public class UserModel {
 	private Long id;
 	private String username;
+	private String email;
 	private LocalDateTime createdAt;
 	private LocalDateTime updatedAt;
 
 	public static UserModel of(User user) {
 		return UserModel.builder()
 				.id(user.getId())
-				.username(user.getUsername())
+				.username(user.getName())
+				.email(user.getEmail())
 				.createdAt(user.getCreatedAt())
 				.updatedAt(user.getUpdatedAt())
 				.build();

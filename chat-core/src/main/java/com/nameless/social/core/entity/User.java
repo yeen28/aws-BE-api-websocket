@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,14 +20,18 @@ public class User extends BaseTimeEntity {
 	@Column(unique = true, nullable = false)
 	private String token; // AWS Cognito User-sub
 
+	@Column(unique = true, nullable = false)
+	private String email;
+
 	@Column(nullable = false)
-	private String username;
+	private String name;
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<ChatRoomUser> chatRooms = new ArrayList<>();
 
-	public User(String token, String username) {
+	public User(String token, String name, String email) {
 		this.token = token;
-		this.username = username;
+		this.name = name;
+		this.email = email;
 	}
 }

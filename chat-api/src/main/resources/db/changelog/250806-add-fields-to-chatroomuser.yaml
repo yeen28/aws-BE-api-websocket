@@ -1,0 +1,17 @@
+databaseChangeLog:
+  - changeSet:
+      id: 250806-1
+      author: yeeun
+      changes:
+        - addColumn:
+            tableName: chat_room_user
+            columns:
+              - column:
+                  name: role
+                  type: varchar(255)
+              - column:
+                  name: last_read_message_id
+                  type: bigint
+              - column:
+                  name: notification_settings
+                  type: varchar(255)
