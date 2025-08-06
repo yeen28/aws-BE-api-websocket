@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -28,10 +29,15 @@ public class UserService {
 		);
 	}
 
-	public UserModel findById(Long id) {
+	public UserModel findById(final Long id) {
 		return UserModel.of(userRepository.findById(id)
 				.orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND))
 		);
+	}
+
+	public List<UserModel> findAll() {
+		return userRepository.findAll().stream()
+				.map(UserModel::of).toList();
 	}
 
 	public void getUserQuestContinuous(final String email) {
