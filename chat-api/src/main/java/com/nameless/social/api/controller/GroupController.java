@@ -29,11 +29,18 @@ public class GroupController {
 		return CommonResponse.success(groupService.getGroupListByUserEmail(email));
 	}
 
-	@GetMapping("/group/getGroup")
-	public CommonResponse<Object> getGroup(
+	@Operation(summary = "그룹 정보 조회")
+	@GetMapping("/group/getGroupInfo")
+	public CommonResponse<Object> getGroupInfo(
 			final HttpServletRequest request,
-			@RequestParam(value = "groupname", required = false) final String groupName
+			@RequestParam(value = "name", required = false) final String groupName
 	) {
 		return CommonResponse.success(groupService.getGroupInfo(groupName));
+	}
+
+	@Operation(summary = "전체 그룹 목록")
+	@GetMapping("/group/getGroupList")
+	public CommonResponse<Object> getGroupList(final HttpServletRequest request) {
+		return CommonResponse.success(groupService.getGroupList());
 	}
 }

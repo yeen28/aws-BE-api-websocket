@@ -2,7 +2,7 @@ package com.nameless.social.api.service;
 
 import com.nameless.social.api.model.GroupInfoModel;
 import com.nameless.social.api.model.GroupModel;
-import com.nameless.social.api.repository.chat.ClubRepository;
+import com.nameless.social.api.repository.ClubRepository;
 import com.nameless.social.api.repository.user.UserRepository;
 import com.nameless.social.core.entity.Club;
 import com.nameless.social.core.entity.ClubUser;

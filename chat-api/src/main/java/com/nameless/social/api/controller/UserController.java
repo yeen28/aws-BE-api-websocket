@@ -112,12 +112,6 @@ public class UserController {
 		return CommonResponse.success(HttpStatus.OK);
 	}
 
-	@GetMapping("/group/getGroupList")
-	public CommonResponse<Object> getGroupList(final HttpServletRequest request) {
-		String[] result = {"\\n  \\\"j처럼 살기\\\",\\n  \\\"0원 챌린지\\\",\\n  \\\"작심삼일\\\"\\n"};
-		return CommonResponse.success(result);
-	}
-
 	@PostMapping("/group/joinUser")
 	public CommonResponse<Object> joinUser(
 			final HttpServletRequest request,

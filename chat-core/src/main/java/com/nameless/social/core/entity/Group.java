@@ -17,6 +17,9 @@ public class Group extends BaseTimeEntity { // Category
 	@Column(nullable = false)
 	private String name;
 
+	@Column
+	private String description;
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id")
 	private User user;

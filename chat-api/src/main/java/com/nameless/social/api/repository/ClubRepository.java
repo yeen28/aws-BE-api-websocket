@@ -1,4 +1,4 @@
-package com.nameless.social.api.repository.chat;
+package com.nameless.social.api.repository;
 
 import com.nameless.social.core.entity.Club;
 import org.springframework.data.jpa.repository.JpaRepository;
