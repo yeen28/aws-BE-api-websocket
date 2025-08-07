@@ -20,8 +20,9 @@ public class Group extends BaseTimeEntity { // Category
 	@Column(nullable = false)
 	private String name;
 
-	@Column
 	private String description;
+	private String icon;
+	private String tag;
 
 	@OneToMany(mappedBy = "group")
 	private List<UserGroup> userGroups = new ArrayList<>();

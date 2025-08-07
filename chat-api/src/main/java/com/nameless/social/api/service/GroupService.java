@@ -9,12 +9,14 @@ import com.nameless.social.api.repository.user.UserRepository;
 import com.nameless.social.core.entity.UserClub;
 import com.nameless.social.core.entity.Group;
 import com.nameless.social.core.entity.User;
+import com.nameless.social.core.entity.UserGroup;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -25,16 +27,30 @@ public class GroupService {
 	private final UserRepository userRepository;
 	private final GroupRepository groupRepository;
 
-	public List<GroupModel> getGroupListByUserEmail(final String email) {
+	public GroupModel getGroupByUserEmail(final String email) {
+		List<String> groupNames = new ArrayList<>();
+		List<String> clubNames = new ArrayList<>();
+
 		User user = userRepository.findByEmail(email).orElseThrow(EntityNotFoundException::new);
+
+		List<UserGroup> userGroups = user.getUserGroups();
+		for (UserGroup userGroup : userGroups) {
+			String groupName = userGroup.getGroup().getName();
+			groupNames.add(groupName);
+		}
+
 		List<UserClub> userClubs = user.getUserClubs();
-		return userClubs.stream()
-				.map(userClub -> GroupModel.of(email, userClub)).toList();
+		for (UserClub userClub : userClubs) {
+			String clubName = userClub.getClub().getName();
+			clubNames.add(clubName);
+		}
+
+		return GroupModel.of(user.getEmail(), groupNames, clubNames);
 	}
 
 	public GroupInfoModel getGroupInfo(String groupName) {
 		Group group = groupRepository.findByName(groupName)
-				.orElseThrow(EntityNotFoundException::new);
+				.orElseThrow(() -> new EntityNotFoundException("Group Not Found"));
 		return GroupInfoModel.of(group);
 	}
 

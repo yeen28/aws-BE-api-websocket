@@ -60,6 +60,12 @@ databaseChangeLog:
                   name: description
                   type: VARCHAR(255)
               - column:
+                  name: icon
+                  type: VARCHAR(255)
+              - column:
+                  name: tag
+                  type: VARCHAR(255)
+              - column:
                   name: created_at
                   type: DATETIME
                   constraints:
@@ -85,6 +91,15 @@ databaseChangeLog:
                   constraints:
                     unique: true
                     nullable: false
+              - column:
+                  name: description
+                  type: VARCHAR(255)
+              - column:
+                  name: tag
+                  type: VARCHAR(255)
+              - column:
+                  name: icon
+                  type: VARCHAR(255)
               - column:
                   name: group_id
                   type: BIGINT
@@ -112,6 +127,14 @@ databaseChangeLog:
               - column:
                   name: name
                   value: "j처럼 살기"
+              - column:
+                  name: icon
+                  value: "#"
+              - column:
+                  name: tag
+                  value: "[
+        \"활발\", \"geek\", \"너도 나도\", \"다 같이\"
+      ]"
               - column:
                   name: created_at
                   valueComputed: "NOW()"
@@ -165,7 +188,18 @@ databaseChangeLog:
             columns:
               - column:
                   name: name
-                  value: "testClub"
+                  value: "redis배우기"
+              - column:
+                  name: description
+                  value: "redis 단 돈 천원!"
+              - column:
+                  name: tag
+                  value: "[
+        \"활발\", \"geek\", \"너도 나도\", \"다 같이\"
+      ]"
+              - column:
+                  name: icon
+                  value: "🪒"
               - column:
                   name: group_id
                   value: 1

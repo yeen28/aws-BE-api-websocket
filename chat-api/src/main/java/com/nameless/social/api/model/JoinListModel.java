@@ -1,4 +1,4 @@
-package com.nameless.social.api.model.user;
+package com.nameless.social.api.model;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
-public class JoinListModelApi {
+public class JoinListModel {
 	private String groupname;
-	private List<String> clubList;
+	private List<String> clubList; // club name list
 }

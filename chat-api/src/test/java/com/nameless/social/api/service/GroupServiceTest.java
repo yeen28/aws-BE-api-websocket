@@ -41,13 +41,13 @@ class GroupServiceTest {
 	}
 
 	@Test
-	@DisplayName("유저 이메일로 그룹 리스트 조회")
-	void getGroupListByUserEmailTest() {
+	@DisplayName("유저 이메일로 그룹 단 건 조회")
+	void getGroupByUserEmailTest() {
 		// given
 		given(userRepository.findByEmail(user.getEmail())).willReturn(Optional.of(user));
 
 		// when
-		List<GroupModel> groupList = groupService.getGroupListByUserEmail(user.getEmail());
+		GroupModel groupList = groupService.getGroupByUserEmail(user.getEmail());
 
 		// then
 		assertThat(groupList).isNotNull();

@@ -26,6 +26,13 @@ public class GroupInfoModel {
 		return GroupInfoModel.builder()
 				.name(group.getName())
 				.description(group.getDescription())
+				.icon(group.getIcon())
+				.memberNum(10L) // TODO mock
+				.questList(List.of("quest test")) // TODO mock
+				.questSuccessNum(List.of(10L)) // TODO mock
+				.tag(List.of("test tag")) // TODO mock
+//				.clubList(List.of(new ClubGroupInfoModel()))
+				.questCreateTime(LocalDate.now()) // TODO mock
 				.build();
 	}
 }

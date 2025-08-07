@@ -1,7 +1,9 @@
 package com.nameless.social.core.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 
+@Getter
 @Entity
 public class UserClub extends BaseTimeEntity {
 	@EmbeddedId
