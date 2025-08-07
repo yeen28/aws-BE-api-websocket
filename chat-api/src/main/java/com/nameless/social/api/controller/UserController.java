@@ -1,39 +1,47 @@
 package com.nameless.social.api.controller;
 
-import com.nameless.social.api.dto.DepartUserDto;
-import com.nameless.social.api.dto.JoinUserDto;
-import com.nameless.social.api.dto.UserDto;
+import com.nameless.social.api.dto.*;
+import com.nameless.social.api.exception.ErrorCode;
+import com.nameless.social.api.exception.ErrorResponse;
+import com.nameless.social.api.handler.UserInfo;
 import com.nameless.social.api.model.user.*;
 import com.nameless.social.api.response.CommonResponse;
 import com.nameless.social.api.service.UserService;
+import com.nameless.social.core.entity.User;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import java.util.List;
+import java.io.IOException;
+import java.util.Map;
 
 @RestController
-@RequestMapping("/api") // /users")
+@RequestMapping("/api")
 @RequiredArgsConstructor
 public class UserController {
 	private final UserService userService;
 
 	// TODO 사용자 생성을 위한 임시 코드. 추후 제거.
-	@PostMapping("/users")
+	@PostMapping("/user")
 	public CommonResponse<UserModel> createUser(@RequestBody UserDto userDto) {
 		return CommonResponse.success(userService.getOrCreateUser(userDto));
 	}
 
-	@GetMapping("/users/{id}")
-	public CommonResponse<UserModel> getUserById(@PathVariable Long id) {
+	@GetMapping("/user/{id}")
+	public CommonResponse<UserModel> getUserById(@PathVariable("id") Long id) {
 		return CommonResponse.success(userService.findById(id));
 	}
 
+	@GetMapping("/users")
+	public CommonResponse<Object> getUsers() {
+		return CommonResponse.success(userService.findAll());
+	}
+
 	// TODO RESTful API로 수정
-	// TODO 가능하면 API 문서 생성
-	// TODO 가능하면 TDD...
 	@Operation(summary = "Cognito 서비스가 되지 않았을 때를 위한 캐시 업데이트용")
 	@GetMapping("/user/getUserCredentials")
 	public CommonResponse<Object> getUserCredentials(
@@ -47,7 +55,8 @@ public class UserController {
 	@GetMapping("/user/getUserStatus")
 	public CommonResponse<Object> getUserInfo(
 			final HttpServletRequest request,
-			@RequestParam(value = "email", required = false) String email
+//			@UserInfo final User user,
+			@RequestParam(value = "email", required = false) final String email
 	) {
 		return CommonResponse.success(userService.getUserInfo(email));
 	}
@@ -56,16 +65,8 @@ public class UserController {
 	@PostMapping("/user/leaveClub")
 	public CommonResponse<Object> leaveClub(
 			final HttpServletRequest request,
-			@RequestBody String user,
-			@RequestBody String group,
-			@RequestBody String club
+			@RequestBody final LeaveClubDto leaveClubDto
 	) {
-//		hedaer: token
-//		body: {
-//			user: string,
-//			group: string
-//			club: string
-//		}
 		return CommonResponse.success(HttpStatus.OK);
 	}
 
@@ -73,9 +74,9 @@ public class UserController {
 	@PostMapping("/user/leaveGroup")
 	public CommonResponse<Object> leaveGroup(
 			final HttpServletRequest request,
-			@RequestBody  String user,
-			@RequestBody String group
+			@RequestBody final LeaveGroupDto leaveGroupDto
 	) {
+		userService.leaveGroup(leaveGroupDto);
 		return CommonResponse.success(HttpStatus.OK);
 	}
 
@@ -83,7 +84,7 @@ public class UserController {
 	@PostMapping("/user/joinClub")
 	public CommonResponse<Object> joinClub(
 			final HttpServletRequest request,
-			@RequestBody String info
+			@RequestBody final JoinClubDto joinClubDto
 	) {
 		return CommonResponse.success(HttpStatus.OK);
 	}
@@ -91,23 +92,29 @@ public class UserController {
 	@PostMapping("/user/joinGroup")
 	public CommonResponse<Object> joinGroup(
 			final HttpServletRequest request,
-			@RequestParam(value = "email", required = false) String email
+			@RequestBody final JoinGroupDto joinGroupDto
 	) {
 		return CommonResponse.success(HttpStatus.OK);
 	}
 
-	@PostMapping("/user/setUsername")
+	@Operation(summary = "사용자 이름 수정")
+	@PostMapping("/user/{id}")
 	public CommonResponse<Object> setUsername(
 			final HttpServletRequest request,
-			@RequestParam(value = "email", required = false) String email
+			@PathVariable("id") final long id,
+			@RequestBody final UsernameDto usernameDto
 	) {
 		return CommonResponse.success(HttpStatus.OK);
 	}
 
+	@Operation(summary = "사용자 아바타 이미지 업로드/수정")
 	@PostMapping("/user/setAvatar")
 	public CommonResponse<Object> setAvatar(
 			final HttpServletRequest request,
-			@RequestParam(value = "email", required = false) String email
+			final MultipartHttpServletRequest multipartHttpServletRequest,
+			@RequestParam(value = "email", required = false) final String email
+//			User user,
+//			@RequestParam(value = "isDefault") boolean isDefault
 	) {
 		return CommonResponse.success(HttpStatus.OK);
 	}

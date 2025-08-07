@@ -24,7 +24,7 @@ public class Club extends BaseTimeEntity {
 	private Group group;
 
 	@OneToMany(mappedBy = "club")
-	private List<ClubUser> participants = new ArrayList<>();
+	private List<UserClub> participants = new ArrayList<>();
 
 //	@OneToMany(mappedBy = "club")
 //	private List<ChatMessage> messages = new ArrayList<>();

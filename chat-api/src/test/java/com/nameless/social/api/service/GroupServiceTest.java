@@ -65,4 +65,17 @@ class GroupServiceTest {
 		// then
 		assertThat(groupInfo.getName()).isEqualTo("test Group");
 	}
+
+	@Test
+	@DisplayName("그룹 목록 조회")
+	void getGroupListTest() {
+		// given
+		given(groupRepository.findAll()).willReturn(List.of(group));
+
+		// when
+		List<GroupInfoModel> groupList = groupService.getGroupList();
+
+		// then
+		assertThat(groupList).isNotNull();
+	}
 }
