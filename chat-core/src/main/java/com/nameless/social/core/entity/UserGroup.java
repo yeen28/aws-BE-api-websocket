@@ -24,4 +24,9 @@ public class UserGroup extends BaseTimeEntity {
 	private Group group;
 
 	private LocalDateTime joinedAt;
+
+	public UserGroup(User user, Group group) {
+		this.user = user;
+		this.group = group;
+	}
 }

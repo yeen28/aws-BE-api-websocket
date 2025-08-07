@@ -14,7 +14,7 @@ public class UserModel {
 	private String id; // email
 	private String name;
 	private String avatar; // base64 encode + json stringify
-	private Status status; // 확장 기능용. 현재는 그냥 “online” string으로 주세요
+	private Status status;
 	private LocalDateTime joinDate;
 	private LocalDateTime lastSeen;
 

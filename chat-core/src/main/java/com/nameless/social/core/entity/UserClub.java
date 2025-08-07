@@ -25,4 +25,9 @@ public class UserClub extends BaseTimeEntity {
 
 	@Column(name = "notification_settings")
 	private String notificationSettings; // 알림 설정 (e.g., on, off)
+
+	public UserClub(User user, Club club) {
+		this.user = user;
+		this.club = club;
+	}
 }

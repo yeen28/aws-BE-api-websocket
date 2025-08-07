@@ -15,8 +15,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-
-import java.io.IOException;
 import java.util.Map;
 
 @RestController
@@ -41,7 +39,6 @@ public class UserController {
 		return CommonResponse.success(userService.findAll());
 	}
 
-	// TODO RESTful API로 수정
 	@Operation(summary = "Cognito 서비스가 되지 않았을 때를 위한 캐시 업데이트용")
 	@GetMapping("/user/getUserCredentials")
 	public CommonResponse<Object> getUserCredentials(
@@ -67,6 +64,7 @@ public class UserController {
 			final HttpServletRequest request,
 			@RequestBody final LeaveClubDto leaveClubDto
 	) {
+		userService.leaveClub(leaveClubDto);
 		return CommonResponse.success(HttpStatus.OK);
 	}
 
@@ -86,14 +84,17 @@ public class UserController {
 			final HttpServletRequest request,
 			@RequestBody final JoinClubDto joinClubDto
 	) {
+		userService.joinClub(joinClubDto);
 		return CommonResponse.success(HttpStatus.OK);
 	}
 
+	@Operation(summary = "사용자가 특정 Group 가입")
 	@PostMapping("/user/joinGroup")
 	public CommonResponse<Object> joinGroup(
 			final HttpServletRequest request,
 			@RequestBody final JoinGroupDto joinGroupDto
 	) {
+		userService.joinGroup(joinGroupDto);
 		return CommonResponse.success(HttpStatus.OK);
 	}
 
@@ -104,6 +105,7 @@ public class UserController {
 			@PathVariable("id") final long id,
 			@RequestBody final UsernameDto usernameDto
 	) {
+		userService.updateUsername(usernameDto);
 		return CommonResponse.success(HttpStatus.OK);
 	}
 

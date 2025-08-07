@@ -11,5 +11,8 @@ import java.util.List;
 @Repository
 public interface UserClubRepository extends JpaRepository<UserClub, Long> {
 	@Query("SELECT uc FROM UserClub uc WHERE uc.user.id = :userId AND uc.club.id IN :clubIds")
-	List<UserClub> findUserClubsInGroup(@Param("userId") Long userId, @Param("clubIds") List<Long> clubIds);
+	List<UserClub> findUserClubsInClubIds(@Param("userId") Long userId, @Param("clubIds") List<Long> clubIds);
+
+	@Query("DELETE FROM UserClub uc WHERE uc.user.id = :userId AND uc.club.id = :clubId")
+	List<UserClub> deleteByUserIdAndClubId(@Param("userId") Long userId, @Param("clubId") Long clubId);
 }
