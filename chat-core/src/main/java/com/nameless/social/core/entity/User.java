@@ -27,10 +27,10 @@ public class User extends BaseTimeEntity {
 	private String name;
 
 	@OneToMany(mappedBy = "user")
-	private List<ClubUser> clubs = new ArrayList<>();
+	private List<UserClub> userClubs = new ArrayList<>();
 
 	@OneToMany(mappedBy = "user")
-	private List<Group> groups = new ArrayList<>();
+	private List<UserGroup> userGroups = new ArrayList<>();
 
 	public User(String token, String name, String email) {
 		this.token = token;

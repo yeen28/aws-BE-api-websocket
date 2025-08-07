@@ -5,6 +5,9 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -20,9 +23,11 @@ public class Group extends BaseTimeEntity { // Category
 	@Column
 	private String description;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "user_id")
-	private User user;
+	@OneToMany(mappedBy = "group")
+	private List<UserGroup> userGroups = new ArrayList<>();
+
+	@OneToMany(mappedBy = "group")
+	private List<Club> clubs = new ArrayList<>();
 
 	public Group(String name) {
 		this.name = name;

@@ -46,7 +46,7 @@ public class UserController {
 	@GetMapping("/user/getUserStatus")
 	public CommonResponse<Object> getUserInfo(
 			final HttpServletRequest request,
-			@RequestParam(value = "email", required = false) String email
+			@RequestParam(value = "email", required = false) final String email
 	) {
 		return CommonResponse.success(userService.getUserInfo(email));
 	}
@@ -66,6 +66,7 @@ public class UserController {
 			final HttpServletRequest request,
 			@RequestBody final LeaveGroupDto leaveGroupDto
 	) {
+		userService.leaveGroup(leaveGroupDto);
 		return CommonResponse.success(HttpStatus.OK);
 	}
 
@@ -73,7 +74,7 @@ public class UserController {
 	@PostMapping("/user/joinClub")
 	public CommonResponse<Object> joinClub(
 			final HttpServletRequest request,
-			@RequestBody String info
+			@RequestBody final JoinClubDto joinClubDto
 	) {
 		return CommonResponse.success(HttpStatus.OK);
 	}
@@ -81,7 +82,7 @@ public class UserController {
 	@PostMapping("/user/joinGroup")
 	public CommonResponse<Object> joinGroup(
 			final HttpServletRequest request,
-			@RequestBody JoinClubDto joinClubDto
+			@RequestBody final JoinGroupDto joinGroupDto
 	) {
 		return CommonResponse.success(HttpStatus.OK);
 	}
