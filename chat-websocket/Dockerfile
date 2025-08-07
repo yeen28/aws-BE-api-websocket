@@ -26,4 +26,9 @@ WORKDIR /app
 # 빌드된 JAR 파일만 최종 이미지에 복사
 COPY --from=build /app/chat-websocket/build/libs/*-SNAPSHOT.jar app.jar
 EXPOSE 9001
-ENTRYPOINT ["java", "-jar", "app.jar"]
+
+# 헬스체크 추가 (예: actuator health endpoint 사용 시)
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s \
+  CMD wget --spider -q http://localhost:9001/actuator/health || exit 1
+# ENTRYPOINT: exec 사용으로 시그널 전달 안정성 확보
+ENTRYPOINT ["sh", "-c", "exec java -jar app.jar"]
