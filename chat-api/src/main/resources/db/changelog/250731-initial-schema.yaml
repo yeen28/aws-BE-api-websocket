@@ -60,8 +60,37 @@ databaseChangeLog:
                   name: description
                   type: VARCHAR(255)
               - column:
-                  name: user_id
+                  name: created_at
+                  type: DATETIME
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: DATETIME
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: club
+            columns:
+              - column:
+                  name: id
                   type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+                  constraints:
+                    unique: true
+                    nullable: false
+              - column:
+                  name: group_id
+                  type: BIGINT
+                  constraints:
+                    unique: true
+                    nullable: false
               - column:
                   name: created_at
                   type: DATETIME
@@ -125,6 +154,21 @@ databaseChangeLog:
               - column:
                   name: token
                   value: "adminToken"
+              - column:
+                  name: created_at
+                  valueComputed: "NOW()"
+              - column:
+                  name: updated_at
+                  valueComputed: "NOW()"
+        - insert:
+            tableName: club
+            columns:
+              - column:
+                  name: name
+                  value: "testClub"
+              - column:
+                  name: group_id
+                  value: 1
               - column:
                   name: created_at
                   valueComputed: "NOW()"

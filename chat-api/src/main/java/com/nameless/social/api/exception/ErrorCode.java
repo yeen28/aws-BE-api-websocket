@@ -15,6 +15,7 @@ public enum ErrorCode {
 
 	// User
 	USER_NOT_FOUND(HttpStatus.NOT_FOUND, "U001", "User not found"),
+	IMAGE_UPDATE_FAILED(HttpStatus.BAD_REQUEST, "U002", "User Image don't update"),
 
 	// Group
 	GROUP_NOT_FOUND(HttpStatus.NOT_FOUND, "GR001", "Group not found"),

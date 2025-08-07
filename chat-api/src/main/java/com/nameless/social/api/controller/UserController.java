@@ -1,14 +1,23 @@
 package com.nameless.social.api.controller;
 
 import com.nameless.social.api.dto.*;
+import com.nameless.social.api.exception.ErrorCode;
+import com.nameless.social.api.exception.ErrorResponse;
+import com.nameless.social.api.handler.UserInfo;
 import com.nameless.social.api.model.user.*;
 import com.nameless.social.api.response.CommonResponse;
 import com.nameless.social.api.service.UserService;
+import com.nameless.social.core.entity.User;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+
+import java.io.IOException;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
@@ -46,6 +55,7 @@ public class UserController {
 	@GetMapping("/user/getUserStatus")
 	public CommonResponse<Object> getUserInfo(
 			final HttpServletRequest request,
+//			@UserInfo final User user,
 			@RequestParam(value = "email", required = false) final String email
 	) {
 		return CommonResponse.success(userService.getUserInfo(email));
@@ -97,10 +107,14 @@ public class UserController {
 		return CommonResponse.success(HttpStatus.OK);
 	}
 
+	@Operation(summary = "사용자 아바타 이미지 업로드/수정")
 	@PostMapping("/user/setAvatar")
 	public CommonResponse<Object> setAvatar(
 			final HttpServletRequest request,
-			@RequestParam(value = "email", required = false) String email
+			final MultipartHttpServletRequest multipartHttpServletRequest,
+			@RequestParam(value = "email", required = false) final String email
+//			User user,
+//			@RequestParam(value = "isDefault") boolean isDefault
 	) {
 		return CommonResponse.success(HttpStatus.OK);
 	}

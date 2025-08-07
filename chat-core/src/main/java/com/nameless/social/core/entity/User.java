@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.beans.ConstructorProperties;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,6 +33,7 @@ public class User extends BaseTimeEntity {
 	@OneToMany(mappedBy = "user")
 	private List<UserGroup> userGroups = new ArrayList<>();
 
+	@ConstructorProperties({"token", "name", "email"})
 	public User(String token, String name, String email) {
 		this.token = token;
 		this.name = name;
