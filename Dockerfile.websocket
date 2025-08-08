@@ -1,0 +1,41 @@
+# 1. 종속성 캐싱 및 준비
+FROM gradle:8.4-jdk17-alpine AS deps
+WORKDIR /app
+
+# Gradle 기본 설정 복사
+COPY build.gradle settings.gradle gradlew ./
+COPY gradle/ ./gradle/
+
+# 모듈별 build.gradle 복사
+COPY chat-core/build.gradle ./chat-core/
+COPY chat-api/build.gradle ./chat-api/
+COPY chat-websocket/build.gradle ./chat-websocket/
+
+# 종속성만 다운로드 (캐시 목적)
+RUN ./gradlew :chat-websocket:dependencies --no-daemon
+
+# 2. 전체 소스 복사 및 빌드
+FROM gradle:8.4-jdk17-alpine AS build
+WORKDIR /app
+
+# deps 스테이지 복사
+COPY --from=deps /app ./
+
+# 전체 소스 복사 (멀티모듈 정상 동작 위해 반드시 필요)
+COPY . .
+
+# chat-websocket 모듈 빌드 (테스트 제외)
+RUN ./gradlew :chat-websocket:build -x test --no-daemon
+
+# 3. 최종 실행 이미지
+FROM eclipse-temurin:17-jdk-alpine
+WORKDIR /app
+
+COPY --from=build /app/chat-websocket/build/libs/*-SNAPSHOT.jar app.jar
+EXPOSE 9001
+
+# 헬스체크 (예시용 endpoint, 상황에 따라 수정 가능)
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s \
+  CMD wget --spider -q http://localhost:9001/actuator/health || exit 1
+
+ENTRYPOINT ["sh", "-c", "exec java -jar app.jar"]
