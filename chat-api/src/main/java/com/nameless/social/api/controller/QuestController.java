@@ -40,7 +40,7 @@ public class QuestController {
 		List<CurQuestTotalModel> curQuestTotalModelApis = List.of(CurQuestTotalModel.builder()
 				.quest("questTest")
 				.isSuccess(true)
-				.group("j처럼 살기")
+				.group("건강")
 				.build());
 		QuestModel questModelApi = QuestModel.builder()
 				.id("email@test.com")
@@ -66,7 +66,7 @@ public class QuestController {
 		List<CurQuestTotalModel> curQuestTotalModelApis = List.of(CurQuestTotalModel.builder()
 				.quest("questTest")
 				.isSuccess(true)
-				.group("j처럼 살기")
+				.group("건강")
 				.build());
 		QuestModel questModelApi = QuestModel.builder()
 				.id("email@test.com")
@@ -93,7 +93,7 @@ public class QuestController {
 		List<CurQuestTotalModel> curQuestTotalModelApis = List.of(CurQuestTotalModel.builder()
 				.quest("questTest")
 				.isSuccess(true)
-				.group("j처럼 살기")
+				.group("건강")
 				.build());
 		QuestModel questModelApi = QuestModel.builder()
 				.id("email@test.com")

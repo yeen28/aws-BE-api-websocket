@@ -118,6 +118,21 @@ public class UserController {
 //			User user,
 //			@RequestParam(value = "isDefault") boolean isDefault
 	) {
+//		try {
+		// TODO default image check
+//		if (multipartHttpServletRequest != null) {
+//			MultipartFile file = multipartHttpServletRequest.getFileMap().values().iterator().next();
+//				if (!file.getOriginalFilename())) { // 지원하지 않는 이미지 확장자인지 체크
+//					throw new IOException("Not supported image extension");
+//				}
+//				userRegistService.updateUserProfileImage(user.getUserId(), file);
+//			} else {
+//				userRegistService.deleteUserProfileImage(user.getUserId());
+//		}
+//		} catch (IOException e) {
+//			return CommonResponse.error(ErrorResponse.of(ErrorCode.IMAGE_UPDATE_FAILED));
+//		}
+//		return CommonResponse.success("Updated image");
 		return CommonResponse.success(HttpStatus.OK);
 	}
 

@@ -18,7 +18,7 @@ public class QuestService {
 		List<CurQuestTotalModel> curQuestTotalModelApis = List.of(CurQuestTotalModel.builder()
 				.quest("questTest")
 				.isSuccess(true)
-				.group("j처럼 살기")
+				.group("건강")
 				.build());
 		return QuestModel.builder()
 				.id(email)

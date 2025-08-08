@@ -1,5 +1,8 @@
 package com.nameless.social.api.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nameless.social.api.exception.CustomException;
 import com.nameless.social.api.exception.ErrorCode;
 import com.nameless.social.api.model.GroupInfoModel;
@@ -26,6 +29,7 @@ import java.util.List;
 public class GroupService {
 	private final UserRepository userRepository;
 	private final GroupRepository groupRepository;
+	private final static ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
 	public GroupModel getGroupByUserEmail(final String email) {
 		List<String> groupNames = new ArrayList<>();
@@ -52,12 +56,12 @@ public class GroupService {
 	public GroupInfoModel getGroupInfo(String groupName) {
 		Group group = groupRepository.findByName(groupName)
 				.orElseThrow(() -> new EntityNotFoundException("Group Not Found"));
-		return GroupInfoModel.of(group);
+		return GroupInfoModel.of(group, parseTags(group.getTag()));
 	}
 
 	public List<GroupInfoModel> getGroupList() {
 		List<GroupInfoModel> groupList = groupRepository.findAll().stream()
-				.map(GroupInfoModel::of)
+				.map(group -> GroupInfoModel.of(group, parseTags(group.getTag())))
 				.toList();
 
 		if (groupList.isEmpty()) {
@@ -66,5 +70,13 @@ public class GroupService {
 		}
 
 		return groupList;
+	}
+
+	private List<String> parseTags(String stringTags) {
+		try {
+			return OBJECT_MAPPER.readValue(stringTags, new TypeReference<List<String>>() {});
+		} catch (JsonProcessingException e) {
+			throw new CustomException(ErrorCode.JSON_PROCESSING_EXCEPTION);
+		}
 	}
 }
