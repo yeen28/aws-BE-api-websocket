@@ -121,6 +121,7 @@ public class UserController {
 		return CommonResponse.success(HttpStatus.OK);
 	}
 
+	@Operation(summary = "그룹에 사용자가 참여한 경우 알리는 용도")
 	@PostMapping("/group/joinUser")
 	public CommonResponse<Object> joinUser(
 			final HttpServletRequest request,

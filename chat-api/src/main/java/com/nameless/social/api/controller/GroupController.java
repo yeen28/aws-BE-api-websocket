@@ -16,8 +16,6 @@ import org.springframework.web.bind.annotation.*;
 public class GroupController {
 	private final GroupService groupService;
 
-	// TODO RESTful API로 수정
-	// TODO 가능하면 TDD...
 	@Operation(summary = "사용자가 가입한 그룹 조회")
 	@GetMapping("/user/getUserJoin")
 	public CommonResponse<GroupModel> getGroupListByUserEmail(

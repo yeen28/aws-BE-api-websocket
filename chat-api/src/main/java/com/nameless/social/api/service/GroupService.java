@@ -31,7 +31,8 @@ public class GroupService {
 		List<String> groupNames = new ArrayList<>();
 		List<String> clubNames = new ArrayList<>();
 
-		User user = userRepository.findByEmail(email).orElseThrow(EntityNotFoundException::new);
+		User user = userRepository.findByEmail(email)
+				.orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
 		List<UserGroup> userGroups = user.getUserGroups();
 		for (UserGroup userGroup : userGroups) {
