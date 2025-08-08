@@ -4,11 +4,13 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserGroup extends BaseTimeEntity {
 	@EmbeddedId // 복합키(Composite key)를 위한 JPA 방식
@@ -26,7 +28,9 @@ public class UserGroup extends BaseTimeEntity {
 	private LocalDateTime joinedAt;
 
 	public UserGroup(User user, Group group) {
+		this.id = new UserGroupId(user.getId(), group.getId());
 		this.user = user;
 		this.group = group;
+		this.joinedAt = LocalDateTime.now();
 	}
 }

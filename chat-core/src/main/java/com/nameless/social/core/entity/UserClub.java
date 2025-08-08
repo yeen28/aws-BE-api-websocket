@@ -1,9 +1,14 @@
 package com.nameless.social.core.entity;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Setter
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class UserClub extends BaseTimeEntity {
 	@EmbeddedId
@@ -27,7 +32,9 @@ public class UserClub extends BaseTimeEntity {
 	private String notificationSettings; // 알림 설정 (e.g., on, off)
 
 	public UserClub(User user, Club club) {
+		this.id = new UserClubId(user.getId(), club.getId());
 		this.user = user;
 		this.club = club;
+		this.role = "member";
 	}
 }
