@@ -15,7 +15,7 @@ import java.util.List;
 public class Group extends BaseTimeEntity { // Category
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	private long id;
 
 	@Column(nullable = false)
 	private String name;

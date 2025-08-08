@@ -16,7 +16,7 @@ import java.util.List;
 public class User extends BaseTimeEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	private long id;
 
 	@Column(unique = true, nullable = false)
 	private String token; // AWS Cognito User-sub
