@@ -19,6 +19,8 @@ public class Club extends BaseTimeEntity {
 	@Column(nullable = false)
 	private String name;
 
+	private String description;
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "group_id")
 	private Group group;

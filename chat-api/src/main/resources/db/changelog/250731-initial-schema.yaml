@@ -60,6 +60,12 @@ databaseChangeLog:
                   name: description
                   type: VARCHAR(255)
               - column:
+                  name: icon
+                  type: VARCHAR(255)
+              - column:
+                  name: tag
+                  type: VARCHAR(255)
+              - column:
                   name: created_at
                   type: DATETIME
                   constraints:
@@ -83,13 +89,20 @@ databaseChangeLog:
                   name: name
                   type: VARCHAR(255)
                   constraints:
-                    unique: true
                     nullable: false
+              - column:
+                  name: description
+                  type: VARCHAR(255)
+              - column:
+                  name: tag
+                  type: VARCHAR(255)
+              - column:
+                  name: icon
+                  type: VARCHAR(255)
               - column:
                   name: group_id
                   type: BIGINT
                   constraints:
-                    unique: true
                     nullable: false
               - column:
                   name: created_at
@@ -101,77 +114,3 @@ databaseChangeLog:
                   type: DATETIME
                   constraints:
                     nullable: false
-  - changeSet:
-      id: 2
-      author: yeeun
-      context: chat
-      changes:
-        - insert:
-            tableName: "group"
-            columns:
-              - column:
-                  name: name
-                  value: "j처럼 살기"
-              - column:
-                  name: created_at
-                  valueComputed: "NOW()"
-              - column:
-                  name: updated_at
-                  valueComputed: "NOW()"
-        - insert:
-            tableName: "group"
-            columns:
-              - column:
-                  name: name
-                  value: "0원 챌린지"
-              - column:
-                  name: created_at
-                  valueComputed: "NOW()"
-              - column:
-                  name: updated_at
-                  valueComputed: "NOW()"
-        - insert:
-            tableName: "group"
-            columns:
-              - column:
-                  name: name
-                  value: "작심삼일"
-              - column:
-                  name: created_at
-                  valueComputed: "NOW()"
-              - column:
-                  name: updated_at
-                  valueComputed: "NOW()"
-        - insert:
-            tableName: users
-            columns:
-              - column:
-                  name: email
-                  value: "admin@nameless.com"
-              - column:
-                  name: name
-                  value: "admin"
-              - column:
-                  name: token
-                  value: "adminToken"
-              - column:
-                  name: created_at
-                  valueComputed: "NOW()"
-              - column:
-                  name: updated_at
-                  valueComputed: "NOW()"
-        - insert:
-            tableName: club
-            columns:
-              - column:
-                  name: name
-                  value: "testClub"
-              - column:
-                  name: group_id
-                  value: 1
-              - column:
-                  name: created_at
-                  valueComputed: "NOW()"
-              - column:
-                  name: updated_at
-                  valueComputed: "NOW()"

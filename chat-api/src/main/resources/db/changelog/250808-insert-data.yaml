@@ -1,0 +1,726 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: yeeun
+      context: chat
+      changes:
+        - insert:
+            tableName: "group"
+            columns:
+              - column:
+                  name: id
+                  value: 1
+              - column:
+                  name: name
+                  value: "건강"
+              - column:
+                  name: icon
+                  value: "🏃‍♀️"
+              - column:
+                  name: tag
+                  value: "[\"절약\", \"건강\", \"생활습관\", \"무료활동\"]"
+              - column:
+                  name: created_at
+                  valueComputed: "NOW()"
+              - column:
+                  name: updated_at
+                  valueComputed: "NOW()"
+        - insert:
+            tableName: club
+            columns:
+              - column:
+                  name: name
+                  value: "동네탐험대"
+              - column:
+                  name: icon
+                  value: "🚶‍♀️"
+              - column:
+                  name: description
+                  value: "오늘도 우리 동네 숨은 보물을 찾아 떠나는 20분 모험!"
+              - column:
+                  name: group_id
+                  value: 1
+              - column:
+                  name: created_at
+                  valueComputed: "NOW()"
+              - column:
+                  name: updated_at
+                  valueComputed: "NOW()"
+        - insert:
+            tableName: club
+            columns:
+              - column:
+                  name: name
+                  value: "베개와의 약속"
+              - column:
+                  name: icon
+                  value: "⏰"
+              - column:
+                  name: description
+                  value: "시계보다 정확한 내 몸의 리듬을 만드는 수면 마스터"
+              - column:
+                  name: group_id
+                  value: 1
+              - column:
+                  name: created_at
+                  valueComputed: "NOW()"
+              - column:
+                  name: updated_at
+                  valueComputed: "NOW()"
+        - insert:
+            tableName: club
+            columns:
+              - column:
+                  name: name
+                  value: "물방울 충전소"
+              - column:
+                  name: icon
+                  value: "🌊"
+              - column:
+                  name: description
+                  value: "몸속 배터리를 깨끗한 물로 매일 풀충전하는 전문가"
+              - column:
+                  name: group_id
+                  value: 1
+              - column:
+                  name: created_at
+                  valueComputed: "NOW()"
+              - column:
+                  name: updated_at
+                  valueComputed: "NOW()"
+        - insert:
+            tableName: club
+            columns:
+              - column:
+                  name: name
+                  value: "뼈마디 깨우기"
+              - column:
+                  name: icon
+                  value: "🦴"
+              - column:
+                  name: description
+                  value: "굳어진 근육에 마법을 걸어 부드럽게 만드는 요정"
+              - column:
+                  name: group_id
+                  value: 1
+              - column:
+                  name: created_at
+                  valueComputed: "NOW()"
+              - column:
+                  name: updated_at
+                  valueComputed: "NOW()"
+        - insert:
+            tableName: club
+            columns:
+              - column:
+                  name: name
+                  value: "비타민 사냥꾼"
+              - column:
+                  name: icon
+                  value: "🍎"
+              - column:
+                  name: description
+                  value: "자연이 숨겨둔 영양보물을 매일 찾아 먹는 헌터"
+              - column:
+                  name: group_id
+                  value: 1
+              - column:
+                  name: created_at
+                  valueComputed: "NOW()"
+              - column:
+                  name: updated_at
+                  valueComputed: "NOW()"
+        - insert:
+            tableName: club
+            columns:
+              - column:
+                  name: name
+                  value: "내면 충전기"
+              - column:
+                  name: icon
+                  value: "🕯️"
+              - column:
+                  name: description
+                  value: "마음의 배터리를 조용히 충전하는 평온 발전소"
+              - column:
+                  name: group_id
+                  value: 1
+              - column:
+                  name: created_at
+                  valueComputed: "NOW()"
+              - column:
+                  name: updated_at
+                  valueComputed: "NOW()"
+        - insert:
+            tableName: club
+            columns:
+              - column:
+                  name: name
+                  value: "치아 청소부"
+              - column:
+                  name: icon
+                  value: "🧵"
+              - column:
+                  name: description
+                  value: "양치 후 1분간 잇몸 사이를 깨끗하게 관리하는 구강 관리사"
+              - column:
+                  name: group_id
+                  value: 1
+              - column:
+                  name: created_at
+                  valueComputed: "NOW()"
+              - column:
+                  name: updated_at
+                  valueComputed: "NOW()"
+        - insert:
+            tableName: club
+            columns:
+              - column:
+                  name: name
+                  value: "영양 충전소"
+              - column:
+                  name: icon
+                  value: "💊"
+              - column:
+                  name: description
+                  value: "매일 약물로 몸을 보호하는 24시간 보안 서비스"
+              - column:
+                  name: group_id
+                  value: 1
+              - column:
+                  name: created_at
+                  valueComputed: "NOW()"
+              - column:
+                  name: updated_at
+                  valueComputed: "NOW()"
+        - insert:
+            tableName: club
+            columns:
+              - column:
+                  name: name
+                  value: "건강 레이더"
+              - column:
+                  name: icon
+                  value: "📈"
+              - column:
+                  name: description
+                  value: "내 몸의 변화를 기록으로 추적하는 조기경보 시스템"
+              - column:
+                  name: group_id
+                  value: 1
+              - column:
+                  name: created_at
+                  valueComputed: "NOW()"
+              - column:
+                  name: updated_at
+                  valueComputed: "NOW()"
+        - insert:
+            tableName: club
+            columns:
+              - column:
+                  name: name
+                  value: "전자기기 금지구역"
+              - column:
+                  name: icon
+                  value: "📱"
+              - column:
+                  name: description
+                  value: "전자기기 없이 온전히 나만의 시간을 즐기는 아날로그 타임"
+              - column:
+                  name: group_id
+                  value: 1
+              - column:
+                  name: created_at
+                  valueComputed: "NOW()"
+              - column:
+                  name: updated_at
+                  valueComputed: "NOW()"
+
+        - insert:
+            tableName: "group"
+            columns:
+              - column:
+                  name: id
+                  value: 2
+              - column:
+                  name: name
+                  value: "금융"
+              - column:
+                  name: icon
+                  value: "💰"
+              - column:
+                  name: description
+                  value: "돈 관리의 달인이 되는 스마트한 습관들"
+              - column:
+                  name: tag
+                  value: "[\"절약\", \"투자\", \"예산관리\", \"자동화\"]"
+              - column:
+                  name: created_at
+                  valueComputed: "NOW()"
+              - column:
+                  name: updated_at
+                  valueComputed: "NOW()"
+        - insert:
+            tableName: club
+            columns:
+              - column:
+                  name: name
+                  value: "월급 도둑"
+              - column:
+                  name: icon
+                  value: "🏦"
+              - column:
+                  name: description
+                  value: "급날마다 몰래 저축통으로 돈을 훔쳐가는 자동 시스템"
+              - column:
+                  name: group_id
+                  value: 2
+              - column:
+                  name: created_at
+                  valueComputed: "NOW()"
+              - column:
+                  name: updated_at
+                  valueComputed: "NOW()"
+        - insert:
+            tableName: club
+            columns:
+              - column:
+                  name: name
+                  value: "가계부 탐정"
+              - column:
+                  name: icon
+                  value: "🔍"
+              - column:
+                  name: description
+                  value: "하루 5분, 돈의 행방을 추적하는 지출 수사관"
+              - column:
+                  name: group_id
+                  value: 2
+              - column:
+                  name: created_at
+                  valueComputed: "NOW()"
+              - column:
+                  name: updated_at
+                  valueComputed: "NOW()"
+        - insert:
+            tableName: "club"
+            columns:
+              - column:
+                  name: name
+                  value: "일요일 회계사"
+              - column:
+                  name: icon
+                  value: "📊"
+              - column:
+                  name: description
+                  value: "매주 일요일 21시, 가계 재정을 점검하는 예산 전문가"
+              - column:
+                  name: group_id
+                  value: 2
+              - column:
+                  name: created_at
+                  valueComputed: "NOW()"
+              - column:
+                  name: updated_at
+                  valueComputed: "NOW()"
+        - insert:
+            tableName: club
+            columns:
+              - column:
+                  name: name
+                  value: "24시간 냉정기"
+              - column:
+                  name: icon
+                  value: "❄️"
+              - column:
+                  name: description
+                  value: "충동구매 욕구를 하루 동안 얼려서 현명한 선택을 돕는 쿨링 시스템"
+              - column:
+                  name: group_id
+                  value: 2
+              - column:
+                  name: created_at
+                  valueComputed: "NOW()"
+              - column:
+                  name: updated_at
+                  valueComputed: "NOW()"
+        - insert:
+            tableName: club
+            columns:
+              - column:
+                  name: name
+                  value: "봉투 마법사"
+              - column:
+                  name: icon
+                  value: "✉️"
+              - column:
+                  name: description
+                  value: "현금 봉투로 지출 한도를 마법처럼 관리하는 예산 마술사"
+              - column:
+                  name: group_id
+                  value: 2
+              - column:
+                  name: created_at
+                  valueComputed: "NOW()"
+              - column:
+                  name: updated_at
+                  valueComputed: "NOW()"
+        - insert:
+            tableName: club
+            columns:
+              - column:
+                  name: name
+                  value: "빚 퇴치단"
+              - column:
+                  name: icon
+                  value: "⚔️"
+              - column:
+                  name: description
+                  value: "고금리부터 차근차근 갚아서 부채를 물리치는 용감한 전사"
+              - column:
+                  name: group_id
+                  value: 2
+              - column:
+                  name: created_at
+                  valueComputed: "NOW()"
+              - column:
+                  name: updated_at
+                  valueComputed: "NOW()"
+        - insert:
+            tableName: club
+            columns:
+              - column:
+                  name: name
+                  value: "미래 저금통"
+              - column:
+                  name: icon
+                  value: "🎯"
+              - column:
+                  name: description
+                  value: "매월 정해진 날, 미래를 위해 꾸준히 투자하는 시간 여행자"
+              - column:
+                  name: group_id
+                  value: 2
+              - column:
+                  name: created_at
+                  valueComputed: "NOW()"
+              - column:
+                  name: updated_at
+                  valueComputed: "NOW()"
+        - insert:
+            tableName: club
+            columns:
+              - column:
+                  name: name
+                  value: "든든한 방패막이"
+              - column:
+                  name: icon
+                  value: "🛡️"
+              - column:
+                  name: description
+                  value: "3-6개월 생활비로 위기상황을 막아내는 최후의 보루"
+              - column:
+                  name: group_id
+                  value: 2
+              - column:
+                  name: created_at
+                  valueComputed: "NOW()"
+              - column:
+                  name: updated_at
+                  valueComputed: "NOW()"
+        - insert:
+            tableName: club
+            columns:
+              - column:
+                  name: name
+                  value: "결제 로봇"
+              - column:
+                  name: icon
+                  value: "🤖"
+              - column:
+                  name: description
+                  value: "반복되는 납부를 자동화해서 깜빡함 없이 처리하는 AI 비서"
+              - column:
+                  name: group_id
+                  value: 2
+              - column:
+                  name: created_at
+                  valueComputed: "NOW()"
+              - column:
+                  name: updated_at
+                  valueComputed: "NOW()"
+        - insert:
+            tableName: club
+            columns:
+              - column:
+                  name: name
+                  value: "돈 새는 곳 막기단"
+              - column:
+                  name: icon
+                  value: "🔧"
+              - column:
+                  name: description
+                  value: "월말 15분으로 불필요한 구독과 수수료 누수를 찾아 막는 수리공"
+              - column:
+                  name: group_id
+                  value: 2
+              - column:
+                  name: created_at
+                  valueComputed: "NOW()"
+              - column:
+                  name: updated_at
+                  valueComputed: "NOW()"
+
+        - insert:
+            tableName: "group"
+            columns:
+              - column:
+                  name: id
+                  value: 3
+              - column:
+                  name: name
+                  value: "스킨케어"
+              - column:
+                  name: icon
+                  value: "✨"
+              - column:
+                  name: description
+                  value: "안팎으로 빛나는 피부를 만드는 뷰티 루틴"
+              - column:
+                  name: tag
+                  value: "[\"뷰티\", \"안티에이징\", \"셀프케어\", \"건강한피부\"]"
+              - column:
+                  name: created_at
+                  valueComputed: "NOW()"
+              - column:
+                  name: updated_at
+                  valueComputed: "NOW()"
+        - insert:
+            tableName: club
+            columns:
+              - column:
+                  name: name
+                  value: "햇빛 방패단"
+              - column:
+                  name: icon
+                  value: "☀️"
+              - column:
+                  name: description
+                  value: "아침 세안 후 선크림으로 자외선을 차단하는 피부 보안관"
+              - column:
+                  name: group_id
+                  value: 3
+              - column:
+                  name: created_at
+                  valueComputed: "NOW()"
+              - column:
+                  name: updated_at
+                  valueComputed: "NOW()"
+        - insert:
+            tableName: club
+            columns:
+              - column:
+                  name: name
+                  value: "얼굴 세탁소"
+              - column:
+                  name: icon
+                  value: "🧼"
+              - column:
+                  name: description
+                  value: "퇴근 후 60초간 하루 쌓인 먼지를 깔끔하게 세탁하는 클렌징 전문가"
+              - column:
+                  name: group_id
+                  value: 3
+              - column:
+                  name: created_at
+                  valueComputed: "NOW()"
+              - column:
+                  name: updated_at
+                  valueComputed: "NOW()"
+        - insert:
+            tableName: club
+            columns:
+              - column:
+                  name: name
+                  value: "수분 충전기"
+              - column:
+                  name: icon
+                  value: "💧"
+              - column:
+                  name: description
+                  value: "샤워 후 촉촉한 보습으로 피부 장벽을 튼튼하게 만드는 수분 공급소"
+              - column:
+                  name: group_id
+                  value: 3
+              - column:
+                  name: created_at
+                  valueComputed: "NOW()"
+              - column:
+                  name: updated_at
+                  valueComputed: "NOW()"
+        - insert:
+            tableName: club
+            columns:
+              - column:
+                  name: name
+                  value: "밤의 재생공장"
+              - column:
+                  name: icon
+                  value: "🌙"
+              - column:
+                  name: description
+                  value: "저녁에 레티노이드로 잠든 사이 피부를 새롭게 만드는 야간 근무자"
+              - column:
+                  name: group_id
+                  value: 3
+              - column:
+                  name: created_at
+                  valueComputed: "NOW()"
+              - column:
+                  name: updated_at
+                  valueComputed: "NOW()"
+        - insert:
+            tableName: club
+            columns:
+              - column:
+                  name: name
+                  value: "아침 비타민 폭탄"
+              - column:
+                  name: icon
+                  value: "🍊"
+              - column:
+                  name: description
+                  value: "비타민 C 세럼으로 하루를 환하게 시작하는 안티에이징 전사"
+              - column:
+                  name: group_id
+                  value: 3
+              - column:
+                  name: created_at
+                  valueComputed: "NOW()"
+              - column:
+                  name: updated_at
+                  valueComputed: "NOW()"
+        - insert:
+            tableName: club
+            columns:
+              - column:
+                  name: name
+                  value: "피부 리셋 버튼"
+              - column:
+                  name: icon
+                  value: "🔄"
+              - column:
+                  name: description
+                  value: "주 1-3회 각질 케어로 피부를 새로고침하는 리뉴얼 전문가"
+              - column:
+                  name: group_id
+                  value: 3
+              - column:
+                  name: created_at
+                  valueComputed: "NOW()"
+              - column:
+                  name: updated_at
+                  valueComputed: "NOW()"
+        - insert:
+            tableName: club
+            columns:
+              - column:
+                  name: name
+                  value: "트러블 119"
+              - column:
+                  name: icon
+                  value: "🚨"
+              - column:
+                  name: description
+                  value: "운동 후 즉시 미온수로 트러블을 예방하는 응급처치팀"
+              - column:
+                  name: group_id
+                  value: 3
+              - column:
+                  name: created_at
+                  valueComputed: "NOW()"
+              - column:
+                  name: updated_at
+                  valueComputed: "NOW()"
+        - insert:
+            tableName: club
+            columns:
+              - column:
+                  name: name
+                  value: "수염 정원사"
+              - column:
+                  name: icon
+                  value: "🪒"
+              - column:
+                  name: description
+                  value: "샤워 후 면도와 보습으로 수염을 가꾸는 그루밍 마스터"
+              - column:
+                  name: group_id
+                  value: 3
+              - column:
+                  name: created_at
+                  valueComputed: "NOW()"
+              - column:
+                  name: updated_at
+                  valueComputed: "NOW()"
+        - insert:
+            tableName: club
+            columns:
+              - column:
+                  name: name
+                  value: "뷰티 슬립 모드"
+              - column:
+                  name: icon
+                  value: "😴"
+              - column:
+                  name: description
+                  value: "밤 11시 전자기기 OFF로 피부 재생을 돕는 수면 매니저"
+              - column:
+                  name: group_id
+                  value: 3
+              - column:
+                  name: created_at
+                  valueComputed: "NOW()"
+              - column:
+                  name: updated_at
+                  valueComputed: "NOW()"
+        - insert:
+            tableName: club
+            columns:
+              - column:
+                  name: name
+                  value: "속부터 빛나기"
+              - column:
+                  name: icon
+                  value: "💎"
+              - column:
+                  name: description
+                  value: "식사 후 물 1컵으로 내부부터 촉촉하게 만드는 이너뷰티 케어"
+              - column:
+                  name: group_id
+                  value: 3
+              - column:
+                  name: created_at
+                  valueComputed: "NOW()"
+              - column:
+                  name: updated_at
+                  valueComputed: "NOW()"
+
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: email
+                  value: "admin@nameless.com"
+              - column:
+                  name: name
+                  value: "admin"
+              - column:
+                  name: token
+                  value: "adminToken"
+              - column:
+                  name: created_at
+                  valueComputed: "NOW()"
+              - column:
+                  name: updated_at
+                  valueComputed: "NOW()"
