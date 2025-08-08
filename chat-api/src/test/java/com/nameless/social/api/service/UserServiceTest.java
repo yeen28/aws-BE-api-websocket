@@ -6,8 +6,6 @@ import com.nameless.social.api.model.user.UserModel;
 import com.nameless.social.api.repository.UserClubRepository;
 import com.nameless.social.api.repository.UserGroupRepository;
 import com.nameless.social.api.repository.user.UserRepository;
-import com.nameless.social.core.entity.Club;
-import com.nameless.social.core.entity.Group;
 import com.nameless.social.core.entity.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -22,8 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
@@ -37,14 +34,10 @@ class UserServiceTest {
 	private UserGroupRepository userGroupRepository;
 
 	private User user;
-	private Group group;
-	private Club club;
 
 	@BeforeEach
 	void setUp() {
 		user = new User("test token", "test", "test@test.com");
-		group = new Group("test Group");
-		club = new Club("test Club");
 	}
 
 	@Test
@@ -83,13 +76,30 @@ class UserServiceTest {
 		// given
 		final String email = "test@test.com";
 		given(userRepository.findByEmail(email)).willReturn(Optional.of(user));
+		given(userClubRepository.existsByIdUserId(user.getId())).willReturn(true);
+		given(userGroupRepository.existsByIdUserId(user.getId())).willReturn(true);
 
 		// when
 		userService.deleteUser(email);
 
 		// then
-		verify(userClubRepository, times(1)).deleteByUserId(anyLong());
-		verify(userGroupRepository, times(1)).deleteByUserId(anyLong());
+		verify(userClubRepository, times(1)).deleteByIdUserId(anyLong());
+		verify(userGroupRepository, times(1)).deleteByIdUserId(anyLong());
 		verify(userRepository, times(1)).deleteById(anyLong());
 	}
+
+//	@Test
+//	@DisplayName("user 탈퇴 실패 - user가 가입한 club이 존재하지 않음")
+//	void deleteUserFailTest_notFoundAnyClub() {
+//		// given
+//		final String email = "test@test.com";
+//		given(userRepository.findByEmail(email)).willReturn(Optional.of(user));
+//		given(userClubRepository.existsByIdUserId(user.getId())).willReturn(false);
+//
+//		// when
+//		userService.deleteUser(email);
+//
+//		// then
+//		verify(userClubRepository, never()).deleteByIdUserId(anyLong());
+//	}
 }

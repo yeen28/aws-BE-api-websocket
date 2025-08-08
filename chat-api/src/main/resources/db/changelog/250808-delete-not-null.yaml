@@ -1,0 +1,10 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: yeeun
+      context: chat
+      changes:
+        - dropNotNullConstraint:
+            tableName: users
+            columnName: token
+            columnDataType: VARCHAR(255)  # 기존 타입과 정확히 일치시켜야 함

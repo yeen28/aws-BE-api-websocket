@@ -12,14 +12,15 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class GlobalExceptionHandler {
 	@ExceptionHandler(CustomException.class)
 	protected ResponseEntity<CommonResponse<ErrorResponse>> handleCustomException(CustomException e) {
-		log.warn(">>> Custom Exception: {}", e.getMessage());
+		log.warn("Custom Exception >>> {}", e.getErrorCode());
+		log.warn("Custom Exception >>> {}", e.getMessage());
 		final ErrorResponse errorResponse = ErrorResponse.of(e.getErrorCode());
 		return new ResponseEntity<>(CommonResponse.error(errorResponse), e.getErrorCode().getStatus());
 	}
 
 	@ExceptionHandler(Exception.class)
 	protected ResponseEntity<CommonResponse<ErrorResponse>> handleException(Exception e) {
-		log.warn(">>> Exception: {}", e.getMessage());
+		log.warn("Exception >>> {}", e.getMessage());
 		final ErrorResponse errorResponse = ErrorResponse.of(ErrorCode.INTERNAL_SERVER_ERROR);
 		return new ResponseEntity<>(CommonResponse.error(errorResponse), HttpStatus.INTERNAL_SERVER_ERROR);
 	}

@@ -142,7 +142,7 @@ public class UserService {
 				.map(Club::getId)
 				.collect(Collectors.toList());
 
-		List<UserClub> userClubs = userClubRepository.findUserClubsInClubIds(user.getId(), clubIds);
+		List<UserClub> userClubs = userClubRepository.findByUserClubsInClubIds(user.getId(), clubIds);
 
 		userClubRepository.deleteAll(userClubs);  // 먼저 Club 탈퇴
 
@@ -158,5 +158,26 @@ public class UserService {
 				.orElseThrow(() -> new CustomException(ErrorCode.CLUB_NOT_FOUND));
 
 		userClubRepository.deleteByUserIdAndClubId(user.getId(), club.getId());
+	}
+
+	@Transactional
+	public void deleteUser(final String email) {
+		User user = userRepository.findByEmail(email)
+				.orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+
+		final long deleteUserId = user.getId();
+
+		// existsByIdUserId : DB에서 존재 여부 확인 시 LIMIT 1 쿼리로 처리 → 훨씬 빠름
+		if (!userClubRepository.existsByIdUserId(deleteUserId)) {
+			throw new CustomException(ErrorCode.USER_CLUB_NOT_FOUND);
+		}
+
+		if (!userGroupRepository.existsByIdUserId(deleteUserId)) {
+			throw new CustomException(ErrorCode.USER_GROUP_NOT_FOUND);
+		}
+
+		userClubRepository.deleteByIdUserId(deleteUserId);
+		userGroupRepository.deleteByIdUserId(deleteUserId);
+		userRepository.deleteById(deleteUserId);
 	}
 }
