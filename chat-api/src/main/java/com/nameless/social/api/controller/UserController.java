@@ -152,4 +152,11 @@ public class UserController {
 	) {
 		return CommonResponse.success(HttpStatus.OK);
 	}
+
+	@Operation(summary = "사용자 서비스 탈퇴")
+	@DeleteMapping("/user")
+	public CommonResponse<Object> deleteUser(@RequestParam("email") final String email) {
+		userService.deleteUser(email);
+		return CommonResponse.success(HttpStatus.OK);
+	}
 }

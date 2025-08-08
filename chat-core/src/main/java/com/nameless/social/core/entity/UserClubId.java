@@ -15,8 +15,8 @@ import java.util.Objects;
 @NoArgsConstructor
 @Embeddable
 public class UserClubId implements Serializable {
-	private Long userId;
-	private Long clubId;
+	private long userId;
+	private long clubId;
 
 	// equals()와 hashCode() 반드시 override 필요!
 	// @EmbeddedId, @IdClass를 사용하는 경우 키 비교를 정확히 하려면 필수입니다.

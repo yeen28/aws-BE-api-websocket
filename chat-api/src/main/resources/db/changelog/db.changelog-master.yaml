@@ -3,3 +3,5 @@ databaseChangeLog:
       file: db/changelog/250731-initial-schema.yaml
   - include:
       file: db/changelog/250808-insert-data.yaml
+  - include:
+      file: db/changelog/250808-delete-not-null.yaml

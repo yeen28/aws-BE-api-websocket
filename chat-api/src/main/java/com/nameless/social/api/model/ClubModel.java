@@ -12,7 +12,7 @@ import java.util.List;
 @Setter
 @Builder
 public class ClubModel {
-	private Long id;
+	private long id;
 	private String name;
 	private List<UserModel> participants;
 	private LocalDateTime createdAt;

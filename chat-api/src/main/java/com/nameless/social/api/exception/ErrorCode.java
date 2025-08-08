@@ -23,6 +23,12 @@ public enum ErrorCode {
 
 	// Club
 	CLUB_NOT_FOUND(HttpStatus.NOT_FOUND, "CR001", "Club not found"),
+
+	// UserGroup
+	USER_GROUP_NOT_FOUND(HttpStatus.NOT_FOUND, "UG001", "User is not a member of any group"),
+
+	// UserClub
+	USER_CLUB_NOT_FOUND(HttpStatus.NOT_FOUND, "UC001", "User is not a member of any club"),
 	;
 
 	private final HttpStatus status;

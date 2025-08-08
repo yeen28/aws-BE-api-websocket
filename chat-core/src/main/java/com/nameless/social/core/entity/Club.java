@@ -14,7 +14,7 @@ import java.util.List;
 public class Club extends BaseTimeEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	private long id;
 
 	@Column(nullable = false)
 	private String name;
