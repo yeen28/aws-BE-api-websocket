@@ -15,12 +15,11 @@ import java.time.LocalDateTime;
 @Builder
 public class ChatPayloadDto {
 	private Long clubId;
-	private String messageId;
 	private String senderEmail;
 	private String senderUsername; // Display purposes
 	private String message;
 	private LocalDateTime timestamp;
-	private MessageType type; // JOIN, CHAT, LEAVE
+	private MessageType type;
 
 	public enum MessageType {
 		JOIN, CHAT, LEAVE

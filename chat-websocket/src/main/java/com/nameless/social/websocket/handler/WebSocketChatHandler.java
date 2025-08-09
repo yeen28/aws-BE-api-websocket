@@ -22,12 +22,13 @@ public class WebSocketChatHandler {
 		messagingTemplate.convertAndSend("/topic/chatroom/" + chatPayloadDto.getClubId(), chatPayloadDto);
 
 		// DynamoDB에 채팅 메시지 저장
+		chatMessageService.createTable(); // TODO DynamoDB 접근을 매번 하지 않도록 수정 필요. 서버 처음 구동시 테이블 생성하는 코드부터 한 번만 호출하도록 하기.
 		if (chatPayloadDto.getType() == ChatPayloadDto.MessageType.CHAT) {
 			chatMessageService.save(chatPayloadDto);
 		}
 
 		// 채팅방 구독자들에게 메시지 전송
-		messagingTemplate.convertAndSend("/topic/chatroom/" + chatMessage.getClubId(), chatMessage);
+		messagingTemplate.convertAndSend("/topic/chatroom/" + chatPayloadDto.getClubId(), chatPayloadDto);
 	}
 
 	@MessageMapping("/chat.addUser")

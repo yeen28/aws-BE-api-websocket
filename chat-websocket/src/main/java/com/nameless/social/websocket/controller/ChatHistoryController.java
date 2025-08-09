@@ -17,7 +17,7 @@ public class ChatHistoryController {
 	private final ChatMessageService chatMessageService;
 
 	@GetMapping("/history/{clubId}")
-	public ResponseEntity<Object> getChatHistory(@PathVariable("clubId") Long clubId) {
-		return ResponseEntity.ok(chatMessageService.findById(clubId));
+	public ResponseEntity<Object> getChatHistory(@PathVariable("clubId") final long clubId) {
+		return ResponseEntity.ok(chatMessageService.findByClubId(clubId));
 	}
 }

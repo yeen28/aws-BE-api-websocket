@@ -1,30 +1,28 @@
 package com.nameless.social.core.model;
 
 import com.nameless.social.core.dto.ChatPayloadDto;
+import com.nameless.social.core.entity.ChatMessage;
 import lombok.Builder;
 import lombok.Getter;
-import software.amazon.awssdk.services.dynamodb.model.AttributeValue;
-
-import java.util.Map;
 
 @Getter
 @Builder
 public class MessageModel {
-	private Long clubId;
+	private long clubId;
 	private String messageId;
-	private String sender;
+	private String senderEmail;
 	private String message;
 	private String timestamp;
 	private ChatPayloadDto.MessageType type;
 
-	public static MessageModel of(Map<String, AttributeValue> item) {
+	public static MessageModel of(final ChatMessage chatMessage) {
 		return MessageModel.builder()
-				.clubId(Long.parseLong(item.get("clubId").n()))
-				.messageId(item.get("messageId").s())
-				.sender(item.get("sender").s())
-				.message(item.get("message").s())
-				.timestamp(item.get("timestamp").s())
-				.type(ChatPayloadDto.MessageType.valueOf(item.get("type").s()))
+				.clubId(chatMessage.getId())
+				.messageId(chatMessage.getMessageId())
+				.senderEmail(String.valueOf(chatMessage.getSenderEmail()))
+				.message(chatMessage.getMessage())
+				.timestamp(chatMessage.getCreatedAt().toString())
+				.type(ChatPayloadDto.MessageType.CHAT)
 				.build();
 	}
 }
