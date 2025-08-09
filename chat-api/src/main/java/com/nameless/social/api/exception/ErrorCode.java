@@ -24,6 +24,9 @@ public enum ErrorCode {
 	// Club
 	CLUB_NOT_FOUND(HttpStatus.NOT_FOUND, "CR001", "Club not found"),
 
+	// Quest
+	QUEST_NOT_FOUND(HttpStatus.NOT_FOUND, "QU001", "Quest not found"),
+
 	// UserGroup
 	USER_GROUP_NOT_FOUND(HttpStatus.NOT_FOUND, "UG001", "User is not a member of any group"),
 

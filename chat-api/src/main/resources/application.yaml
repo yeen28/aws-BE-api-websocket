@@ -20,7 +20,7 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.MySQLDialect
     hibernate:
-      ddl-auto: update
+      ddl-auto: update # TODO 실제 운영에서 수정 필요
 
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yaml

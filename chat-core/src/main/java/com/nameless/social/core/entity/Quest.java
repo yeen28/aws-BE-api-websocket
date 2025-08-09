@@ -5,13 +5,10 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Club extends BaseTimeEntity {
+public class Quest extends BaseTimeEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
@@ -21,20 +18,23 @@ public class Club extends BaseTimeEntity {
 
 	private String description;
 
-	private String icon;
+	private String tag;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "group_id")
-	private Group group;
+	@Column(nullable = false)
+	private boolean isSuccess;
 
-	@OneToMany(mappedBy = "club")
-	private List<UserClub> participants = new ArrayList<>();
+	@ManyToOne
+	@JoinColumn(name = "club_id")
+	private Club club;
 
-	@OneToMany(mappedBy = "club")
-	private List<Quest> quest = new ArrayList<>();
+	@ManyToOne
+	@JoinColumn(name = "user_id")
+	private User user;
 
-	public Club(long id, String name) {
+	// test code에서만 사용
+	public Quest(final long id, final String name, final boolean isSuccess) {
 		this.id = id;
 		this.name = name;
+		this.isSuccess = isSuccess;
 	}
 }

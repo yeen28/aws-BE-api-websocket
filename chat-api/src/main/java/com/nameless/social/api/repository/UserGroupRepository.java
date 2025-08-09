@@ -4,11 +4,15 @@ import com.nameless.social.core.entity.UserGroup;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface UserGroupRepository extends JpaRepository<UserGroup, Long> {
+	List<UserGroup> findAllByIdUserId(final long userId);
+
 	// 존재 여부 확인 (LIMIT 1)
-	boolean existsByIdUserId(long userId);
+	boolean existsByIdUserId(final long userId);
 
 	// 해당 userId로 모든 UserGroup 삭제
-	void deleteByIdUserId(long userId);
+	void deleteByIdUserId(final long userId);
 }

@@ -18,15 +18,12 @@ import java.util.List;
 public class QuestController {
 	private final QuestService questService;
 
-	// TODO RESTful API로 수정
-	// TODO 가능하면 TDD...
 	@Operation(summary = "현재 진행하고 있는 퀘스트들 목록")
 	@GetMapping("/user/getUserQuestCur")
 	public CommonResponse<QuestModel> getQuest(
 			final HttpServletRequest request,
-			@RequestParam(value = "id", required = false) final String email
+			@RequestParam(value = "email", required = false) final String email
 	) {
-		// TODO Auth
 		return CommonResponse.success(questService.getQuest(email));
 	}
 
@@ -35,7 +32,7 @@ public class QuestController {
 	@GetMapping("/user/getUserQuestContinuous")
 	public CommonResponse<QuestModel> getUserQuestContinuous(
 			final HttpServletRequest request,
-			@RequestParam(value = "id", required = false) String email
+			@RequestParam(value = "email", required = false) String email
 	) {
 		List<CurQuestTotalModel> curQuestTotalModelApis = List.of(CurQuestTotalModel.builder()
 				.quest("questTest")
@@ -52,7 +49,7 @@ public class QuestController {
 	@GetMapping("/user/getUserQuestWeekly")
 	public CommonResponse<Object> getUserQuestWeekly(
 			final HttpServletRequest request,
-			@RequestParam(value = "id", required = false) String email
+			@RequestParam(value = "email", required = false) String email
 	) {
 
 //		id: string(email)
@@ -79,7 +76,7 @@ public class QuestController {
 	@GetMapping("/user/getUserQuestPrev")
 	public CommonResponse<QuestModel> getUserQuestPrev(
 			final HttpServletRequest request,
-			@RequestParam(value = "id", required = false) String email
+			@RequestParam(value = "email", required = false) String email
 	) {
 
 //		id: string(email)
