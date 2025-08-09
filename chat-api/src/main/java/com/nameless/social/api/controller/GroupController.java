@@ -1,6 +1,5 @@
 package com.nameless.social.api.controller;
 
-import com.nameless.social.api.model.GroupInfoModel;
 import com.nameless.social.api.model.GroupModel;
 import com.nameless.social.api.response.CommonResponse;
 import com.nameless.social.api.service.GroupService;
@@ -9,8 +8,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Slf4j
 @RestController
@@ -41,7 +38,7 @@ public class GroupController {
 
 	@Operation(summary = "전체 그룹 목록")
 	@GetMapping("/group/getGroupList")
-	public CommonResponse<List<GroupInfoModel>> getGroupList(final HttpServletRequest request) {
+	public CommonResponse<Object> getGroupList(final HttpServletRequest request) {
 		return CommonResponse.success(groupService.getGroupList());
 	}
 }
