@@ -7,11 +7,13 @@ import com.nameless.social.api.exception.CustomException;
 import com.nameless.social.api.exception.ErrorCode;
 import com.nameless.social.api.model.GroupInfoModel;
 import com.nameless.social.api.model.GroupModel;
-import com.nameless.social.api.model.QuestModel;
-import com.nameless.social.api.repository.ClubRepository;
 import com.nameless.social.api.repository.GroupRepository;
 import com.nameless.social.api.repository.user.UserRepository;
-import com.nameless.social.core.entity.*;
+import com.nameless.social.core.entity.UserClub;
+import com.nameless.social.core.entity.Group;
+import com.nameless.social.core.entity.User;
+import com.nameless.social.core.entity.UserGroup;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -25,7 +27,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class GroupService {
-	private final ClubRepository clubRepository;
 	private final UserRepository userRepository;
 	private final GroupRepository groupRepository;
 	private final static ObjectMapper OBJECT_MAPPER = new ObjectMapper();
@@ -54,47 +55,18 @@ public class GroupService {
 
 	public GroupInfoModel getGroupInfo(String groupName) {
 		Group group = groupRepository.findByName(groupName)
-				.orElseThrow(() -> new CustomException(ErrorCode.GROUP_NOT_FOUND));
-		List<Club> clubs = clubRepository.findAllByGroupId(group.getId());
-
-		// TODO mock data -> DB에서 club에 가입한 사용자 수를 조회해야 함.
-		long memberCount = 1L;
-
-		// TODO Quest를 DB에서 조회한 뒤 전달해야 함.
-		List<QuestModel> questModels = null;
-
-		return GroupInfoModel.of(
-				group,
-				clubs,
-				memberCount,
-				questModels,
-				parseTags(group.getTag())
-		);
+				.orElseThrow(() -> new EntityNotFoundException("Group Not Found"));
+		return GroupInfoModel.of(group, parseTags(group.getTag()));
 	}
 
 	public List<GroupInfoModel> getGroupList() {
 		List<GroupInfoModel> groupList = groupRepository.findAll().stream()
-				.map(group -> {
-					List<Club> club = clubRepository.findAllByGroupId(group.getId());
-
-					// TODO mock data -> DB에서 club에 가입한 사용자 수를 조회해야 함.
-					long memberCount = 1L;
-
-					// TODO Quest를 DB에서 조회한 뒤 전달해야 함.
-					List<QuestModel> questModels = null;
-
-					return GroupInfoModel.of(
-							group,
-							club,
-							memberCount,
-							questModels,
-							parseTags(group.getTag())
-					);
-				})
+				.map(group -> GroupInfoModel.of(group, parseTags(group.getTag())))
 				.toList();
 
 		if (groupList.isEmpty()) {
-			throw new CustomException(ErrorCode.GROUP_NOT_FOUND);
+			log.warn("GroupList is null.");
+			throw new CustomException(ErrorCode.ENTITY_NOT_FOUND);
 		}
 
 		return groupList;
