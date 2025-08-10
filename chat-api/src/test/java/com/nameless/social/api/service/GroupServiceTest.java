@@ -5,6 +5,7 @@ import com.nameless.social.api.model.GroupModel;
 import com.nameless.social.api.repository.ClubRepository;
 import com.nameless.social.api.repository.GroupRepository;
 import com.nameless.social.api.repository.QuestRepository;
+import com.nameless.social.api.repository.UserGroupRepository;
 import com.nameless.social.api.repository.user.UserRepository;
 import com.nameless.social.core.entity.Club;
 import com.nameless.social.core.entity.Group;
@@ -37,6 +38,8 @@ class GroupServiceTest {
 	private ClubRepository clubRepository;
 	@Mock
 	private QuestRepository questRepository;
+	@Mock
+	private UserGroupRepository userGroupRepository;
 
 	private User user;
 	private Group group;
@@ -71,6 +74,7 @@ class GroupServiceTest {
 		given(groupRepository.findByName(group.getName())).willReturn(Optional.of(group));
 		given(clubRepository.findAllByGroupId(group.getId())).willReturn(List.of(club));
 		given(questRepository.findAll()).willReturn(List.of(quest));
+		given(userGroupRepository.countByIdGroupId(group.getId())).willReturn(1L);
 
 		// when
 		GroupInfoModel result = groupService.getGroupInfo(group.getName());
@@ -88,6 +92,7 @@ class GroupServiceTest {
 		given(groupRepository.findAll()).willReturn(List.of(group));
 		given(clubRepository.findAllByGroupId(group.getId())).willReturn(List.of(club));
 		given(questRepository.findAll()).willReturn(List.of(quest));
+		given(userGroupRepository.countByIdGroupId(group.getId())).willReturn(1L);
 
 		// when
 		List<GroupInfoModel> result = groupService.getGroupList();
