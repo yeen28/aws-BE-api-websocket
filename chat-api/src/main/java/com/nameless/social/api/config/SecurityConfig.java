@@ -21,7 +21,7 @@ public class SecurityConfig {
 				.cors(cors -> cors.configurationSource(corsConfigurationSource()))
 				.csrf(AbstractHttpConfigurer::disable)
 				.authorizeHttpRequests(authorize -> authorize
-								.requestMatchers("/api/**").authenticated()
+//								.requestMatchers("/api/**").authenticated()
 
 								// FIXME: 만약 .anyRequest().authenticated()로 수정된다면 `/actuator/health`가 인증 없이 허용되도록 주석을 제거해야 합니다.
 //								.requestMatchers("/actuator/health").permitAll() // 인증 없이 허용
