@@ -1,22 +1,24 @@
 package com.nameless.social.api.service;
 
+import com.nameless.social.api.dto.QuestSuccessDto;
+import com.nameless.social.api.dto.UserQuestDto;
 import com.nameless.social.api.exception.CustomException;
 import com.nameless.social.api.exception.ErrorCode;
-import com.nameless.social.api.model.CurQuestTotalModel;
-import com.nameless.social.api.model.QuestModel;
-import com.nameless.social.api.model.QuestWeeklyModel;
-import com.nameless.social.api.model.UserQuestWeeklyModel;
+import com.nameless.social.api.model.*;
 import com.nameless.social.api.repository.UserGroupRepository;
 import com.nameless.social.api.repository.user.UserRepository;
 import com.nameless.social.core.entity.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -48,12 +50,7 @@ public class QuestService {
 			}
 		}
 
-		// 4. 퀘스트 없으면 예외
-		if (allQuests.isEmpty()) {
-			throw new CustomException(ErrorCode.QUEST_NOT_FOUND);
-		}
-
-		// 5. Quest -> CurQuestTotalModel 변환
+		// 4. Quest -> CurQuestTotalModel 변환
 		List<CurQuestTotalModel> curQuestTotalModels = allQuests.stream()
 				.map(quest -> CurQuestTotalModel.of(quest, questMap.get(quest.getId())))
 				.toList();
@@ -91,10 +88,6 @@ public class QuestService {
 					questMap.put(quest.getId(), Map.of(group, club));
 				}
 			}
-		}
-
-		if (allQuests.isEmpty()) {
-			throw new CustomException(ErrorCode.QUEST_NOT_FOUND);
 		}
 
 		// 3. 요일별 집계 구조 생성
@@ -141,5 +134,75 @@ public class QuestService {
 				.id(user.getEmail())
 				.weeklyQuestList(weeklyList)
 				.build();
+	}
+
+	/**
+	 * 현재 일자에 할당받은 퀘스트를 제외한 나머지 퀘스트 수행 여부를 집산한 것입니다.
+	 * User, Quest 매핑 테이블을 통해 나오는 isSuccess 그리고 Quest 테이블로 들어가 나오는 group은 group 그대로, compleTime은 createTime을 넣어주시면 될 것같습니다
+	 * @param email
+	 * @return
+	 */
+	public UserQuestPrevModel getUserQuestPrev(final String email) {
+		// 1. 유저 조회
+		User user = userRepository.findByEmail(email)
+				.orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+
+		// 2. 오늘 날짜
+		LocalDate today = LocalDate.now();
+
+		// 3. 유저가 속한 그룹 조회
+		List<Group> groups = userGroupRepository.findAllByIdUserId(user.getId())
+				.stream()
+				.map(UserGroup::getGroup)
+				.toList();
+
+		// 4. 그룹에 속한 모든 클럽의 퀘스트 수집 (오늘 날짜 제외)
+		List<QuestPrevTotalModel> prevQuests = new ArrayList<>();
+		for (Group group : groups) {
+			for (Club club : group.getClubs()) {
+				for (Quest quest : club.getQuest()) {
+					LocalDate createDate = quest.getCreatedAt().toLocalDate();
+
+					// 오늘 날짜 제외
+					if (!createDate.isEqual(today)) {
+						prevQuests.add(
+								QuestPrevTotalModel.builder()
+										.questId(quest.getId())
+										.quest(quest.getName())
+										.group(group.getName())
+										.isSuccess(quest.isSuccess())
+										.completeTime(createDate) // createTime → LocalDate
+										.build()
+						);
+					}
+				}
+			}
+		}
+
+		// 5. 결과 반환
+		return UserQuestPrevModel.builder()
+				.id(user.getEmail())
+				.prevQuestTotalList(prevQuests)
+				.build();
+	}
+
+	/**
+	 * 사용자가 퀘스트 수행 여부를 최신화합니다.
+	 * 사용자가 퀘스트 수행 완료를 누르면 해당 퀘스트 목록이 전송됩니다.
+	 * @param dto
+	 */
+	public void setUserQuestRecord(final UserQuestDto dto) {
+		User user = userRepository.findByEmail(dto.user())
+				.orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+
+		log.info("아직 구현 중...");
+	}
+
+	/**
+	 * 그룹에서 퀘스트를 성공한 인원이 나온 경우 알려주는 api입니다
+	 * @param dto
+	 */
+	public void questSuccess(final QuestSuccessDto dto) {
+		log.info("아직 구현 중...");
 	}
 }

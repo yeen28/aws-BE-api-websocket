@@ -1,7 +1,10 @@
 package com.nameless.social.api.controller;
 
+import com.nameless.social.api.dto.QuestSuccessDto;
+import com.nameless.social.api.dto.UserQuestDto;
 import com.nameless.social.api.model.CurQuestTotalModel;
 import com.nameless.social.api.model.QuestModel;
+import com.nameless.social.api.model.UserQuestPrevModel;
 import com.nameless.social.api.model.UserQuestWeeklyModel;
 import com.nameless.social.api.response.CommonResponse;
 import com.nameless.social.api.service.QuestService;
@@ -56,43 +59,31 @@ public class QuestController {
 		return CommonResponse.success(questService.getUserQuestWeekly(email));
 	}
 
-	// TODO token에 사용자에 대한 정보가 있으니깐 email을 전달하지 않아도 됨.
+	@Operation(summary = "오늘 이전에 할당받은 퀘스트 수행 여부 집산")
 	@GetMapping("/user/getUserQuestPrev")
-	public CommonResponse<QuestModel> getUserQuestPrev(
+	public CommonResponse<UserQuestPrevModel> getUserQuestPrev(
 			final HttpServletRequest request,
-			@RequestParam(value = "email", required = false) String email
+			@RequestParam(value = "email", required = false) final String email
 	) {
-
-//		id: string(email)
-//		prevQuestTotalList: […{
-//			quest: string,
-//			group: string,
-//			isSuccess: boolean,
-//			completeTime: Date(YYYY-MM-DD)
-//		}]
-
-		List<CurQuestTotalModel> curQuestTotalModelApis = List.of(CurQuestTotalModel.builder()
-				.quest("questTest")
-				.isSuccess(true)
-				.group("건강")
-				.build());
-		QuestModel questModelApi = QuestModel.builder()
-				.id("email@test.com")
-				.curQuestTotalList(curQuestTotalModelApis)
-				.build();
-		return CommonResponse.success(questModelApi);
+		return CommonResponse.success(questService.getUserQuestPrev(email));
 	}
 
+	@Operation(summary = "퀘스트 수행 완료 버튼 클릭 시 퀘스트 수행 여부 최신화")
 	@PostMapping("/user/setUserQuestRecord")
 	public CommonResponse<Object> setUserQuestRecord(
 			final HttpServletRequest request,
-			@RequestBody String[] userQuest
+			@RequestBody UserQuestDto userQuestDto
 	) {
-//		header: token
-//		body : {
-//			userQuest: string[]
-//		}
-		// TODO service에서 setUserQuestRecord 수행
+		questService.setUserQuestRecord(userQuestDto);
+		return CommonResponse.success(HttpStatus.OK);
+	}
+
+	@Operation(summary = "")
+	@PostMapping("/group/questSuccess")
+	public CommonResponse<Object> questSuccess(
+			@RequestBody QuestSuccessDto questSuccessDto
+	) {
+		questService.questSuccess(questSuccessDto);
 		return CommonResponse.success(HttpStatus.OK);
 	}
 }

@@ -1,21 +1,15 @@
 package com.nameless.social.api.controller;
 
 import com.nameless.social.api.dto.*;
-import com.nameless.social.api.exception.ErrorCode;
-import com.nameless.social.api.exception.ErrorResponse;
-import com.nameless.social.api.handler.UserInfo;
 import com.nameless.social.api.model.user.*;
 import com.nameless.social.api.response.CommonResponse;
 import com.nameless.social.api.service.UserService;
-import com.nameless.social.core.entity.User;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
@@ -99,10 +93,9 @@ public class UserController {
 	}
 
 	@Operation(summary = "사용자 이름 수정")
-	@PostMapping("/user/{id}")
+	@PostMapping("/user/setUsername")
 	public CommonResponse<Object> setUsername(
 			final HttpServletRequest request,
-			@PathVariable("id") final long id,
 			@RequestBody final UsernameDto usernameDto
 	) {
 		userService.updateUsername(usernameDto);
@@ -133,23 +126,6 @@ public class UserController {
 //			return CommonResponse.error(ErrorResponse.of(ErrorCode.IMAGE_UPDATE_FAILED));
 //		}
 //		return CommonResponse.success("Updated image");
-		return CommonResponse.success(HttpStatus.OK);
-	}
-
-	@Operation(summary = "그룹에 사용자가 참여한 경우 알리는 용도")
-	@PostMapping("/group/joinUser")
-	public CommonResponse<Object> joinUser(
-			final HttpServletRequest request,
-			@RequestBody JoinUserDto joinUserDto
-	) {
-		return CommonResponse.success(HttpStatus.OK);
-	}
-
-	@PostMapping("/group/departUser")
-	public CommonResponse<Object> departUser(
-			final HttpServletRequest request,
-			@RequestBody DepartUserDto departUserDto
-	) {
 		return CommonResponse.success(HttpStatus.OK);
 	}
 
