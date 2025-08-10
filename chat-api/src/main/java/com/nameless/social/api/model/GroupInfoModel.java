@@ -15,11 +15,11 @@ import java.util.List;
 @Builder
 public class GroupInfoModel {
 	private long groupId;
-	private String name;
+	private String name; // group name
 	private String description;
 	private String icon;
-	private long memberNum;
-	private List<String> questList;
+	private long memberNum; // 그룹에 가입한 user 수
+	private List<String> questList; // ???
 	private List<Long> questSuccessNum;
 	private List<String> tag;
 	private List<ClubGroupInfoModel> clubList;
@@ -39,7 +39,7 @@ public class GroupInfoModel {
 						.description(club.getDescription())
 						.icon(club.getIcon())
 						.memberNum(clubMemberNum)
-						.tag(List.of("mock tag")) // TODO club DB에는 club tag 컬럼이 없음.
+						.tag(List.of("")) // TODO club DB에는 club tag 컬럼이 없음.
 						.build()
 				)
 				.toList();

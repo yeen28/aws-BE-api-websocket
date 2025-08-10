@@ -5,7 +5,7 @@ services:
     image: mysql
     container_name: mysql-container
     environment:
-      MYSQL_ROOT_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: your_password
       MYSQL_DATABASE: nameless
     ports:
       - "3306:3306"
@@ -14,8 +14,8 @@ services:
   chat-api:
     container_name: chat-api
     build:
-      context: ./chat-api
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: Dockerfile.api
     ports:
       - "9000:9000"
     depends_on:
@@ -23,12 +23,12 @@ services:
     environment:
       - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-container:3306/nameless
       - SPRING_DATASOURCE_USERNAME=root
-      - SPRING_DATASOURCE_PASSWORD=password
+      - SPRING_DATASOURCE_PASSWORD=your_password
 
   chat-websocket:
     container_name: chat-websocket
     build:
-      context: ./chat-websocket
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: Dockerfile.websocket
     ports:
       - "9001:9001"
