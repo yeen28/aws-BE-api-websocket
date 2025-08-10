@@ -26,12 +26,13 @@ spring:
     change-log: classpath:db/changelog/db.changelog-master.yaml
     enabled: true
 
-#  security:
-#    oauth2:
-#      resourceserver:
-#        jwt:
-#          issuer-uri: https://cognito-idp.{region}.amazonaws.com/{userPoolId} # Replace with your Cognito User Pool Issuer URI
-#          jwk-set-uri: https://cognito-idp.{region}.amazonaws.com/{userPoolId}/.well-known/jwks.json # Replace with your Cognito User Pool JWKS URI
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${ISSUER_URI:input_uri}
+          jwk-set-uri: ${JWK_SET_URI:input_uri}
+        client-id: ${JWK_SET_URI:input_client_id}
 
 jpa.auditing:
   enabled: true

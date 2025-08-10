@@ -13,6 +13,7 @@ public enum ErrorCode {
 	INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "C004", "Server Error"),
 	INVALID_TYPE_VALUE(HttpStatus.BAD_REQUEST, "C005", "Invalid Type Value"),
 	JSON_PROCESSING_EXCEPTION(HttpStatus.BAD_REQUEST, "C006", "Json processing exception"),
+	INVALID_TOKEN(HttpStatus.BAD_REQUEST, "C007", "invalid token"),
 
 	// User
 	USER_NOT_FOUND(HttpStatus.NOT_FOUND, "U001", "User not found"),
