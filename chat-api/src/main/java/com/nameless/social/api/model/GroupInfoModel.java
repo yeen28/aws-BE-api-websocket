@@ -39,7 +39,6 @@ public class GroupInfoModel {
 						.description(club.getDescription())
 						.icon(club.getIcon())
 						.memberNum(clubMemberNum)
-						.tag(List.of("")) // TODO club DB에는 club tag 컬럼이 없음.
 						.build()
 				)
 				.toList();
