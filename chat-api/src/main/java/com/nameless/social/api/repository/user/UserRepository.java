@@ -11,10 +11,10 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-	Optional<User> findByToken(String token);
-	Optional<User> findByEmail(String email);
+	Optional<User> findByToken(final String token);
+	Optional<User> findByEmail(final String email);
 
 	@Modifying(clearAutomatically = true)
 	@Query("UPDATE User u SET name = :username WHERE u.id = :userId")
-	int updateUsername(@Param("userId") Long userId, @Param("username") String username);
+	int updateUsername(@Param("userId") final long userId, @Param("username") final String username);
 }

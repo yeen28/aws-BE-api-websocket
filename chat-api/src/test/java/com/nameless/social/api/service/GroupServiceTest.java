@@ -4,9 +4,11 @@ import com.nameless.social.api.model.GroupInfoModel;
 import com.nameless.social.api.model.GroupModel;
 import com.nameless.social.api.repository.ClubRepository;
 import com.nameless.social.api.repository.GroupRepository;
+import com.nameless.social.api.repository.QuestRepository;
 import com.nameless.social.api.repository.user.UserRepository;
 import com.nameless.social.core.entity.Club;
 import com.nameless.social.core.entity.Group;
+import com.nameless.social.core.entity.Quest;
 import com.nameless.social.core.entity.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -33,16 +35,20 @@ class GroupServiceTest {
 	private GroupRepository groupRepository;
 	@Mock
 	private ClubRepository clubRepository;
+	@Mock
+	private QuestRepository questRepository;
 
 	private User user;
 	private Group group;
 	private Club club;
+	private Quest quest;
 
 	@BeforeEach
 	void setUp() {
 		user = new User("test token", "test", "test@test.com");
 		group = new Group(1L, "test Group", "[\"절약\", \"투자\", \"예산관리\", \"자동화\"]");
 		club = new Club(1L, "ClubA");
+		quest = new Quest(1L, "test Quest", false);
 	}
 
 	@Test
@@ -64,6 +70,7 @@ class GroupServiceTest {
 		// given
 		given(groupRepository.findByName(group.getName())).willReturn(Optional.of(group));
 		given(clubRepository.findAllByGroupId(group.getId())).willReturn(List.of(club));
+		given(questRepository.findAll()).willReturn(List.of(quest));
 
 		// when
 		GroupInfoModel result = groupService.getGroupInfo(group.getName());
@@ -80,6 +87,7 @@ class GroupServiceTest {
 		// given
 		given(groupRepository.findAll()).willReturn(List.of(group));
 		given(clubRepository.findAllByGroupId(group.getId())).willReturn(List.of(club));
+		given(questRepository.findAll()).willReturn(List.of(quest));
 
 		// when
 		List<GroupInfoModel> result = groupService.getGroupList();

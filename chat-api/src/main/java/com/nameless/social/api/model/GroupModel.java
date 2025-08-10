@@ -13,7 +13,7 @@ import java.util.List;
 @Setter
 @Builder
 public class GroupModel {
-	private String id; // email 값 // TODO 이미 FE에서 가지고 있기 때문에 BE에서 또 전달할 필요가 없음
+	private String id; // email 값
 	private List<JoinListModel> joinList;
 
 	public static GroupModel of(List<UserGroup> userGroups, String email) {
