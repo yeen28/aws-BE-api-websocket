@@ -3,7 +3,6 @@ package com.nameless.social.api.model;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import java.util.List;
 
 @Getter
 @Setter
@@ -14,5 +13,4 @@ public class ClubGroupInfoModel {
 	private String description;
 	private String icon;
 	private long memberNum;
-	private List<String> tag;
 }
