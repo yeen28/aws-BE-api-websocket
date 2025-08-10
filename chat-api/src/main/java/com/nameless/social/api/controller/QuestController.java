@@ -2,6 +2,7 @@ package com.nameless.social.api.controller;
 
 import com.nameless.social.api.model.CurQuestTotalModel;
 import com.nameless.social.api.model.QuestModel;
+import com.nameless.social.api.model.UserQuestWeeklyModel;
 import com.nameless.social.api.response.CommonResponse;
 import com.nameless.social.api.service.QuestService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -46,30 +47,13 @@ public class QuestController {
 		return CommonResponse.success(questModelApi);
 	}
 
+	@Operation(summary = "사용자가 성공한 퀘스트를 요일별로 집산")
 	@GetMapping("/user/getUserQuestWeekly")
-	public CommonResponse<Object> getUserQuestWeekly(
+	public CommonResponse<UserQuestWeeklyModel> getUserQuestWeekly(
 			final HttpServletRequest request,
-			@RequestParam(value = "email", required = false) String email
+			@RequestParam(value = "email", required = false) final String email
 	) {
-
-//		id: string(email)
-//		weeklyQuestList: […{
-//			day: number
-//			questTotalNum: number,
-//			successQuestNum: number,
-//			bestParticipateGroup: string
-//		}]
-
-		List<CurQuestTotalModel> curQuestTotalModelApis = List.of(CurQuestTotalModel.builder()
-				.quest("questTest")
-				.isSuccess(true)
-				.group("건강")
-				.build());
-		QuestModel questModelApi = QuestModel.builder()
-				.id("email@test.com")
-				.curQuestTotalList(curQuestTotalModelApis)
-				.build();
-		return CommonResponse.success(questModelApi);
+		return CommonResponse.success(questService.getUserQuestWeekly(email));
 	}
 
 	// TODO token에 사용자에 대한 정보가 있으니깐 email을 전달하지 않아도 됨.
