@@ -191,10 +191,7 @@ public class QuestService {
 	 * 사용자가 퀘스트 수행 완료를 누르면 해당 퀘스트 목록이 전송됩니다.
 	 * @param dto
 	 */
-	public void setUserQuestRecord(final UserQuestDto dto) {
-		User user = userRepository.findByEmail(dto.user())
-				.orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-
+	public void setUserQuestRecord(final User user, final UserQuestDto dto) {
 		log.info("아직 구현 중...");
 	}
 
@@ -202,7 +199,7 @@ public class QuestService {
 	 * 그룹에서 퀘스트를 성공한 인원이 나온 경우 알려주는 api입니다
 	 * @param dto
 	 */
-	public void questSuccess(final QuestSuccessDto dto) {
+	public void questSuccess(final User user, final QuestSuccessDto dto) {
 		log.info("아직 구현 중...");
 	}
 }

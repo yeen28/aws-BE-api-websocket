@@ -65,24 +65,12 @@ public class UserService {
 	}
 
 	@Transactional
-	public void updateUsername(final UsernameDto dto) {
-		if (StringUtils.isEmpty(dto.getUser())) {
-			throw new CustomException(ErrorCode.INVALID_INPUT_VALUE);
-		}
-
-		User user = userRepository.findByEmail(dto.getUser())
-				.orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+	public void updateUsername(final User user, final UsernameDto dto) {
 		userRepository.updateUsername(user.getId(), dto.getUsername());
 	}
 
 	@Transactional
-	public void joinClub(final JoinClubDto dto) {
-		if (StringUtils.isEmpty(dto.getUser())) {
-			throw new CustomException(ErrorCode.INVALID_INPUT_VALUE);
-		}
-
-		User user = userRepository.findByEmail(dto.getUser())
-				.orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+	public void joinClub(final User user, final JoinClubDto dto) {
 		// TODO group에 존재하는 user인지 유효성 검증하면 더 좋긴 함.
 //		Group group = groupRepository.findByName(dto.getGroup())
 //				.orElseThrow(() -> new CustomException(ErrorCode.GROUP_NOT_FOUND));
@@ -100,13 +88,7 @@ public class UserService {
 	}
 
 	@Transactional
-	public void joinGroup(final JoinGroupDto dto) {
-		if (StringUtils.isEmpty(dto.getUser())) {
-			throw new CustomException(ErrorCode.INVALID_INPUT_VALUE);
-		}
-
-		User user = userRepository.findByEmail(dto.getUser())
-				.orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+	public void joinGroup(final User user, final JoinGroupDto dto) {
 		// TODO group에 존재하는 user인지 유효성 검증하면 더 좋긴 함.
 		Group group = groupRepository.findByName(dto.getGroup())
 				.orElseThrow(() -> new CustomException(ErrorCode.GROUP_NOT_FOUND));
@@ -121,13 +103,11 @@ public class UserService {
 
 	// TODO 좀 더 살펴보기
 	@Transactional
-	public void leaveGroup(final LeaveGroupDto dto) {
-		if (dto.getUser() == null || dto.getGroup() == null) {
+	public void leaveGroup(final User user, final LeaveGroupDto dto) {
+		if (dto.getGroup() == null) {
 			throw new CustomException(ErrorCode.INVALID_INPUT_VALUE);
 		}
 
-		User user = userRepository.findByEmail(dto.getUser())
-				.orElseThrow(EntityNotFoundException::new);
 		Group group = groupRepository.findByName(dto.getGroup())
 				.orElseThrow(EntityNotFoundException::new);
 
@@ -151,9 +131,7 @@ public class UserService {
 	}
 
 	@Transactional
-	public void leaveClub(final LeaveClubDto leaveClubDto) {
-		User user = userRepository.findByEmail(leaveClubDto.getUser())
-				.orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+	public void leaveClub(final User user, final LeaveClubDto leaveClubDto) {
 		Club club = clubRepository.findByName(leaveClubDto.getClub())
 				.orElseThrow(() -> new CustomException(ErrorCode.CLUB_NOT_FOUND));
 
