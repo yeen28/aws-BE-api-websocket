@@ -1,6 +1,6 @@
 # websocket
 
-- Java 17+
+- Java 17
 - SpringBoot 3.3.2
 - Gradle 8.4
 
