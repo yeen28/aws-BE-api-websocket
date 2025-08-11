@@ -16,11 +16,10 @@ public class GroupModel {
 	private String id; // email 값
 	private List<JoinListModel> joinList;
 
-	public static GroupModel of(List<UserGroup> userGroups, String email) {
+	public static GroupModel of(List<UserGroup> userGroups, List<Club> clubs, String email) {
 		List<JoinListModel> joinListModels = new ArrayList<>();
 		for (UserGroup userGroup : userGroups) {
 			List<ClubModel> clubModels = new ArrayList<>();
-			List<Club> clubs = userGroup.getGroup().getClubs();
 			for (Club club : clubs) {
 				clubModels.add(ClubModel.builder()
 						.clubId(club.getId())

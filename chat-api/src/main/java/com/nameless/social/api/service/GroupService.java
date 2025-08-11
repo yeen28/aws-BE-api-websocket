@@ -32,19 +32,16 @@ public class GroupService {
 
 	/**
 	 * 사용자가 가입한 그룹과 모임을 조사하여 목록화하여 돌려주는 api입니다.
-	 * @param email user email
+	 * @param user
 	 * @return 그룹 목록을 List로 만든 뒤 GroupModel로 한 번 더 감싸서 전달.
 	 * 그러므로 List<GroupModel>이 아니라 GroupModel로 전달해야하고 이 안에 group에 대한 List가 하위로 포함되어 있습니다.
 	 */
-	public GroupModel getGroupByUserEmail(final String email) {
-		User user = userRepository.findByEmail(email)
-				.orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-
-		List<String> clubNames = user.getUserClubs().stream()
-				.map(userClub -> userClub.getClub().getName())
+	public GroupModel getGroupByUserEmail(final User user) {
+		List<Club> clubs = user.getUserClubs().stream()
+				.map(UserClub::getClub)
 				.toList();
 
-		return GroupModel.of(user.getUserGroups(), user.getEmail());
+		return GroupModel.of(user.getUserGroups(), clubs, user.getEmail());
 	}
 
 	/**
