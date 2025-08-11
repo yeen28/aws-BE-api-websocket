@@ -61,7 +61,7 @@ class GroupServiceTest {
 		given(userRepository.findByEmail(user.getEmail())).willReturn(Optional.of(user));
 
 		// when
-		GroupModel result = groupService.getGroupByUserEmail(user.getEmail());
+		GroupModel result = groupService.getGroupByUserEmail(user);
 
 		// then
 		assertThat(result).isNotNull();

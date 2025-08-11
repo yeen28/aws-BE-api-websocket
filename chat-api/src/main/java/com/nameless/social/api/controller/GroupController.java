@@ -26,7 +26,7 @@ public class GroupController {
 			@UserInfo final User user,
 			@RequestParam(value = "email", required = false) final String email
 	) {
-		return CommonResponse.success(groupService.getGroupByUserEmail(user.getEmail()));
+		return CommonResponse.success(groupService.getGroupByUserEmail(user));
 	}
 
 	@Operation(summary = "그룹 정보 조회")
