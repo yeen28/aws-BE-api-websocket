@@ -1,7 +1,7 @@
 .
-├── Dockerfile
+├── Dockerfile.api
+├── Dockerfile.websocket
 ├── README.md
-├── a
 ├── build
 │   ├── libs
 │   │   └── social-0.0.1-SNAPSHOT.jar
@@ -11,7 +11,6 @@
 ├── build-and-push-ecr.sh
 ├── build.gradle
 ├── chat-api
-│   ├── Dockerfile
 │   ├── build
 │   │   ├── classes
 │   │   │   └── java
@@ -21,10 +20,11 @@
 │   │   │       │           └── social
 │   │   │       │               └── api
 │   │   │       │                   ├── ChatApiApplication.class
+│   │   │       │                   ├── auth
+│   │   │       │                   │   └── CognitoTokenVerifier.class
 │   │   │       │                   ├── config
 │   │   │       │                   │   └── SecurityConfig.class
 │   │   │       │                   ├── controller
-│   │   │       │                   │   ├── ClubController.class
 │   │   │       │                   │   ├── GroupController.class
 │   │   │       │                   │   ├── IndexController.class
 │   │   │       │                   │   ├── QuestController.class
@@ -32,14 +32,33 @@
 │   │   │       │                   ├── dto
 │   │   │       │                   │   ├── ClubDto.class
 │   │   │       │                   │   ├── DepartUserDto.class
+│   │   │       │                   │   ├── JoinClubDto$JoinClubDtoBuilder.class
+│   │   │       │                   │   ├── JoinClubDto.class
+│   │   │       │                   │   ├── JoinGroupDto$JoinGroupDtoBuilder.class
+│   │   │       │                   │   ├── JoinGroupDto.class
 │   │   │       │                   │   ├── JoinUserDto.class
-│   │   │       │                   │   └── UserDto.class
+│   │   │       │                   │   ├── LeaveClubDto.class
+│   │   │       │                   │   ├── LeaveGroupDto$LeaveGroupDtoBuilder.class
+│   │   │       │                   │   ├── LeaveGroupDto.class
+│   │   │       │                   │   ├── QuestFeedbackDto.class
+│   │   │       │                   │   ├── QuestSuccessDto.class
+│   │   │       │                   │   ├── UserDto.class
+│   │   │       │                   │   ├── UserQuestDto.class
+│   │   │       │                   │   ├── UsernameDto$UsernameDtoBuilder.class
+│   │   │       │                   │   └── UsernameDto.class
 │   │   │       │                   ├── exception
 │   │   │       │                   │   ├── CustomException.class
 │   │   │       │                   │   ├── ErrorCode.class
 │   │   │       │                   │   ├── ErrorResponse.class
 │   │   │       │                   │   └── GlobalExceptionHandler.class
+│   │   │       │                   ├── handler
+│   │   │       │                   │   ├── UserInfo.class
+│   │   │       │                   │   ├── UserInfoArgumentResolver.class
+│   │   │       │                   │   └── WebConfig.class
 │   │   │       │                   ├── model
+│   │   │       │                   │   ├── ClubGroupInfoModel$ClubGroupInfoModelBuilder.class
+│   │   │       │                   │   ├── ClubGroupInfoModel.class
+│   │   │       │                   │   ├── ClubModel$ClubModelBuilder.class
 │   │   │       │                   │   ├── ClubModel.class
 │   │   │       │                   │   ├── CurQuestTotalModel$CurQuestTotalModelBuilder.class
 │   │   │       │                   │   ├── CurQuestTotalModel.class
@@ -47,38 +66,50 @@
 │   │   │       │                   │   ├── GroupInfoModel.class
 │   │   │       │                   │   ├── GroupModel$GroupModelBuilder.class
 │   │   │       │                   │   ├── GroupModel.class
+│   │   │       │                   │   ├── JoinListModel$JoinListModelBuilder.class
+│   │   │       │                   │   ├── JoinListModel.class
 │   │   │       │                   │   ├── QuestModel$QuestModelBuilder.class
 │   │   │       │                   │   ├── QuestModel.class
-│   │   │       │                   │   ├── chat
-│   │   │       │                   │   │   ├── ClubModel$ClubModelBuilder.class
-│   │   │       │                   │   │   └── ClubModel.class
+│   │   │       │                   │   ├── QuestPrevTotalModel$QuestPrevTotalModelBuilder.class
+│   │   │       │                   │   ├── QuestPrevTotalModel.class
+│   │   │       │                   │   ├── QuestWeeklyModel$QuestWeeklyModelBuilder.class
+│   │   │       │                   │   ├── QuestWeeklyModel.class
+│   │   │       │                   │   ├── UserQuestPrevModel$UserQuestPrevModelBuilder.class
+│   │   │       │                   │   ├── UserQuestPrevModel.class
+│   │   │       │                   │   ├── UserQuestWeeklyModel$UserQuestWeeklyModelBuilder.class
+│   │   │       │                   │   ├── UserQuestWeeklyModel.class
 │   │   │       │                   │   └── user
-│   │   │       │                   │       ├── JoinListModelApi$JoinListModelApiBuilder.class
-│   │   │       │                   │       ├── JoinListModelApi.class
 │   │   │       │                   │       ├── UserModel$Status.class
 │   │   │       │                   │       ├── UserModel$UserModelBuilder.class
 │   │   │       │                   │       └── UserModel.class
 │   │   │       │                   ├── repository
-│   │   │       │                   │   ├── chat
-│   │   │       │                   │   │   ├── ClubRepository.class
-│   │   │       │                   │   │   └── ClubUserRepository.class
+│   │   │       │                   │   ├── ClubRepository.class
+│   │   │       │                   │   ├── GroupRepository.class
+│   │   │       │                   │   ├── QuestRepository.class
+│   │   │       │                   │   ├── UserClubRepository.class
+│   │   │       │                   │   ├── UserGroupRepository.class
 │   │   │       │                   │   └── user
 │   │   │       │                   │       └── UserRepository.class
 │   │   │       │                   ├── response
 │   │   │       │                   │   └── CommonResponse.class
-│   │   │       │                   └── service
-│   │   │       │                       ├── ClubService.class
-│   │   │       │                       ├── GroupService.class
-│   │   │       │                       ├── QuestService.class
-│   │   │       │                       └── UserService.class
+│   │   │       │                   ├── service
+│   │   │       │                   │   ├── GroupService.class
+│   │   │       │                   │   ├── QuestService.class
+│   │   │       │                   │   └── UserService.class
+│   │   │       │                   └── utils
+│   │   │       │                       ├── StrUtils$1.class
+│   │   │       │                       └── StrUtils.class
 │   │   │       └── test
 │   │   │           └── com
 │   │   │               └── nameless
 │   │   │                   └── social
 │   │   │                       └── api
-│   │   │                           └── service
-│   │   │                               ├── GroupServiceTest.class
-│   │   │                               └── UserServiceTest.class
+│   │   │                           ├── service
+│   │   │                           │   ├── GroupServiceTest.class
+│   │   │                           │   ├── QuestServiceTest.class
+│   │   │                           │   └── UserServiceTest.class
+│   │   │                           └── utils
+│   │   │                               └── StrUtilsTest.class
 │   │   ├── generated
 │   │   │   └── sources
 │   │   │       ├── annotationProcessor
@@ -97,7 +128,9 @@
 │   │   │       └── test
 │   │   │           ├── classes
 │   │   │           │   ├── com.nameless.social.api.service.GroupServiceTest.html
-│   │   │           │   └── com.nameless.social.api.service.UserServiceTest.html
+│   │   │           │   ├── com.nameless.social.api.service.QuestServiceTest.html
+│   │   │           │   ├── com.nameless.social.api.service.UserServiceTest.html
+│   │   │           │   └── com.nameless.social.api.utils.StrUtilsTest.html
 │   │   │           ├── css
 │   │   │           │   ├── base-style.css
 │   │   │           │   └── style.css
@@ -105,14 +138,19 @@
 │   │   │           ├── js
 │   │   │           │   └── report.js
 │   │   │           └── packages
-│   │   │               └── com.nameless.social.api.service.html
+│   │   │               ├── com.nameless.social.api.service.html
+│   │   │               └── com.nameless.social.api.utils.html
 │   │   ├── resolvedMainClassName
+│   │   ├── resolvedMainTestClassName
 │   │   ├── resources
 │   │   │   └── main
 │   │   │       ├── application.yaml
 │   │   │       ├── db
 │   │   │       │   └── changelog
 │   │   │       │       ├── 250731-initial-schema.yaml
+│   │   │       │       ├── 250808-delete-not-null.yaml
+│   │   │       │       ├── 250808-insert-data.yaml
+│   │   │       │       ├── 250810-create-table-quest.yaml
 │   │   │       │       └── db.changelog-master.yaml
 │   │   │       ├── override.yaml
 │   │   │       ├── static
@@ -121,7 +159,9 @@
 │   │   ├── test-results
 │   │   │   └── test
 │   │   │       ├── TEST-com.nameless.social.api.service.GroupServiceTest.xml
+│   │   │       ├── TEST-com.nameless.social.api.service.QuestServiceTest.xml
 │   │   │       ├── TEST-com.nameless.social.api.service.UserServiceTest.xml
+│   │   │       ├── TEST-com.nameless.social.api.utils.StrUtilsTest.xml
 │   │   │       └── binary
 │   │   │           ├── output.bin
 │   │   │           ├── output.bin.idx
@@ -145,10 +185,11 @@
 │   │   │   │           └── social
 │   │   │   │               └── api
 │   │   │   │                   ├── ChatApiApplication.class
+│   │   │   │                   ├── auth
+│   │   │   │                   │   └── CognitoTokenVerifier.class
 │   │   │   │                   ├── config
 │   │   │   │                   │   └── SecurityConfig.class
 │   │   │   │                   ├── controller
-│   │   │   │                   │   ├── ClubController.class
 │   │   │   │                   │   ├── GroupController.class
 │   │   │   │                   │   ├── IndexController.class
 │   │   │   │                   │   ├── QuestController.class
@@ -156,14 +197,33 @@
 │   │   │   │                   ├── dto
 │   │   │   │                   │   ├── ClubDto.class
 │   │   │   │                   │   ├── DepartUserDto.class
+│   │   │   │                   │   ├── JoinClubDto$JoinClubDtoBuilder.class
+│   │   │   │                   │   ├── JoinClubDto.class
+│   │   │   │                   │   ├── JoinGroupDto$JoinGroupDtoBuilder.class
+│   │   │   │                   │   ├── JoinGroupDto.class
 │   │   │   │                   │   ├── JoinUserDto.class
-│   │   │   │                   │   └── UserDto.class
+│   │   │   │                   │   ├── LeaveClubDto.class
+│   │   │   │                   │   ├── LeaveGroupDto$LeaveGroupDtoBuilder.class
+│   │   │   │                   │   ├── LeaveGroupDto.class
+│   │   │   │                   │   ├── QuestFeedbackDto.class
+│   │   │   │                   │   ├── QuestSuccessDto.class
+│   │   │   │                   │   ├── UserDto.class
+│   │   │   │                   │   ├── UserQuestDto.class
+│   │   │   │                   │   ├── UsernameDto$UsernameDtoBuilder.class
+│   │   │   │                   │   └── UsernameDto.class
 │   │   │   │                   ├── exception
 │   │   │   │                   │   ├── CustomException.class
 │   │   │   │                   │   ├── ErrorCode.class
 │   │   │   │                   │   ├── ErrorResponse.class
 │   │   │   │                   │   └── GlobalExceptionHandler.class
+│   │   │   │                   ├── handler
+│   │   │   │                   │   ├── UserInfo.class
+│   │   │   │                   │   ├── UserInfoArgumentResolver.class
+│   │   │   │                   │   └── WebConfig.class
 │   │   │   │                   ├── model
+│   │   │   │                   │   ├── ClubGroupInfoModel$ClubGroupInfoModelBuilder.class
+│   │   │   │                   │   ├── ClubGroupInfoModel.class
+│   │   │   │                   │   ├── ClubModel$ClubModelBuilder.class
 │   │   │   │                   │   ├── ClubModel.class
 │   │   │   │                   │   ├── CurQuestTotalModel$CurQuestTotalModelBuilder.class
 │   │   │   │                   │   ├── CurQuestTotalModel.class
@@ -171,33 +231,47 @@
 │   │   │   │                   │   ├── GroupInfoModel.class
 │   │   │   │                   │   ├── GroupModel$GroupModelBuilder.class
 │   │   │   │                   │   ├── GroupModel.class
+│   │   │   │                   │   ├── JoinListModel$JoinListModelBuilder.class
+│   │   │   │                   │   ├── JoinListModel.class
 │   │   │   │                   │   ├── QuestModel$QuestModelBuilder.class
 │   │   │   │                   │   ├── QuestModel.class
-│   │   │   │                   │   ├── chat
-│   │   │   │                   │   │   ├── ClubModel$ClubModelBuilder.class
-│   │   │   │                   │   │   └── ClubModel.class
+│   │   │   │                   │   ├── QuestPrevTotalModel$QuestPrevTotalModelBuilder.class
+│   │   │   │                   │   ├── QuestPrevTotalModel.class
+│   │   │   │                   │   ├── QuestWeeklyModel$QuestWeeklyModelBuilder.class
+│   │   │   │                   │   ├── QuestWeeklyModel.class
+│   │   │   │                   │   ├── UserQuestPrevModel$UserQuestPrevModelBuilder.class
+│   │   │   │                   │   ├── UserQuestPrevModel.class
+│   │   │   │                   │   ├── UserQuestWeeklyModel$UserQuestWeeklyModelBuilder.class
+│   │   │   │                   │   ├── UserQuestWeeklyModel.class
 │   │   │   │                   │   └── user
-│   │   │   │                   │       ├── JoinListModelApi$JoinListModelApiBuilder.class
-│   │   │   │                   │       ├── JoinListModelApi.class
 │   │   │   │                   │       ├── UserModel$Status.class
 │   │   │   │                   │       ├── UserModel$UserModelBuilder.class
 │   │   │   │                   │       └── UserModel.class
 │   │   │   │                   ├── repository
 │   │   │   │                   │   ├── ClubRepository.class
-│   │   │   │                   │   ├── ClubUserRepository.class
 │   │   │   │                   │   ├── GroupRepository.class
+│   │   │   │                   │   ├── QuestRepository.class
+│   │   │   │                   │   ├── UserClubRepository.class
+│   │   │   │                   │   ├── UserGroupRepository.class
 │   │   │   │                   │   └── user
 │   │   │   │                   │       └── UserRepository.class
 │   │   │   │                   ├── response
 │   │   │   │                   │   └── CommonResponse.class
-│   │   │   │                   └── service
-│   │   │   │                       ├── ClubService.class
-│   │   │   │                       ├── GroupService.class
-│   │   │   │                       ├── QuestService.class
-│   │   │   │                       └── UserService.class
+│   │   │   │                   ├── service
+│   │   │   │                   │   ├── GroupService.class
+│   │   │   │                   │   ├── QuestService.class
+│   │   │   │                   │   └── UserService.class
+│   │   │   │                   └── utils
+│   │   │   │                       ├── StrUtils$1.class
+│   │   │   │                       └── StrUtils.class
 │   │   │   └── resources
+│   │   │       ├── application.yaml
 │   │   │       ├── db
 │   │   │       │   └── changelog
+│   │   │       │       ├── 250731-initial-schema.yaml
+│   │   │       │       ├── 250808-delete-not-null.yaml
+│   │   │       │       ├── 250808-insert-data.yaml
+│   │   │       │       ├── 250810-create-table-quest.yaml
 │   │   │       │       └── db.changelog-master.yaml
 │   │   │       ├── override.yaml
 │   │   │       └── static
@@ -208,9 +282,12 @@
 │   │           │   └── nameless
 │   │           │       └── social
 │   │           │           └── api
-│   │           │               └── service
-│   │           │                   ├── GroupServiceTest.class
-│   │           │                   └── UserServiceTest.class
+│   │           │               ├── service
+│   │           │               │   ├── GroupServiceTest.class
+│   │           │               │   ├── QuestServiceTest.class
+│   │           │               │   └── UserServiceTest.class
+│   │           │               └── utils
+│   │           │                   └── StrUtilsTest.class
 │   │           └── generated_tests
 │   └── src
 │       ├── main
@@ -221,10 +298,11 @@
 │       │   │           └── social
 │       │   │               └── api
 │       │   │                   ├── ChatApiApplication.java
+│       │   │                   ├── auth
+│       │   │                   │   └── CognitoTokenVerifier.java
 │       │   │                   ├── config
 │       │   │                   │   └── SecurityConfig.java
 │       │   │                   ├── controller
-│       │   │                   │   ├── ClubController.java
 │       │   │                   │   ├── GroupController.java
 │       │   │                   │   ├── IndexController.java
 │       │   │                   │   ├── QuestController.java
@@ -232,43 +310,63 @@
 │       │   │                   ├── dto
 │       │   │                   │   ├── ClubDto.java
 │       │   │                   │   ├── DepartUserDto.java
+│       │   │                   │   ├── JoinClubDto.java
+│       │   │                   │   ├── JoinGroupDto.java
 │       │   │                   │   ├── JoinUserDto.java
-│       │   │                   │   └── UserDto.java
+│       │   │                   │   ├── LeaveClubDto.java
+│       │   │                   │   ├── LeaveGroupDto.java
+│       │   │                   │   ├── QuestFeedbackDto.java
+│       │   │                   │   ├── QuestSuccessDto.java
+│       │   │                   │   ├── UserDto.java
+│       │   │                   │   ├── UserQuestDto.java
+│       │   │                   │   └── UsernameDto.java
 │       │   │                   ├── exception
 │       │   │                   │   ├── CustomException.java
 │       │   │                   │   ├── ErrorCode.java
 │       │   │                   │   ├── ErrorResponse.java
 │       │   │                   │   └── GlobalExceptionHandler.java
+│       │   │                   ├── handler
+│       │   │                   │   ├── UserInfo.java
+│       │   │                   │   ├── UserInfoArgumentResolver.java
+│       │   │                   │   └── WebConfig.java
 │       │   │                   ├── model
+│       │   │                   │   ├── ClubGroupInfoModel.java
 │       │   │                   │   ├── ClubModel.java
 │       │   │                   │   ├── CurQuestTotalModel.java
 │       │   │                   │   ├── GroupInfoModel.java
 │       │   │                   │   ├── GroupModel.java
+│       │   │                   │   ├── JoinListModel.java
 │       │   │                   │   ├── QuestModel.java
-│       │   │                   │   ├── chat
-│       │   │                   │   │   └── ClubModel.java
+│       │   │                   │   ├── QuestPrevTotalModel.java
+│       │   │                   │   ├── QuestWeeklyModel.java
+│       │   │                   │   ├── UserQuestPrevModel.java
+│       │   │                   │   ├── UserQuestWeeklyModel.java
 │       │   │                   │   └── user
-│       │   │                   │       ├── JoinListModelApi.java
 │       │   │                   │       └── UserModel.java
 │       │   │                   ├── repository
+│       │   │                   │   ├── ClubRepository.java
+│       │   │                   │   ├── GroupRepository.java
 │       │   │                   │   ├── QuestRepository.java
-│       │   │                   │   ├── chat
-│       │   │                   │   │   ├── ClubRepository.java
-│       │   │                   │   │   └── ClubUserRepository.java
+│       │   │                   │   ├── UserClubRepository.java
+│       │   │                   │   ├── UserGroupRepository.java
 │       │   │                   │   └── user
 │       │   │                   │       └── UserRepository.java
 │       │   │                   ├── response
 │       │   │                   │   └── CommonResponse.java
-│       │   │                   └── service
-│       │   │                       ├── ClubService.java
-│       │   │                       ├── GroupService.java
-│       │   │                       ├── QuestService.java
-│       │   │                       └── UserService.java
+│       │   │                   ├── service
+│       │   │                   │   ├── GroupService.java
+│       │   │                   │   ├── QuestService.java
+│       │   │                   │   └── UserService.java
+│       │   │                   └── utils
+│       │   │                       └── StrUtils.java
 │       │   └── resources
 │       │       ├── application.yaml
 │       │       ├── db
 │       │       │   └── changelog
 │       │       │       ├── 250731-initial-schema.yaml
+│       │       │       ├── 250808-delete-not-null.yaml
+│       │       │       ├── 250808-insert-data.yaml
+│       │       │       ├── 250810-create-table-quest.yaml
 │       │       │       └── db.changelog-master.yaml
 │       │       ├── override.yaml
 │       │       ├── static
@@ -280,9 +378,13 @@
 │                   └── nameless
 │                       └── social
 │                           └── api
-│                               └── service
-│                                   ├── GroupServiceTest.java
-│                                   └── UserServiceTest.java
+│                               ├── service
+│                               │   ├── ClubServiceTest.java
+│                               │   ├── GroupServiceTest.java
+│                               │   ├── QuestServiceTest.java
+│                               │   └── UserServiceTest.java
+│                               └── utils
+│                                   └── StrUtilsTest.java
 ├── chat-core
 │   ├── build
 │   │   ├── classes
@@ -293,17 +395,24 @@
 │   │   │                   └── social
 │   │   │                       └── core
 │   │   │                           ├── dto
-│   │   │                           │   ├── ChatMessageDto$ChatMessageDtoBuilder.class
-│   │   │                           │   ├── ChatMessageDto$MessageType.class
-│   │   │                           │   └── ChatMessageDto.class
-│   │   │                           └── entity
-│   │   │                               ├── BaseTimeEntity.class
-│   │   │                               ├── ChatMessage$ChatMessageBuilder.class
-│   │   │                               ├── ChatMessage.class
-│   │   │                               ├── Club.class
-│   │   │                               ├── ClubUser.class
-│   │   │                               ├── Group.class
-│   │   │                               └── User.class
+│   │   │                           │   ├── ChatPayloadDto$ChatPayloadDtoBuilder.class
+│   │   │                           │   ├── ChatPayloadDto$MessageType.class
+│   │   │                           │   └── ChatPayloadDto.class
+│   │   │                           ├── entity
+│   │   │                           │   ├── BaseTimeEntity.class
+│   │   │                           │   ├── ChatMessage$ChatMessageBuilder.class
+│   │   │                           │   ├── ChatMessage.class
+│   │   │                           │   ├── Club.class
+│   │   │                           │   ├── Group.class
+│   │   │                           │   ├── Quest.class
+│   │   │                           │   ├── User.class
+│   │   │                           │   ├── UserClub.class
+│   │   │                           │   ├── UserClubId.class
+│   │   │                           │   ├── UserGroup.class
+│   │   │                           │   └── UserGroupId.class
+│   │   │                           └── model
+│   │   │                               ├── MessageModel$MessageModelBuilder.class
+│   │   │                               └── MessageModel.class
 │   │   ├── generated
 │   │   │   └── sources
 │   │   │       ├── annotationProcessor
@@ -319,12 +428,12 @@
 │   │       │   ├── compileTransaction
 │   │       │   │   ├── backup-dir
 │   │       │   │   └── stash-dir
-│   │       │   │       ├── ChatMessageDto$ChatMessageDtoBuilder.class.uniqueId5
-│   │       │   │       ├── ChatMessageDto$MessageType.class.uniqueId0
-│   │       │   │       ├── ChatMessageDto.class.uniqueId1
-│   │       │   │       ├── ChatRoom.class.uniqueId2
-│   │       │   │       ├── ChatRoomUser.class.uniqueId3
-│   │       │   │       └── User.class.uniqueId4
+│   │       │   │       ├── Club.class.uniqueId3
+│   │       │   │       ├── Group.class.uniqueId5
+│   │       │   │       ├── Quest.class.uniqueId2
+│   │       │   │       ├── User.class.uniqueId4
+│   │       │   │       ├── UserClub.class.uniqueId0
+│   │       │   │       └── UserGroup.class.uniqueId1
 │   │       │   └── previous-compilation-data.bin
 │   │       └── jar
 │   │           └── MANIFEST.MF
@@ -337,15 +446,24 @@
 │   │                   └── social
 │   │                       └── core
 │   │                           ├── dto
-│   │                           │   ├── ChatMessageDto$ChatMessageDtoBuilder.class
-│   │                           │   ├── ChatMessageDto$MessageType.class
-│   │                           │   └── ChatMessageDto.class
-│   │                           └── entity
-│   │                               ├── BaseTimeEntity.class
-│   │                               ├── Club.class
-│   │                               ├── ClubUser.class
-│   │                               ├── Group.class
-│   │                               └── User.class
+│   │                           │   ├── ChatPayloadDto$ChatPayloadDtoBuilder.class
+│   │                           │   ├── ChatPayloadDto$MessageType.class
+│   │                           │   └── ChatPayloadDto.class
+│   │                           ├── entity
+│   │                           │   ├── BaseTimeEntity.class
+│   │                           │   ├── ChatMessage$ChatMessageBuilder.class
+│   │                           │   ├── ChatMessage.class
+│   │                           │   ├── Club.class
+│   │                           │   ├── Group.class
+│   │                           │   ├── Quest.class
+│   │                           │   ├── User.class
+│   │                           │   ├── UserClub.class
+│   │                           │   ├── UserClubId.class
+│   │                           │   ├── UserGroup.class
+│   │                           │   └── UserGroupId.class
+│   │                           └── model
+│   │                               ├── MessageModel$MessageModelBuilder.class
+│   │                               └── MessageModel.class
 │   └── src
 │       └── main
 │           ├── generated
@@ -355,17 +473,22 @@
 │                       └── social
 │                           └── core
 │                               ├── dto
-│                               │   └── ChatMessageDto.java
+│                               │   └── ChatPayloadDto.java
 │                               ├── entity
 │                               │   ├── BaseTimeEntity.java
 │                               │   ├── ChatMessage.java
 │                               │   ├── Club.java
-│                               │   ├── ClubUser.java
 │                               │   ├── Group.java
-│                               │   └── User.java
+│                               │   ├── Quest.java
+│                               │   ├── User.java
+│                               │   ├── UserClub.java
+│                               │   ├── UserClubId.java
+│                               │   ├── UserGroup.java
+│                               │   └── UserGroupId.java
+│                               ├── model
+│                               │   └── MessageModel.java
 │                               └── repository
 ├── chat-websocket
-│   ├── Dockerfile
 │   ├── build
 │   │   ├── classes
 │   │   │   └── java
@@ -377,13 +500,13 @@
 │   │   │                           ├── ChatWebsocketApplication.class
 │   │   │                           ├── config
 │   │   │                           │   ├── DynamoDBConfig.class
-│   │   │                           │   └── WebSocketConfig.class
+│   │   │                           │   ├── WebSocketConfig.class
+│   │   │                           │   └── repository
+│   │   │                           │       └── ChatMessageRepository.class
 │   │   │                           ├── controller
 │   │   │                           │   └── ChatHistoryController.class
 │   │   │                           ├── handler
 │   │   │                           │   └── WebSocketChatHandler.class
-│   │   │                           ├── repository
-│   │   │                           │   └── ChatMessageRepository.class
 │   │   │                           └── service
 │   │   │                               └── ChatMessageService.class
 │   │   ├── generated
@@ -419,9 +542,16 @@
 │   │       │               └── websocket
 │   │       │                   ├── ChatWebsocketApplication.class
 │   │       │                   ├── config
-│   │       │                   │   └── WebSocketConfig.class
-│   │       │                   └── handler
-│   │       │                       └── WebSocketChatHandler.class
+│   │       │                   │   ├── DynamoDBConfig.class
+│   │       │                   │   ├── WebSocketConfig.class
+│   │       │                   │   └── repository
+│   │       │                   │       └── ChatMessageRepository.class
+│   │       │                   ├── controller
+│   │       │                   │   └── ChatHistoryController.class
+│   │       │                   ├── handler
+│   │       │                   │   └── WebSocketChatHandler.class
+│   │       │                   └── service
+│   │       │                       └── ChatMessageService.class
 │   │       └── resources
 │   │           ├── application.yaml
 │   │           └── override.yaml
@@ -435,23 +565,31 @@
 │       │   │               └── websocket
 │       │   │                   ├── ChatWebsocketApplication.java
 │       │   │                   ├── config
-│       │   │                   │   └── WebSocketConfig.java
+│       │   │                   │   ├── DynamoDBConfig.java
+│       │   │                   │   ├── WebSocketConfig.java
+│       │   │                   │   └── repository
+│       │   │                   │       └── ChatMessageRepository.java
+│       │   │                   ├── controller
+│       │   │                   │   └── ChatHistoryController.java
 │       │   │                   ├── dto
-│       │   │                   └── handler
-│       │   │                       └── WebSocketChatHandler.java
+│       │   │                   ├── handler
+│       │   │                   │   └── WebSocketChatHandler.java
+│       │   │                   └── service
+│       │   │                       └── ChatMessageService.java
 │       │   └── resources
 │       │       ├── application.yaml
 │       │       └── override.yaml
 │       └── test
 │           └── java
 ├── docker-compose.yml
-├── dump.rdb
 ├── gradle
 │   └── wrapper
 │       ├── gradle-wrapper.jar
 │       └── gradle-wrapper.properties
 ├── gradlew
 ├── gradlew.bat
-└── settings.gradle
+├── jenkinsfile
+├── settings.gradle
+└── tree
 
-228 directories, 227 files
+244 directories, 349 files
