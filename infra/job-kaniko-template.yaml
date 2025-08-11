@@ -60,7 +60,7 @@ spec:
           volumeMounts:
             - { name: workspace, mountPath: /workspace }
 
-      containers:  
+      containers:   # ← 반드시 template.spec 안에!
         - name: kaniko
           image: gcr.io/kaniko-project/executor:v1.23.2
           imagePullPolicy: IfNotPresent
