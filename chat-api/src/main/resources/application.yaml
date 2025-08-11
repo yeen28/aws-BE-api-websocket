@@ -32,7 +32,7 @@ spring:
         jwt:
           issuer-uri: ${ISSUER_URI:input_uri}
           jwk-set-uri: ${JWK_SET_URI:input_uri}
-        client-id: ${JWK_SET_URI:input_client_id}
+        client-id: ${CLIENT_ID:input_client_id}
 
 jpa.auditing:
   enabled: true
