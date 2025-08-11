@@ -18,7 +18,7 @@ public class ChatPayloadDto {
 	private String senderEmail;
 	private String senderUsername; // Display purposes
 	private String message;
-	private LocalDateTime timestamp;
+	private String timestamp;
 	private MessageType type;
 
 	public enum MessageType {
