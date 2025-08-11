@@ -54,6 +54,7 @@ public class UserInfoArgumentResolver implements HandlerMethodArgumentResolver {
 //		if (!verify) {
 //			throw new CustomException(ErrorCode.INVALID_TOKEN);
 //		}
+		log.warn("임시로 토큰 검증하지 않음");
 
 		String email = cognitoTokenVerifier.extractEmailFromToken(token);
 
