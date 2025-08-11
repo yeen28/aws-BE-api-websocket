@@ -7,3 +7,5 @@ databaseChangeLog:
       file: db/changelog/250808-delete-not-null.yaml
   - include:
       file: db/changelog/250810-create-table-quest.yaml
+  - include:
+      file: db/changelog/250812-update-table-users.yaml

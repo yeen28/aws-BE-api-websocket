@@ -3,10 +3,7 @@ package com.nameless.social.api.controller;
 import com.nameless.social.api.dto.QuestSuccessDto;
 import com.nameless.social.api.dto.UserQuestDto;
 import com.nameless.social.api.handler.UserInfo;
-import com.nameless.social.api.model.CurQuestTotalModel;
-import com.nameless.social.api.model.QuestModel;
-import com.nameless.social.api.model.UserQuestPrevModel;
-import com.nameless.social.api.model.UserQuestWeeklyModel;
+import com.nameless.social.api.model.*;
 import com.nameless.social.api.response.CommonResponse;
 import com.nameless.social.api.service.QuestService;
 import com.nameless.social.core.entity.User;
@@ -32,22 +29,13 @@ public class QuestController {
 		return CommonResponse.success(questService.getQuest(user.getEmail()));
 	}
 
-	@Operation(summary = "연속으로 성공하고 있는 퀘스트 수")
+	@Operation(summary = "30일 기준으로 연속해서 성공하고 있는 퀘스트 수")
 	@GetMapping("/user/getUserQuestContinuous")
-	public CommonResponse<QuestModel> getUserQuestContinuous(
+	public CommonResponse<QuestContinuousModel> getQuestStatisticsByUser(
 			@UserInfo final User user,
 			@RequestParam(value = "email", required = false) String email
 	) {
-		List<CurQuestTotalModel> curQuestTotalModelApis = List.of(CurQuestTotalModel.builder()
-				.quest("questTest")
-				.isSuccess(true)
-				.group("건강")
-				.build());
-		QuestModel questModelApi = QuestModel.builder()
-				.id("email@test.com")
-				.curQuestTotalList(curQuestTotalModelApis)
-				.build();
-		return CommonResponse.success(questModelApi);
+		return CommonResponse.success(questService.getQuestStatisticsByUser(user));
 	}
 
 	@Operation(summary = "사용자가 성공한 퀘스트를 요일별로 집산")
