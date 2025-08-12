@@ -40,6 +40,13 @@ public class UserInfoArgumentResolver implements HandlerMethodArgumentResolver {
 			NativeWebRequest webRequest,
 			WebDataBinderFactory binderFactory
 	) {
+		// TODO 실제 환경에서는 제거하기
+		if (true) {
+			log.info("임시로 토큰 검증하지 않음");
+			return userRepository.findByEmail("admin@nameless.com")
+					.orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+		}
+
 		// Authorization 헤더 가져오기
 		String authHeader = webRequest.getHeader("Authorization");
 		if (StringUtils.isEmpty(authHeader) || !authHeader.startsWith("Bearer ")) {

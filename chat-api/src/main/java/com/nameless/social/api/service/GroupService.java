@@ -40,8 +40,11 @@ public class GroupService {
 		List<Club> clubs = user.getUserClubs().stream()
 				.map(UserClub::getClub)
 				.toList();
+		List<Group> groups = user.getUserGroups().stream()
+				.map(UserGroup::getGroup)
+				.toList();
 
-		return GroupModel.of(user.getUserGroups(), clubs, user.getEmail());
+		return GroupModel.of(groups, clubs, user.getEmail());
 	}
 
 	/**
