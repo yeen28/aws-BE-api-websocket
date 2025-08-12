@@ -1,5 +1,6 @@
 package com.nameless.social.api.service;
 
+import com.nameless.social.api.dto.InsertQuestDto;
 import com.nameless.social.api.dto.QuestSuccessDto;
 import com.nameless.social.api.dto.UserQuestDto;
 import com.nameless.social.api.exception.CustomException;
@@ -264,5 +265,17 @@ public class QuestService {
 				.id(user.getEmail())
 				.continuousSuccessQuestList(Collections.singletonList(successModel))
 				.build();
+	}
+
+	private AddQuestModel insertQuest(final InsertQuestDto dto) {
+		Quest quest = Quest.builder()
+				.name(dto.name())
+				.description(dto.description())
+				.tag(dto.tags())
+				.isSuccess(false)
+				.build();
+		questRepository.save(quest);
+
+		return AddQuestModel.of(quest);
 	}
 }
