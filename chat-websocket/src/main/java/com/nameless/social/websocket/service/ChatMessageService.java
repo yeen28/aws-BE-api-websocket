@@ -26,7 +26,7 @@ public class ChatMessageService {
 		log.info("message saved to DynamoDB: {}", dto.getMessage());
 	}
 
-	public MessageModel findByClubId(final long clubId) {
+	public MessageModel findMessagesByClubId(final long clubId) {
 		ChatMessage chatMessage = chatMessageRepository.findByClubId(clubId);
 		return MessageModel.of(chatMessage);
 	}
