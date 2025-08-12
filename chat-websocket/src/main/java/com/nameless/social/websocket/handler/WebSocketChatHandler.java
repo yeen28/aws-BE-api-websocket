@@ -1,6 +1,7 @@
 package com.nameless.social.websocket.handler;
 
-import com.nameless.social.core.dto.ChatPayloadDto;
+import com.nameless.social.websocket.dto.ChatPayloadDto;
+import com.nameless.social.websocket.enums.MessageType;
 import com.nameless.social.websocket.service.ChatMessageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +24,7 @@ public class WebSocketChatHandler {
 
 		// DynamoDB에 채팅 메시지 저장
 		chatMessageService.createTable(); // TODO DynamoDB 접근을 매번 하지 않도록 수정 필요. 서버 처음 구동시 테이블 생성하는 코드부터 한 번만 호출하도록 하기.
-		if (chatPayloadDto.getType() == ChatPayloadDto.MessageType.CHAT) {
+		if (chatPayloadDto.getType() == MessageType.CHAT) {
 			chatMessageService.save(chatPayloadDto);
 		}
 
