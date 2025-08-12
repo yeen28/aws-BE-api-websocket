@@ -29,12 +29,12 @@ public class GroupModel {
 							.updatedAt(club.getUpdatedAt())
 							.build()
 					);
-					joinListModels.add(JoinListModel.builder()
-							.groupId(group.getId())
-							.groupname(group.getName())
-							.clubList(clubModels)
-							.build());
-				}
+			}
+				joinListModels.add(JoinListModel.builder()
+						.groupId(group.getId())
+						.groupname(group.getName())
+						.clubList(clubModels)
+						.build());
 			}
 		}
 
