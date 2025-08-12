@@ -201,8 +201,20 @@ public class QuestService {
 	 * 그룹에서 퀘스트를 성공한 인원이 나온 경우 알려주는 api입니다
 	 * @param dto
 	 */
+	@Transactional
 	public void questSuccess(final User user, final QuestSuccessDto dto) {
-		log.info("아직 구현 중...");
+		dto.questList().forEach(questFeedbackDto -> {
+			Quest quest = questRepository.findByName(questFeedbackDto.quest())
+					.orElseThrow(() -> new CustomException(ErrorCode.QUEST_NOT_FOUND));
+
+			// 본인 소유 퀘스트인지 검증
+			if (quest.getUser().getId() != user.getId()) {
+				log.warn("다른 사용자의 퀘스트를 조작할 수 없습니다. - userId:{}, questId:{}", user.getId(), quest.getId());
+				throw new IllegalStateException("다른 사용자의 퀘스트를 수정할 수 없습니다.");
+			}
+
+			quest.setSuccess(true); // 변경 감지로 update 실행
+		});
 	}
 
 	/**

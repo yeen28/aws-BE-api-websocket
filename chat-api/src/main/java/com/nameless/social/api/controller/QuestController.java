@@ -66,7 +66,7 @@ public class QuestController {
 		return CommonResponse.success(HttpStatus.OK);
 	}
 
-	@Operation(summary = "")
+	@Operation(summary = "퀘스트 성공 처리")
 	@PostMapping("/group/questSuccess")
 	public CommonResponse<Object> questSuccess(
 			@UserInfo final User user,
