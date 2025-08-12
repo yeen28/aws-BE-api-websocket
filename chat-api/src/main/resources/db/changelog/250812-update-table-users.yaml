@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: yeeun
+      context: chat
+      changes:
+        - dropUniqueConstraint:
+            tableName: users
+            constraintName: token  # 제거할 unique 제약 조건 이름

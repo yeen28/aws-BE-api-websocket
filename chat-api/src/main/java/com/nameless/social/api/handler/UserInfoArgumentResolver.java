@@ -50,11 +50,10 @@ public class UserInfoArgumentResolver implements HandlerMethodArgumentResolver {
 		String token = authHeader.substring(7);
 
 		// 토큰 검증 (예: CognitoTokenVerifier 사용)
-//		boolean verify = cognitoTokenVerifier.verify(token);
-//		if (!verify) {
-//			throw new CustomException(ErrorCode.INVALID_TOKEN);
-//		}
-		log.warn("임시로 토큰 검증하지 않음");
+		boolean verify = cognitoTokenVerifier.verify(token);
+		if (!verify) {
+			throw new CustomException(ErrorCode.INVALID_TOKEN);
+		}
 
 		String email = cognitoTokenVerifier.extractEmailFromToken(token);
 

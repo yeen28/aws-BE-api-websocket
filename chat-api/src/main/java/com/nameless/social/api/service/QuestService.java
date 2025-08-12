@@ -5,6 +5,7 @@ import com.nameless.social.api.dto.UserQuestDto;
 import com.nameless.social.api.exception.CustomException;
 import com.nameless.social.api.exception.ErrorCode;
 import com.nameless.social.api.model.*;
+import com.nameless.social.api.repository.QuestRepository;
 import com.nameless.social.api.repository.UserGroupRepository;
 import com.nameless.social.api.repository.user.UserRepository;
 import com.nameless.social.core.entity.*;
@@ -25,6 +26,7 @@ import java.util.stream.Collectors;
 public class QuestService {
 	private final UserRepository userRepository;
 	private final UserGroupRepository userGroupRepository;
+	private final QuestRepository questRepository;
 
 	public QuestModel getQuest(final String email) {
 		// 1. 유저 조회
@@ -201,5 +203,54 @@ public class QuestService {
 	 */
 	public void questSuccess(final User user, final QuestSuccessDto dto) {
 		log.info("아직 구현 중...");
+	}
+
+	/**
+	 * 사용자가 퀘스트를 몇일 연속으로 클리어했는지 표시합니다.
+	 * 반환하는 데이터는 30일 기준입니다.
+	 * @param user
+	 * @return
+	 */
+	public QuestContinuousModel getQuestStatisticsByUser(final User user) {
+		LocalDateTime thirtyDaysAgo = LocalDateTime.now().minusDays(30);
+		LocalDate yesterday = LocalDate.now().minusDays(1);
+
+		// 30일 이내의 퀘스트만 필터링
+		List<Quest> recentQuests = user.getQuests().stream()
+				.filter(q -> q.getCreatedAt().isAfter(thirtyDaysAgo))
+				.toList();
+
+		long totalQuestNum = recentQuests.size();
+		long successQuestNum = recentQuests.stream()
+				.filter(Quest::isSuccess)
+				.count();
+
+		// 연속 성공 일수 계산
+		long continuousDays = 0;
+		LocalDate currentDate = yesterday;
+
+		while (continuousDays <= 30) {
+			LocalDate finalCurrentDate = currentDate;
+			boolean hasSuccessOnDay = recentQuests.stream()
+					.anyMatch(q -> q.isSuccess() && q.getCreatedAt().toLocalDate().isEqual(finalCurrentDate));
+
+			if (hasSuccessOnDay) {
+				continuousDays++;
+				currentDate = currentDate.minusDays(1);
+			} else {
+				break;
+			}
+		}
+
+		QuestContinuousSuccessModel successModel = QuestContinuousSuccessModel.builder()
+				.days(continuousDays)
+				.totalQuestNum(totalQuestNum)
+				.successQuestNum(successQuestNum)
+				.build();
+
+		return QuestContinuousModel.builder()
+				.id(user.getEmail())
+				.continuousSuccessQuestList(Collections.singletonList(successModel))
+				.build();
 	}
 }
