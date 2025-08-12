@@ -1,12 +1,11 @@
-package com.nameless.social.core.dto;
+package com.nameless.social.websocket.dto;
 
+import com.nameless.social.websocket.enums.MessageType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -20,8 +19,4 @@ public class ChatPayloadDto {
 	private String message;
 	private String timestamp;
 	private MessageType type;
-
-	public enum MessageType {
-		JOIN, CHAT, LEAVE
-	}
 }

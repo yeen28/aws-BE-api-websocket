@@ -1,7 +1,7 @@
-package com.nameless.social.core.model;
+package com.nameless.social.websocket.model;
 
-import com.nameless.social.core.dto.ChatPayloadDto;
 import com.nameless.social.core.entity.ChatMessage;
+import com.nameless.social.websocket.enums.MessageType;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -13,16 +13,16 @@ public class MessageModel {
 	private String senderEmail;
 	private String message;
 	private String timestamp;
-	private ChatPayloadDto.MessageType type;
+	private MessageType type;
 
 	public static MessageModel of(final ChatMessage chatMessage) {
 		return MessageModel.builder()
-				.clubId(chatMessage.getId())
+				.clubId(chatMessage.getClubId())
 				.messageId(chatMessage.getMessageId())
 				.senderEmail(String.valueOf(chatMessage.getSenderEmail()))
 				.message(chatMessage.getMessage())
 				.timestamp(chatMessage.getCreatedAt().toString())
-				.type(ChatPayloadDto.MessageType.CHAT)
+				.type(MessageType.CHAT)
 				.build();
 	}
 }
