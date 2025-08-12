@@ -20,6 +20,7 @@ public class GroupModel {
 		List<JoinListModel> joinListModels = new ArrayList<>();
 		for (Group group : groups) {
 			List<ClubModel> clubModels = new ArrayList<>();
+
 			for (Club club : clubs) {
 				if (club.getGroup().getId() == group.getId()) {
 					clubModels.add(ClubModel.builder()
@@ -29,13 +30,15 @@ public class GroupModel {
 							.updatedAt(club.getUpdatedAt())
 							.build()
 					);
+				}
 			}
-				joinListModels.add(JoinListModel.builder()
-						.groupId(group.getId())
-						.groupname(group.getName())
-						.clubList(clubModels)
-						.build());
-			}
+
+			// clubModels 채운 후 group당 1번만 JoinListModel 추가
+			joinListModels.add(JoinListModel.builder()
+					.groupId(group.getId())
+					.groupname(group.getName())
+					.clubList(clubModels)
+					.build());
 		}
 
 		return GroupModel.builder()
