@@ -7,7 +7,7 @@ import org.springframework.web.servlet.ModelAndView;
 // TODO FE와 연동 후 제거
 @Controller
 public class IndexController {
-	@GetMapping("/index")
+	@GetMapping("/api")
 	public ModelAndView index() {
 		return new ModelAndView("/index");
 	}
