@@ -78,6 +78,15 @@ public class ChatMessageRepository {
 									.writeCapacityUnits(5L)
 									.build()
 					)
+					.streamSpecification(StreamSpecification.builder()
+							.streamEnabled(true)
+							// 아래 중 하나 선택
+							// streamViewType 은 스트림에 어떤 데이터를 담을지 지정하는 옵션입니다. 보통 NEW_AND_OLD_IMAGES가 많이 쓰입니다.
+							.streamViewType(StreamViewType.NEW_AND_OLD_IMAGES)
+							// .streamViewType(StreamViewType.NEW_IMAGE)
+							// .streamViewType(StreamViewType.KEYS_ONLY)
+							// .streamViewType(StreamViewType.OLD_IMAGE)
+							.build())
 					.build());
 
 			log.info("테이블 생성 완료 - {}", TABLE_NAME);
