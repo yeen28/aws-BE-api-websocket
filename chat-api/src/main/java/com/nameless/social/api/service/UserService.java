@@ -13,7 +13,6 @@ import com.nameless.social.core.entity.*;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -109,13 +108,11 @@ public class UserService {
 		}
 
 		Group group = groupRepository.findByName(dto.getGroup())
-				.orElseThrow(EntityNotFoundException::new);
+				.orElseThrow(() -> new CustomException(ErrorCode.GROUP_NOT_FOUND));
 
 		UserGroupId userGroupId = new UserGroupId(user.getId(), group.getId());
-		// TODO 임시로 1L로 조회
-//		UserGroup userGroup = userGroupRepository.findById(userGroupId)
-		UserGroup userGroup = userGroupRepository.findById(1L)
-				.orElseThrow(EntityNotFoundException::new);
+		UserGroup userGroup = userGroupRepository.findById(userGroupId)
+				.orElseThrow(() -> new CustomException(ErrorCode.USER_GROUP_NOT_FOUND));
 
 		List<Club> groupClubs = group.getClubs();
 		List<Long> clubIds = groupClubs.stream()
