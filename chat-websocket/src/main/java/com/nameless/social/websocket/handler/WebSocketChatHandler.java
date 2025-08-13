@@ -5,10 +5,13 @@ import com.nameless.social.websocket.enums.MessageType;
 import com.nameless.social.websocket.service.ChatMessageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
+
+import java.util.Map;
 
 @Slf4j
 @Controller
@@ -18,13 +21,31 @@ public class WebSocketChatHandler {
 	private final ChatMessageService chatMessageService;
 
 	@MessageMapping("/chat.sendMessage")
-	public void sendMessage(@Payload ChatPayloadDto chatPayloadDto) {
+	public void sendMessage(
+			@Payload ChatPayloadDto chatPayloadDto,
+			@Header Map<String, Object> headers
+	) {
 		log.info("Received message: {} - {}", chatPayloadDto.getSenderEmail(), chatPayloadDto.getMessage());
-		messagingTemplate.convertAndSend("/topic/chatroom/" + chatPayloadDto.getClubId(), chatPayloadDto);
 
-		// DynamoDB에 채팅 메시지 저장
-		chatMessageService.createTable(); // TODO DynamoDB 접근을 매번 하지 않도록 수정 필요. 서버 처음 구동시 테이블 생성하는 코드부터 한 번만 호출하도록 하기.
+		String contentType = (String) headers.get("content-type");
+
+		if ("image/base64".equals(contentType)) {
+			// 이미지인 경우 그대로 전달 (content-type 포함)
+			messagingTemplate.convertAndSend(
+					"/topic/chatroom/" + chatPayloadDto.getClubId(),
+					chatPayloadDto,
+					Map.of("content-type", "image/base64"));
+		} else {
+			// 일반 메시지
+			messagingTemplate.convertAndSend(
+					"/topic/chatroom/" + chatPayloadDto.getClubId(),
+					chatPayloadDto
+			);
+		}
+
 		if (chatPayloadDto.getType() == MessageType.CHAT) {
+			// DynamoDB에 채팅 메시지 저장
+			chatMessageService.createTable(); // TODO DynamoDB 접근을 매번 하지 않도록 수정 필요. 서버 처음 구동시 테이블 생성하는 코드부터 한 번만 호출하도록 하기.
 			chatMessageService.save(chatPayloadDto);
 		}
 
