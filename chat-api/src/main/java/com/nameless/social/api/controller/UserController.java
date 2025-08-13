@@ -115,10 +115,7 @@ public class UserController {
 
 	@Operation(summary = "사용자 서비스 탈퇴")
 	@DeleteMapping("/user")
-	public CommonResponse<Object> deleteUser(
-			@UserInfo final User user,
-			@RequestParam("email") final String email
-	) {
+	public CommonResponse<Object> deleteUser(@UserInfo final User user) {
 		userService.deleteUser(user.getEmail());
 		return CommonResponse.success(HttpStatus.OK);
 	}
