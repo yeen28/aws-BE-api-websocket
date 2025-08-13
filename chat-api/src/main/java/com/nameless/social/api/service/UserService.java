@@ -132,7 +132,7 @@ public class UserService {
 		Club club = clubRepository.findByName(leaveClubDto.getClub())
 				.orElseThrow(() -> new CustomException(ErrorCode.CLUB_NOT_FOUND));
 
-		userClubRepository.deleteByUserIdAndClubId(user.getId(), club.getId());
+		userClubRepository.deleteByIdUserIdAndClubId(user.getId(), club.getId());
 	}
 
 	@Transactional
