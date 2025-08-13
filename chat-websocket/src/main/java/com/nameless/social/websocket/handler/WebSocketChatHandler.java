@@ -12,6 +12,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
 import java.util.Map;
+import java.util.Objects;
 
 @Slf4j
 @Controller
@@ -23,11 +24,14 @@ public class WebSocketChatHandler {
 	@MessageMapping("/chat.sendMessage")
 	public void sendMessage(
 			@Payload ChatPayloadDto chatPayloadDto,
-			@Header Map<String, Object> headers
+			@Header(required = false) Map<String, Object> headers
 	) {
 		log.info("Received message: {} - {}", chatPayloadDto.getSenderEmail(), chatPayloadDto.getMessage());
 
-		String contentType = (String) headers.get("content-type");
+		String contentType = "";
+		if (!Objects.isNull(headers)) {
+			contentType = (String) headers.get("content-type");
+		}
 
 		if ("image/base64".equals(contentType)) {
 			// 이미지인 경우 그대로 전달 (content-type 포함)
