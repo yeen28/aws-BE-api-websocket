@@ -8,6 +8,11 @@ spec:
   backoffLimit: 0
   template:
     spec:
+      tolerations:
+        - key: nodegroup-role
+          operator: Equal
+          value: cicd
+          effect: NoSchedule
       serviceAccountName: jenkins-sa
       nodeSelector:
         nodegroup-role: cicd
