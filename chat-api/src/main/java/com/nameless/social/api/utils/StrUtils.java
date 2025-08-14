@@ -13,7 +13,7 @@ import java.util.List;
 public class StrUtils {
 	private final static ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
-	public static List<String> parseTags(String stringTags) {
+	public static List<String> parseTags(final String stringTags) {
 		if (StringUtils.isEmpty(stringTags)) {
 			return List.of();
 		}

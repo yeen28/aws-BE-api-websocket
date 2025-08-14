@@ -1,8 +1,10 @@
 package com.nameless.social.websocket.handler;
 
+import com.nameless.social.core.entity.ChatMessage;
 import com.nameless.social.websocket.dto.ChatPayloadDto;
 import com.nameless.social.websocket.enums.MessageType;
 import com.nameless.social.websocket.service.ChatMessageService;
+import com.nameless.social.websocket.utils.MediaUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.Header;
@@ -10,9 +12,13 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
-import java.util.Objects;
+import java.util.UUID;
 
 @Slf4j
 @Controller
@@ -22,7 +28,6 @@ public class WebSocketChatHandler {
 	private final ChatMessageService chatMessageService;
 
 	/**
-	 * 이미지의 경우: data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAYAAAC…
 	 * @param chatPayloadDto
 	 * @param headers
 	 */
@@ -33,29 +38,25 @@ public class WebSocketChatHandler {
 	) {
 		log.info("Received message: {} - {}", chatPayloadDto.getSenderEmail(), chatPayloadDto.getMessage());
 
-		String contentType = "";
-		if (!Objects.isNull(headers)) {
-			contentType = (String) headers.get("content-type");
+		String imgType = "";
+		if (MessageType.IMAGE.equals(chatPayloadDto.getType())) {
+			imgType = MediaUtils.getType(chatPayloadDto.getMessage());
 		}
 
-		if ("image/base64".equals(contentType)) {
-			// 이미지인 경우 그대로 전달 (content-type 포함)
-			messagingTemplate.convertAndSend(
-					"/topic/chatroom/" + chatPayloadDto.getClubId(),
-					chatPayloadDto,
-					Map.of("content-type", "image/base64"));
-		} else {
-			// 일반 메시지
-			messagingTemplate.convertAndSend(
-					"/topic/chatroom/" + chatPayloadDto.getClubId(),
-					chatPayloadDto
+		// JOIN, LEAVE가 아닐 때만 DynamoDB에 채팅 내역 저장
+		List<MessageType> notSaveTypes = List.of(MessageType.JOIN, MessageType.LEAVE);
+		if (!notSaveTypes.contains(chatPayloadDto.getType())) {
+			chatMessageService.save(
+					ChatMessage.builder()
+							.clubId(chatPayloadDto.getClubId())
+							.messageId(String.format("%s#%s", Instant.now().toString(), UUID.randomUUID()))
+							.senderEmail(chatPayloadDto.getSenderEmail())
+							.message(chatPayloadDto.getMessage())
+							.messageType(chatPayloadDto.getType().name())
+							.imageType(StringUtils.hasText(imgType) ? imgType : "")
+							.createdAt(LocalDateTime.now())
+							.build()
 			);
-		}
-
-		if (chatPayloadDto.getType() == MessageType.CHAT) {
-			// DynamoDB에 채팅 메시지 저장
-			chatMessageService.createTable(); // TODO DynamoDB 접근을 매번 하지 않도록 수정 필요. 서버 처음 구동시 테이블 생성하는 코드부터 한 번만 호출하도록 하기.
-			chatMessageService.save(chatPayloadDto);
 		}
 
 		// 채팅방 구독자들에게 메시지 전송

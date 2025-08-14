@@ -7,6 +7,7 @@ import com.nameless.social.websocket.config.repository.ChatMessageRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -19,22 +20,10 @@ import java.util.UUID;
 public class ChatMessageService {
 	private final ChatMessageRepository chatMessageRepository;
 
-	public void createTable() {
-		chatMessageRepository.createTable();
-	}
-
-	public void save(final ChatPayloadDto dto) {
-		log.info("message save start: {} {}", dto.getClubId(), dto.getSenderEmail());
-
-		chatMessageRepository.insertChatMessage(ChatMessage.builder()
-				.clubId(dto.getClubId())
-				.messageId(String.format("%s#%s", Instant.now().toString(), UUID.randomUUID()))
-				.senderEmail(dto.getSenderEmail())
-				.message(dto.getMessage())
-				.createdAt(LocalDateTime.now())
-				.build());
-
-		log.info("message saved to DynamoDB: {}", dto.getMessage());
+	public void save(final ChatMessage message) {
+		log.info("message save start: {} {}", message.getClubId(), message.getSenderEmail());
+		chatMessageRepository.insertChatMessage(message);
+		log.info("message saved to DynamoDB: {}", message.getMessage());
 	}
 
 	public List<MessageModel> findMessagesByClubId(final long clubId) {

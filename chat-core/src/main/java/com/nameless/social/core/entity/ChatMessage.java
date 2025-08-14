@@ -18,6 +18,8 @@ public class ChatMessage {
 	private String messageId;
 	private String senderEmail;
 	@Getter private String message;
+	@Getter private String messageType;
+	@Getter private String imageType;
 	@Getter private LocalDateTime createdAt;
 
 	@DynamoDbPartitionKey
