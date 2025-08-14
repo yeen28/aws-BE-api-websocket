@@ -5,6 +5,7 @@ import com.nameless.social.api.exception.CustomException;
 import com.nameless.social.api.exception.ErrorCode;
 import com.nameless.social.api.repository.user.UserRepository;
 import com.nameless.social.core.entity.User;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.MethodParameter;
@@ -40,13 +41,14 @@ public class UserInfoArgumentResolver implements HandlerMethodArgumentResolver {
 			NativeWebRequest webRequest,
 			WebDataBinderFactory binderFactory
 	) {
-		// TODO 실제 환경에서는 제거하기
-		if (true) {
-			log.info("임시로 토큰 검증하지 않음");
-			return userRepository.findByEmail("admin@nameless.com")
-					.orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-		}
+		HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
+		String domain = request.getServerName();   // 예: stage.teamnameless.click
+		int port = request.getServerPort();        // 예: 443
+		String scheme = request.getScheme();
 
+		if (domain.startsWith("localhost")) {
+			return userRepository.findByEmail("admin@nameless.com").orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+		}
 		// Authorization 헤더 가져오기
 		String authHeader = webRequest.getHeader("Authorization");
 		if (StringUtils.isEmpty(authHeader) || !authHeader.startsWith("Bearer ")) {
@@ -87,7 +89,7 @@ public class UserInfoArgumentResolver implements HandlerMethodArgumentResolver {
 //			email = null; // 일단 null 처리
 //		}
 
-		return userRepository.findByEmail("admin@nameless.com")
+		return userRepository.findByEmail(email)
 				.orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 	}
 }
