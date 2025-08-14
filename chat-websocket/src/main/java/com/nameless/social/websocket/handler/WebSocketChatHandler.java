@@ -21,6 +21,11 @@ public class WebSocketChatHandler {
 	private final SimpMessagingTemplate messagingTemplate;
 	private final ChatMessageService chatMessageService;
 
+	/**
+	 * 이미지의 경우: data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAYAAAC…
+	 * @param chatPayloadDto
+	 * @param headers
+	 */
 	@MessageMapping("/chat.sendMessage")
 	public void sendMessage(
 			@Payload ChatPayloadDto chatPayloadDto,

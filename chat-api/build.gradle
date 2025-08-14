@@ -12,5 +12,6 @@ dependencies {
 	implementation 'com.mysql:mysql-connector-j:8.3.0'
 	// Spring Boot Actuator 활성화.
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation 'software.amazon.awssdk:cognitoidentityprovider:2.32.4'
 	implementation project(':chat-core')
 }
