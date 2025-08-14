@@ -1,4 +1,4 @@
-apiVersion: batch/v1 #test
+apiVersion: batch/v1
 kind: Job
 metadata:
   name: kaniko-build-__IMAGE_TAG__
@@ -8,11 +8,6 @@ spec:
   backoffLimit: 0
   template:
     spec:
-      tolerations:
-        - key: nodegroup-role
-          operator: Equal
-          value: cicd
-          effect: NoSchedule
       serviceAccountName: jenkins-sa
       nodeSelector:
         nodegroup-role: cicd
@@ -38,7 +33,7 @@ spec:
               PW=$(aws ecr get-login-password --region __AWS_REGION__);
               printf '{"auths":{"%s":{"username":"AWS","password":"%s"}}}' "$ECR_REG" "$PW" > /kaniko/.docker/config.json;
           resources:
-            requests: { cpu: "50m", memory: "64Mi" }
+            requests: { cpu: "50m", memory: "512Mi" }
           volumeMounts:
             - { name: docker-config, mountPath: /kaniko/.docker }
 
@@ -61,25 +56,23 @@ spec:
               valueFrom:
                 secretKeyRef: { name: __GH_BASIC_SECRET__, key: password }
           resources:
-            requests: { cpu: "100m", memory: "128Mi" }
+            requests: { cpu: "100m", memory: "256Mi" }
           volumeMounts:
             - { name: workspace, mountPath: /workspace }
 
-      containers:
+      containers:   # ← 반드시 template.spec 안에!
         - name: kaniko
-          image: gcr.io/kaniko-project/executor:latest
+          image: gcr.io/kaniko-project/executor:v1.23.2
           imagePullPolicy: IfNotPresent
-          command: ["/busybox/sh","-c"]
           args:
-            - >
-              /kaniko/executor
-              --context=__BUILD_CONTEXT__               # ex) /workspace
-              --dockerfile=__DOCKERFILE__               # ex) Dockerfile.websocket
-              --destination=__ACCOUNT_ID__.dkr.ecr.__AWS_REGION__.amazonaws.com/__ECR_REPO__:__IMAGE_TAG__
-              --cache=true
-              --cache-repo=__ACCOUNT_ID__.dkr.ecr.__AWS_REGION__.amazonaws.com/__ECR_REPO__:buildcache
-              --snapshotMode=redo
-              --verbosity=info
+            - --context=__BUILD_CONTEXT__
+            - --dockerfile=__DOCKERFILE__
+            - --destination=__ACCOUNT_ID__.dkr.ecr.__AWS_REGION__.amazonaws.com/__ECR_REPO__:__IMAGE_TAG__
+            - --destination=__ACCOUNT_ID__.dkr.ecr.__AWS_REGION__.amazonaws.com/__ECR_REPO__:latest
+            - --cache=true
+            - --cache-repo=__ACCOUNT_ID__.dkr.ecr.__AWS_REGION__.amazonaws.com/__ECR_REPO__:buildcache
+            - --snapshotMode=redo
+            - --verbosity=info
           env:
             - { name: AWS_REGION, value: "__AWS_REGION__" }
             - { name: ACCOUNT_ID, value: "__ACCOUNT_ID__" }
@@ -89,3 +82,6 @@ spec:
           resources:
             requests: { cpu: "512m", memory: "1Gi" }
             limits:   { cpu: "2000m", memory: "4Gi" }
+          volumeMounts:
+            - { name: docker-config, mountPath: /kaniko/.docker }
+            - { name: workspace,     mountPath: /workspace }
