@@ -23,7 +23,8 @@ public class ChatMessageRepository {
 	private static final String TABLE_NAME = "ChatMessage";
 
 	/**
-	 * DynamoDB 테이블 생성
+	 * DynamoDB 테이블 생성.
+	 * 참고용. 운영에서는 다음 메서드는 호출하면 안됨.
 	 */
 	public void createTable() {
 		try {
