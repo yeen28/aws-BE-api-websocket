@@ -9,7 +9,7 @@ pipeline {
   environment {
     AWS_REGION   = 'ap-northeast-2'
     ACCOUNT_ID   = '229816860374'
-    ECR_REPO     = 'chat-websocket'           
+    ECR_REPO     = 'chat-api'           
     ORG          = 'aws-devlopment-project'
     REPO         = 'backend-api-websocket'
     BUILD_CONTEXT= '/workspace'
