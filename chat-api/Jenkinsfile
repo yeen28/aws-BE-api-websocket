@@ -89,7 +89,7 @@ spec:
               sed -i "s|__ACCOUNT_ID__|${ACCOUNT_ID}|g"                   /tmp/apijob.yaml
               sed -i "s|__AWS_REGION__|${AWS_REGION}|g"                   /tmp/apijob.yaml
               sed -i "s|__ECR_REPO__|${ECR_REPO}|g"                       /tmp/apijob.yaml
-              sed -i "s|__ORG__|${ORG}|g"                                 /tmp/apujob.yaml
+              sed -i "s|__ORG__|${ORG}|g"                                 /tmp/apijob.yaml
               sed -i "s|__REPO__|${REPO}|g"                               /tmp/apijob.yaml
               sed -i "s|__IMAGE_TAG__|${IMAGE_TAG}|g"                     /tmp/apijob.yaml
               sed -i "s|__GIT_REF__|${GIT_COMMIT:-${BRANCH_NAME:-master}}|g" /tmp/apijob.yaml
