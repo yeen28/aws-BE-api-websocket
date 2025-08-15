@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/chat")
+@RequestMapping("/ws")
 @RequiredArgsConstructor
 public class ChatHistoryController {
 	private final ChatMessageService chatMessageService;
