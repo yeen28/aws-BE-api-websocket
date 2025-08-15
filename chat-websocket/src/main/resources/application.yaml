@@ -12,7 +12,7 @@ server:
 
 services:
   chat-api:
-    url: http://localhost:8080
+    url: ${CHAT_API_URL}
 
 aws:
   dynamodb:
