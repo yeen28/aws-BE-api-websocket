@@ -10,6 +10,10 @@ management:
 server:
   port: 9001
 
+services:
+  chat-api:
+    url: http://localhost:8080
+
 aws:
   dynamodb:
     region: ap-northeast-2

@@ -9,8 +9,8 @@ import com.nameless.social.api.repository.GroupRepository;
 import com.nameless.social.api.repository.UserClubRepository;
 import com.nameless.social.api.repository.UserGroupRepository;
 import com.nameless.social.api.repository.user.UserRepository;
+import com.nameless.social.core.model.UserInfoModel;
 import com.nameless.social.core.entity.*;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -56,8 +56,13 @@ public class UserService {
 	public void getUserQuestContinuous(final String email) {
 	}
 
+	public UserInfoModel findUserInfo(final String email) {
+		return UserInfoModel.of(userRepository.findByEmail(email)
+				.orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND))
+		);
+	}
+
 	public UserModel getUserInfo(final String email) {
-		// TODO User 유효성 검증
 		return UserModel.of(userRepository.findByEmail(email)
 				.orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND))
 		);

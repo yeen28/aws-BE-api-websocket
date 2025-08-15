@@ -13,7 +13,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 public class ChatPayloadDto {
-	private Long clubId;
+	private long clubId;
 	private String senderEmail;
 	private String senderUsername; // Display purposes
 	private String message;

@@ -67,5 +67,7 @@ public class WebSocketChatHandler {
 	public void addUser(@Payload ChatPayloadDto chatPayloadDto) {
 		log.info("User joined: {}", chatPayloadDto.getSenderEmail());
 		messagingTemplate.convertAndSend("/topic/chatroom/" + chatPayloadDto.getClubId(), chatPayloadDto);
+
+		chatMessageService.sendUserInfoToAI(chatPayloadDto);
 	}
 }

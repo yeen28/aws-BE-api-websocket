@@ -1,8 +1,8 @@
 package com.nameless.social.api.controller;
 
+import com.nameless.social.core.model.UserInfoModel;
 import com.nameless.social.api.dto.*;
 import com.nameless.social.api.handler.UserInfo;
-import com.nameless.social.api.model.user.*;
 import com.nameless.social.api.response.CommonResponse;
 import com.nameless.social.api.service.UserService;
 import com.nameless.social.core.entity.User;
@@ -34,6 +34,14 @@ public class UserController {
 			@RequestParam(value = "email", required = false) final String email
 	) {
 		return CommonResponse.success(userService.getUserInfo(user.getEmail()));
+	}
+
+	@Operation(summary = "Email로 사용자 정보 조회")
+	@GetMapping("/user")
+	public CommonResponse<UserInfoModel> getUserId(
+			@RequestParam("email") final String email
+	) {
+		return CommonResponse.success(userService.findUserInfo("admin@nameless.com"));
 	}
 
 	@Operation(summary = "사용자가 특정 클럽(소모임, 특정 그룹 내에 존재) 탈퇴")
