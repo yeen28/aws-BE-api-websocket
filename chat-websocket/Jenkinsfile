@@ -108,7 +108,7 @@ spec:
               kubectl -n cicd apply -f /tmp/wsjob.yaml
               kubectl -n cicd wait --for=condition=complete job/"${JOB_NAME}" --timeout=30m 
               kubectl -n cicd logs -f job/"${JOB_NAME}" -c kaniko || true 
-              kubectl -n cicd replace --force job/"${JOB_NAME}" --ignore-not-found
+              kubectl -n cicd replace --force job/"${JOB_NAME}" 
 
               # 4) 정리
               kubectl -n cicd delete job/kaniko-build-${IMAGE_TAG} --ignore-not-found

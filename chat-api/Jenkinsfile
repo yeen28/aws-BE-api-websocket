@@ -110,7 +110,7 @@ spec:
               kubectl -n cicd apply -f /tmp/apijob.yaml
               kubectl -n cicd wait --for=condition=complete job/"kaniko-build-${SERVICE}-${IMAGE_TAG}-${BUILD_NUMBER}" --timeout=30m 
               kubectl -n cicd logs -f job/"kaniko-build-${SERVICE}-${IMAGE_TAG}-${BUILD_NUMBER}" -c kaniko || true 
-              kubectl -n cicd replace --force job/"kaniko-build-${SERVICE}-${IMAGE_TAG}-${BUILD_NUMBER}" --ignore-not-found
+              kubectl -n cicd replace --force job/"kaniko-build-${SERVICE}-${IMAGE_TAG}-${BUILD_NUMBER}"
               # 4) 정리
               kubectl -n cicd delete job/kaniko-build-${SERVICE}-${IMAGE_TAG}-${BUILD_NUMBER} --ignore-not-found
               kubectl -n cicd delete secret "$GH_SECRET" --ignore-not-found
