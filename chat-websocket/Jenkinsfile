@@ -13,7 +13,7 @@ pipeline {
     ORG          = 'aws-devlopment-project'
     REPO         = 'backend-api-websocket'
     BUILD_CONTEXT= '/workspace'
-    DOCKERFILE   = 'Dockerfile.api'
+    DOCKERFILE   = 'Dockerfile.websocket'
     GIT_BASIC_ID = 'jenkinstoken'   // Jenkins Credentials (username+password=PAT)
   }
 
