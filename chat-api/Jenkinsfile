@@ -74,7 +74,7 @@ spec:
               GH_SECRET="gh-basic-ci-${BUILD_NUMBER}"
               
               cleanup() {
-                kubectl -n cicd delete job/kaniko-build-${IMAGE_TAG} --ignore-not-found
+                kubectl -n cicd delete job/kaniko-build-${SERVICE}-${IMAGE_TAG}-${BUILD_NUMBER} --ignore-not-found
                 kubectl -n cicd delete secret "$GH_SECRET" --ignore-not-found
               }
               trap cleanup EXIT
@@ -107,11 +107,11 @@ spec:
               sed -i "s|__JOB_NAME__|${JOB_NAME}|g"                       /tmp/apijob.yaml
 
               # 3) Job 실행/대기/로그
-              kubectl -n cicd wait --for=condition=complete job/"${JOB_NAME}" --timeout=30m 
-              kubectl -n cicd logs -f job/"${JOB_NAME}" -c kaniko || true 
-              kubectl -n cicd replace --force job/"${JOB_NAME}" --ignore-not-found
+              kubectl -n cicd wait --for=condition=complete job/"kaniko-build-${SERVICE}-${IMAGE_TAG}-${BUILD_NUMBER}" --timeout=30m 
+              kubectl -n cicd logs -f job/"kaniko-build-${SERVICE}-${IMAGE_TAG}-${BUILD_NUMBER}" -c kaniko || true 
+              kubectl -n cicd replace --force job/"kaniko-build-${SERVICE}-${IMAGE_TAG}-${BUILD_NUMBER}" --ignore-not-found
               # 4) 정리
-              kubectl -n cicd delete job/kaniko-build-${IMAGE_TAG} --ignore-not-found
+              kubectl -n cicd delete job/kaniko-build-${SERVICE}-${IMAGE_TAG}-${BUILD_NUMBER} --ignore-not-found
               kubectl -n cicd delete secret "$GH_SECRET" --ignore-not-found
               
               
