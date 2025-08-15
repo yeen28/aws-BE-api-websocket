@@ -9,13 +9,12 @@ pipeline {
   environment {
     AWS_REGION   = 'ap-northeast-2'
     ACCOUNT_ID   = '229816860374'
-    ECR_REPO     = 'chat-api'
+    ECR_REPO     = 'chat-websocket'           
     ORG          = 'aws-devlopment-project'
     REPO         = 'backend-api-websocket'
     BUILD_CONTEXT= '/workspace'
     DOCKERFILE   = 'Dockerfile.api'
     GIT_BASIC_ID = 'jenkinstoken'   // Jenkins Credentials (username+password=PAT)
-    SERVICE      = 'chat-api'
   }
 
   triggers { githubPush() }
@@ -44,10 +43,10 @@ spec:
     emptyDir: {}
   containers:
   - name: kubectl
-    image: bitnami/kubectl:1.29      # ✅ 존재 확인된 태그
+    image: bitnami/kubectl:1.29    
     imagePullPolicy: IfNotPresent
     command: ['sleep']
-    args: ['infinity']               # 안정 대기
+    args: ['infinity']               
     tty: true
     workingDir: /home/jenkins/agent
     securityContext:
@@ -73,12 +72,6 @@ spec:
               JOB_NAME="kaniko-build-${SERVICE}-${IMAGE_TAG}-${BUILD_NUMBER}"
               GH_SECRET="gh-basic-ci-${BUILD_NUMBER}"
               
-              cleanup() {
-                kubectl -n cicd delete job/kaniko-build-${SERVICE}-${IMAGE_TAG}-${BUILD_NUMBER} --ignore-not-found
-                kubectl -n cicd delete secret "$GH_SECRET" --ignore-not-found
-              }
-              trap cleanup EXIT
-              
               # 1) GitHub 자격증명 임시 Secret 생성/갱신
               kubectl -n cicd create secret generic "$GH_SECRET" \
                 --from-literal=username="$GH_USER" \
@@ -95,9 +88,8 @@ spec:
               cp infra/job-kaniko-template.yaml /tmp/apijob.yaml
               sed -i "s|__ACCOUNT_ID__|${ACCOUNT_ID}|g"                   /tmp/apijob.yaml
               sed -i "s|__AWS_REGION__|${AWS_REGION}|g"                   /tmp/apijob.yaml
-
               sed -i "s|__ECR_REPO__|${ECR_REPO}|g"                       /tmp/apijob.yaml
-              sed -i "s|__ORG__|${ORG}|g"                                 /tmp/apijob.yaml
+              sed -i "s|__ORG__|${ORG}|g"                                 /tmp/apujob.yaml
               sed -i "s|__REPO__|${REPO}|g"                               /tmp/apijob.yaml
               sed -i "s|__IMAGE_TAG__|${IMAGE_TAG}|g"                     /tmp/apijob.yaml
               sed -i "s|__GIT_REF__|${GIT_COMMIT:-${BRANCH_NAME:-master}}|g" /tmp/apijob.yaml
@@ -108,11 +100,12 @@ spec:
 
               # 3) Job 실행/대기/로그
               kubectl -n cicd apply -f /tmp/apijob.yaml
-              kubectl -n cicd wait --for=condition=complete job/"kaniko-build-${SERVICE}-${IMAGE_TAG}-${BUILD_NUMBER}" --timeout=30m 
-              kubectl -n cicd logs -f job/"kaniko-build-${SERVICE}-${IMAGE_TAG}-${BUILD_NUMBER}" -c kaniko || true 
-              kubectl -n cicd replace --force job/"kaniko-build-${SERVICE}-${IMAGE_TAG}-${BUILD_NUMBER}"
+              kubectl -n cicd wait --for=condition=complete job/"${JOB_NAME}" --timeout=30m 
+              kubectl -n cicd logs -f job/"${JOB_NAME}" -c kaniko || true 
+
+
               # 4) 정리
-              kubectl -n cicd delete job/kaniko-build-${SERVICE}-${IMAGE_TAG}-${BUILD_NUMBER} --ignore-not-found
+              kubectl -n cicd delete job/$"{JOB_NAME}" --ignore-not-found
               kubectl -n cicd delete secret "$GH_SECRET" --ignore-not-found
               
               
