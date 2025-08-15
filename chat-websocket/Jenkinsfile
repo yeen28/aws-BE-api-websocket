@@ -67,7 +67,8 @@ spec:
               set -e
               SERVICE="${ECR_REPO}"
               SHORT_SHA=$(echo "${GIT_COMMIT:-${BRANCH_NAME:-master}}" | cut -c1-7)
-              IMAGE_TAG="sha-${SHORT_SHA}"
+
+              IMAGE_TAG="ws-sha-${SHORT_SHA}"
               SANITIZED_REF=$(echo "${GIT_COMMIT:-${BRANCH_NAME:-master}}" | tr '[:upper:]' '[:lower:]' | tr -c 'a-z0-9' '-')
               JOB_NAME="kaniko-build-${SERVICE}-${IMAGE_TAG}-${BUILD_NUMBER}"
               GH_SECRET="gh-basic-ci-${BUILD_NUMBER}"
