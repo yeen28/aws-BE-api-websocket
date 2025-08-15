@@ -1,0 +1,25 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: yeeun
+      context: chat
+      changes:
+        - update:
+            tableName: "group"
+            columns:
+              - column:
+                  name: tag
+                  valueComputed: "JSON_UNQUOTE(tag)"
+            where: "JSON_VALID(JSON_UNQUOTE(tag))"
+
+  - changeSet:
+      id: 2
+      author: yeeun
+      context: chat
+      changes:
+        - sql:
+            sql: |
+              -- 변환 결과 확인용 (운영 반영 전 데이터 검증)
+              SELECT id, tag
+              FROM `group`
+              WHERE JSON_VALID(tag) = 0 OR JSON_TYPE(tag) != 'ARRAY';
