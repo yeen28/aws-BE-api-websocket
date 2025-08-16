@@ -10,6 +10,10 @@ management:
 server:
   port: 9000
 
+services:
+  ai:
+    url: ${AI_URL}
+
 spring:
   datasource:
     url: ${SPRING_DATASOURCE_URL}

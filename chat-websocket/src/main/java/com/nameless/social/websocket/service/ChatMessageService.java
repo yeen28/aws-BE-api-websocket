@@ -1,15 +1,22 @@
 package com.nameless.social.websocket.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nameless.social.core.entity.ChatMessage;
 //import com.nameless.social.websocket.client.ChatApiClient;
 import com.nameless.social.websocket.config.repository.ChatMessageRepository;
 import com.nameless.social.websocket.dto.ChatPayloadDto;
+import com.nameless.social.websocket.dto.GenerateQuestDto;
+import com.nameless.social.websocket.dto.GenerateQuestModel;
+import com.nameless.social.websocket.dto.InsertQuestDto;
 import com.nameless.social.websocket.model.MessageModel;
+import com.nameless.social.websocket.response.CommonResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-//import reactor.core.publisher.Mono;
+import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -17,7 +24,15 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ChatMessageService {
 	private final ChatMessageRepository chatMessageRepository;
+	private final RestTemplate restTemplate;
+	private final ObjectMapper objectMapper = new ObjectMapper();
 //	private final ChatApiClient chatApiClient;
+
+	@Value("${services.ai.url}")
+	private String aiUrl;
+
+	@Value("${services.chat-api.url}")
+	private String apiUrl;
 
 	public void save(final ChatMessage message) {
 		log.info("message save start: {} {}", message.getClubId(), message.getSenderEmail());
@@ -43,9 +58,52 @@ public class ChatMessageService {
 	}
 
 	/**
+	 * 사용자가 club에 접속했을 때, 오늘 생성된 퀘스트가 없다면 퀘스트 생성 요청
+	 */
+	public void createTodayQuestIfAbsent(final ChatPayloadDto dto) {
+		try {
+			CommonResponse response = restTemplate.getForObject(
+					String.format("%s/api/club/%s/existQuest", apiUrl, dto.getClubId()),
+					CommonResponse.class
+			);
+
+			if (Boolean.TRUE.equals(response.getData())) {
+				log.info("오늘의 퀘스트가 이미 존재하므로 AI 호출을 건너뜁니다.");
+				return;
+			}
+
+			GenerateQuestDto generateQuestDto = new GenerateQuestDto(dto.getSenderEmail(), String.valueOf(dto.getClubId()), "title");
+			GenerateQuestModel generateQuestModel = restTemplate.postForObject(
+					String.format("%s/generateQuest", aiUrl),
+					generateQuestDto,
+					GenerateQuestModel.class
+			);
+			log.info("Successfully called AI API. Response for user {}: {}", generateQuestModel.getUser(), objectMapper.writeValueAsString(generateQuestModel.getQuestList()));
+
+			List<InsertQuestDto> insertQuestDtoList = new ArrayList<>();
+			generateQuestModel.getQuestList().forEach(questModel -> {
+				insertQuestDtoList.add(new InsertQuestDto(
+						questModel.getQuestTitle(),
+						questModel.getQuestDescription(),
+						questModel.getDifficulty()
+				));
+			});
+
+			restTemplate.postForObject(
+					String.format("%s/api/club/%s/quest", apiUrl, dto.getClubId()),
+					insertQuestDtoList,
+					CommonResponse.class
+			);
+
+		} catch (Exception e) {
+			log.error("Error calling API: {} {}", dto.getClubId(), dto.getSenderEmail(), e);
+		}
+	}
+
+	/**
 	 * 사용자가 club에 가입하면 AI에 정보를 전달해서 퀘스트 생성
 	 */
-//	public void sendUserInfoToAI(final ChatPayloadDto dto) {
+//	public void createTodayQuestIfAbsent(final ChatPayloadDto dto) {
 //		chatApiClient.getUserIdByEmail(dto.getSenderEmail())
 //				.flatMap(extractedUserId -> {
 //					log.info("Extracted User ID: {}", extractedUserId);

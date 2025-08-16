@@ -1,22 +1,24 @@
 package com.nameless.social.api.service;
 
-import com.nameless.social.api.dto.InsertQuestDto;
-import com.nameless.social.api.dto.QuestSuccessDto;
-import com.nameless.social.api.dto.UserQuestDto;
+import com.nameless.social.api.dto.*;
 import com.nameless.social.api.exception.CustomException;
 import com.nameless.social.api.exception.ErrorCode;
 import com.nameless.social.api.model.*;
+import com.nameless.social.api.repository.ClubRepository;
 import com.nameless.social.api.repository.QuestRepository;
 import com.nameless.social.api.repository.UserGroupRepository;
 import com.nameless.social.api.repository.user.UserRepository;
 import com.nameless.social.core.entity.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -25,9 +27,14 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class QuestService {
+	private final ClubRepository clubRepository;
 	private final UserRepository userRepository;
 	private final UserGroupRepository userGroupRepository;
 	private final QuestRepository questRepository;
+	private final RestTemplate restTemplate;
+
+	@Value("${services.ai.url}")
+	private String aiUrl;
 
 	public QuestModel getQuest(final String email) {
 		// 1. 유저 조회
@@ -199,23 +206,25 @@ public class QuestService {
 	}
 
 	/**
+	 * 퀘스트 성공 처리
 	 * 그룹에서 퀘스트를 성공한 인원이 나온 경우 알려주는 api입니다
 	 * @param dto
 	 */
 	@Transactional
 	public void questSuccess(final User user, final QuestSuccessDto dto) {
-		dto.questList().forEach(questFeedbackDto -> {
-			Quest quest = questRepository.findByName(questFeedbackDto.quest())
-					.orElseThrow(() -> new CustomException(ErrorCode.QUEST_NOT_FOUND));
+		// TODO dto.quest()로 조회해야하는데 FE에서 잘못 전달하고 있음. 지금은 급하니깐 일단 이렇게 하기
+		Quest quest = questRepository.findByName(dto.club())
+				.orElseThrow(() -> new CustomException(ErrorCode.QUEST_NOT_FOUND));
 
-			// 본인 소유 퀘스트인지 검증
-			if (quest.getUser().getId() != user.getId()) {
-				log.warn("다른 사용자의 퀘스트를 조작할 수 없습니다. - userId:{}, questId:{}", user.getId(), quest.getId());
-				throw new IllegalStateException("다른 사용자의 퀘스트를 수정할 수 없습니다.");
-			}
+		// 본인 소유 퀘스트인지 검증
+		if (quest.getUser().getId() != user.getId()) {
+			log.warn("다른 사용자의 퀘스트를 조작할 수 없습니다. - userId:{}, questId:{}", user.getId(), quest.getId());
+			throw new IllegalStateException("다른 사용자의 퀘스트를 수정할 수 없습니다.");
+		}
 
-			quest.setSuccess(true); // 변경 감지로 update 실행
-		});
+		quest.setSuccess(true); // 변경 감지로 update 실행
+
+		sendFeedbackToAI(user, quest, dto);
 	}
 
 	/**
@@ -267,15 +276,52 @@ public class QuestService {
 				.build();
 	}
 
-	private AddQuestModel insertQuest(final InsertQuestDto dto) {
-		Quest quest = Quest.builder()
-				.name(dto.name())
-				.description(dto.description())
-				.tag(dto.tags())
-				.isSuccess(false)
-				.build();
-		questRepository.save(quest);
+	public void insertQuest(final long clubId, final List<InsertQuestDto> dtoList) {
+		Club club = clubRepository.findById(clubId)
+				.orElseThrow(() -> new CustomException(ErrorCode.CLUB_NOT_FOUND));
 
-		return AddQuestModel.of(quest);
+		dtoList.forEach(dto -> {
+			Quest quest = Quest.builder()
+					.name(dto.title())
+					.description(dto.description())
+					.isSuccess(false)
+					.club(club)
+					.difficulty(dto.difficulty())
+					.build();
+			questRepository.save(quest);
+		});
+	}
+
+	private void sendFeedbackToAI(User user, Quest quest, QuestSuccessDto dto) {
+		final String url = String.format("%s/feedbackQuest", aiUrl);
+
+		try {
+			String feedback = dto.feedback();
+			FeedbackQuestRequestDto requestDto = new FeedbackQuestRequestDto(
+					user.getEmail(),
+					quest.getName(),
+					String.valueOf(quest.getClub().getId()),
+					quest.getClub().getName(),
+					feedback,
+					dto.isLike()
+			);
+
+			String response = restTemplate.postForObject(url, requestDto, String.class);
+			log.info("Successfully called AI feedback API. Response: {}", response);
+
+		} catch (Exception e) {
+			log.error("Error calling AI feedback API for user: {}", user.getEmail(), e);
+		}
+	}
+
+	/**
+	 * 오늘 퀘스트가 할당되었는지 체크
+	 * @param clubId
+	 * @return
+	 */
+	public boolean existQuest(final long clubId) {
+		LocalDateTime startOfDay = LocalDate.now().atStartOfDay();
+		LocalDateTime endOfDay = LocalDate.now().atTime(LocalTime.MAX);
+		return questRepository.countByClubIdAndCreatedAtBetween(clubId, startOfDay, endOfDay) >= 3;
 	}
 }

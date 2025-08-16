@@ -1,0 +1,48 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: yeeun
+      changes:
+        - modifyDataType:
+            tableName: quest
+            columnName: description
+            newDataType: MEDIUMTEXT
+      rollback:
+        - modifyDataType:
+            tableName: quest
+            columnName: description
+            newDataType: VARCHAR(255)
+
+  - changeSet:
+      id: 2
+      author: yeeun
+      changes:
+        - addColumn:
+            tableName: quest
+            columns:
+              - column:
+                  name: is_visible
+                  type: BOOLEAN
+                  defaultValueBoolean: true
+                  constraints:
+                    nullable: false
+      rollback:
+        - dropColumn:
+            tableName: quest
+            columnName: is_visible
+
+  - changeSet:
+      id: 3
+      author: yeeun
+      changes:
+        - addColumn:
+            tableName: quest
+            columns:
+              - column:
+                  name: difficulty
+                  type: BIGINT
+                  defaultValueNumeric: 0
+      rollback:
+        - dropColumn:
+            tableName: quest
+            columnName: difficulty

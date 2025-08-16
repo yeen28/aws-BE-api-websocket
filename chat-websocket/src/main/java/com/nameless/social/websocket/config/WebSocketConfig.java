@@ -6,9 +6,17 @@ import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBr
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 
+import org.springframework.context.annotation.Bean;
+import org.springframework.web.client.RestTemplate;
+
 @Configuration
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
+	@Bean
+	public RestTemplate restTemplate() {
+		return new RestTemplate();
+	}
+
 	@Override
 	public void configureMessageBroker(MessageBrokerRegistry config) {
 		config.enableSimpleBroker("/topic", "/topic/chatroom"); // 메시지를 구독하는 클라이언트에게 메시지를 전달할 prefix

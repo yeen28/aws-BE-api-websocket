@@ -137,6 +137,7 @@ public class UserService {
 		Club club = clubRepository.findByName(leaveClubDto.getClub())
 				.orElseThrow(() -> new CustomException(ErrorCode.CLUB_NOT_FOUND));
 
+		// TODO 퀘스트에 delete flag 하나 있어야 함 -> 이유: 통계를 위해 컬럼은 있어야 하기 때문. 재가입을 해도 이전 퀘스트가 보임.
 		userClubRepository.deleteByIdUserIdAndClubId(user.getId(), club.getId());
 	}
 

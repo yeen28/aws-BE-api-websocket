@@ -16,6 +16,7 @@ public class Quest extends BaseTimeEntity {
 	@Column(nullable = false)
 	private String name;
 
+	@Column(columnDefinition = "TEXT")
 	private String description;
 
 	private String tag;
@@ -23,6 +24,11 @@ public class Quest extends BaseTimeEntity {
 	@Setter
 	@Column(nullable = false)
 	private boolean isSuccess;
+
+	@Column(nullable = false)
+	private boolean isVisible = true;
+
+	private Long difficulty;
 
 	@ManyToOne
 	@JoinColumn(name = "club_id")
