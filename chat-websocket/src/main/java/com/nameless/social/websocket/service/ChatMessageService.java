@@ -61,25 +61,36 @@ public class ChatMessageService {
 	 * 사용자가 club에 접속했을 때, 오늘 생성된 퀘스트가 없다면 퀘스트 생성 요청
 	 */
 	public void createTodayQuestIfAbsent(final ChatPayloadDto dto) {
+		CommonResponse response = null;
 		try {
-			CommonResponse response = restTemplate.getForObject(
+			response = restTemplate.getForObject(
 					String.format("%s/api/club/%s/existQuest", apiUrl, dto.getClubId()),
 					CommonResponse.class
 			);
 
-			if (Boolean.TRUE.equals(response.getData())) {
-				log.info("오늘의 퀘스트가 이미 존재하므로 AI 호출을 건너뜁니다.");
-				return;
-			}
+		} catch (Exception e) {
+			log.error("Error calling API: {} {} {}", dto.getClubId(), dto.getSenderEmail(), e.getMessage());
+		}
 
+		if (Boolean.TRUE.equals(response.getData())) {
+			log.info("오늘의 퀘스트가 이미 존재하므로 AI 호출을 건너뜁니다.");
+			return;
+		}
+
+		GenerateQuestModel generateQuestModel = null;
+		try {
 			GenerateQuestDto generateQuestDto = new GenerateQuestDto(dto.getSenderEmail(), String.valueOf(dto.getClubId()), "title");
-			GenerateQuestModel generateQuestModel = restTemplate.postForObject(
+			generateQuestModel = restTemplate.postForObject(
 					String.format("%s/generateQuest", aiUrl),
 					generateQuestDto,
 					GenerateQuestModel.class
 			);
 			log.info("Successfully called AI API. Response for user {}: {}", generateQuestModel.getUser(), objectMapper.writeValueAsString(generateQuestModel.getQuestList()));
+		} catch (Exception e) {
+			log.error("Error calling API: {} {} {}", dto.getClubId(), dto.getSenderEmail(), e.getMessage());
+		}
 
+		try {
 			List<InsertQuestDto> insertQuestDtoList = new ArrayList<>();
 			generateQuestModel.getQuestList().forEach(questModel -> {
 				insertQuestDtoList.add(new InsertQuestDto(
@@ -96,7 +107,7 @@ public class ChatMessageService {
 			);
 
 		} catch (Exception e) {
-			log.error("Error calling API: {} {}", dto.getClubId(), dto.getSenderEmail(), e);
+			log.error("Error calling API: {} {} {}", dto.getClubId(), dto.getSenderEmail(), e.getMessage());
 		}
 	}
 
