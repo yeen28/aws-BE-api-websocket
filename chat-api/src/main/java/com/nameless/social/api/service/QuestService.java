@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
+@Transactional
 public class QuestService {
 	private final ClubRepository clubRepository;
 	private final UserRepository userRepository;
