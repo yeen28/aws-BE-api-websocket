@@ -11,3 +11,5 @@ databaseChangeLog:
       file: db/changelog/250812-update-table-users.yaml
   - include:
       file: db/changelog/250815-update-column-group.yaml
+  - include:
+      file: db/changelog/250817-update-column-quest.yaml

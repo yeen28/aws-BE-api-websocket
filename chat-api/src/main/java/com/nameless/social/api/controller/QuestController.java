@@ -1,5 +1,6 @@
 package com.nameless.social.api.controller;
 
+import com.nameless.social.api.dto.InsertQuestDto;
 import com.nameless.social.api.dto.QuestSuccessDto;
 import com.nameless.social.api.dto.UserQuestDto;
 import com.nameless.social.api.handler.UserInfo;
@@ -11,6 +12,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -72,5 +75,23 @@ public class QuestController {
 	) {
 		questService.questSuccess(user, questSuccessDto);
 		return CommonResponse.success(HttpStatus.OK);
+	}
+
+	@Operation(summary = "퀘스트 저장")
+	@PostMapping("/club/{clubId}/quest")
+	public CommonResponse<Object> insertQuest(
+			@PathVariable("clubId") final long clubId,
+			@RequestBody final List<InsertQuestDto> questDtoList
+	) {
+		questService.insertQuest(clubId, questDtoList);
+		return CommonResponse.success(HttpStatus.OK);
+	}
+
+	@Operation(summary = "오늘 퀘스트가 존재하는지 체크")
+	@GetMapping("/club/{clubId}/existQuest")
+	public CommonResponse<Object> existQuest(
+			@PathVariable("clubId") final long clubId
+	) {
+		return CommonResponse.success(questService.existQuest(clubId));
 	}
 }

@@ -1,4 +1,4 @@
-package com.nameless.social.api.dto;
+package com.nameless.social.websocket.dto;
 
 public record InsertQuestDto(
 	String title, // Quest title

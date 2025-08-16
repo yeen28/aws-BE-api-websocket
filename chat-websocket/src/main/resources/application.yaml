@@ -13,6 +13,8 @@ server:
 services:
   chat-api:
     url: ${CHAT_API_URL}
+  ai:
+    url: ${AI_URL}
 
 aws:
   dynamodb:
