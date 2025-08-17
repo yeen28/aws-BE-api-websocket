@@ -237,12 +237,18 @@ public class QuestService {
 	public void questSuccess(final User user, final QuestSuccessDto dto) {
 		// TODO dto.quest()로 조회해야하는데 FE에서 잘못 전달하고 있음. 지금은 급하니깐 일단 이렇게 하기
 		Quest quest = questRepository.findByName(dto.club())
-				.orElseThrow(() -> new CustomException(ErrorCode.QUEST_NOT_FOUND));
+				.orElseThrow(() -> {
+					log.warn("{} - {} {} {}", ErrorCode.QUEST_NOT_FOUND.getMessage(), user.getEmail(), dto.club(), dto.quest());
+					return new CustomException(ErrorCode.QUEST_NOT_FOUND);
+				});
 
 		// userQuest의 successAt을 현재 시간으로 업데이트
 		UserQuestId userQuestId = new UserQuestId(user.getId(), quest.getId());
 		UserQuest userQuest = userQuestRepository.findById(userQuestId)
-				.orElseThrow(() -> new CustomException(ErrorCode.USER_QUEST_NOT_FOUND));
+				.orElseThrow(() -> {
+					log.warn("{} - {} {} {}", ErrorCode.USER_QUEST_NOT_FOUND.getMessage(), user.getEmail(), dto.club(), dto.quest());
+					return new CustomException(ErrorCode.USER_QUEST_NOT_FOUND);
+				});
 
 		userQuest.setSuccess(true);
 		userQuest.setSuccess_at(LocalDateTime.now());
