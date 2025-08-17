@@ -1,8 +1,10 @@
 package com.nameless.social.api.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nameless.social.api.dto.*;
 import com.nameless.social.api.exception.CustomException;
 import com.nameless.social.api.exception.ErrorCode;
+import com.nameless.social.api.model.GenerateQuestModel;
 import com.nameless.social.api.model.user.*;
 import com.nameless.social.api.repository.*;
 import com.nameless.social.api.repository.user.UserRepository;
@@ -10,8 +12,10 @@ import com.nameless.social.core.model.UserInfoModel;
 import com.nameless.social.core.entity.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -32,6 +36,11 @@ public class UserService {
 	private final UserGroupRepository userGroupRepository;
 	private final UserClubRepository userClubRepository;
 	private final ClubRepository clubRepository;
+	private final RestTemplate restTemplate;
+	private final ObjectMapper objectMapper = new ObjectMapper();
+
+	@Value("${services.ai.url}")
+	private String aiUrl;
 
 	@Transactional
 	public UserModel getOrCreateUser(final UserDto userDto) {
@@ -172,13 +181,54 @@ public class UserService {
 	 * @param clubs
 	 */
 	private void addUserQuest(final User user, final List<Club> clubs) {
+		log.info("add user quest >>> {}", user.getEmail());
 		LocalDate today = LocalDate.now();
 		LocalDateTime start = today.atStartOfDay();
 		LocalDateTime end = today.plusDays(1).atStartOfDay().minusNanos(1);
 
-		List<Quest> questsToday = questRepository.findByCreatedAtBetween(start, end);
-
 		clubs.forEach(club -> {
+			List<Quest> questsToday = questRepository.findByCreatedAtBetween(start, end).stream()
+					.filter(quest -> quest.getClub().getId() == club.getId())
+					.toList();
+
+			if (questsToday.isEmpty()) {
+				GenerateQuestModel generateQuestModel = null;
+				try {
+					GenerateQuestDto generateQuestDto = new GenerateQuestDto(user.getEmail(), String.valueOf(club.getId()), club.getName());
+					generateQuestModel = restTemplate.postForObject(
+							String.format("%s/generateQuest", aiUrl),
+							generateQuestDto,
+							GenerateQuestModel.class
+					);
+					log.info("Successfully called AI API. Response for user {}: {}", generateQuestModel.getUser(), objectMapper.writeValueAsString(generateQuestModel.getQuestList()));
+				} catch (Exception e) {
+					log.error("Error calling API: {} {} {}", club.getId(), user.getEmail(), e.getMessage());
+				}
+
+				List<InsertQuestDto> insertQuestDtoList = new ArrayList<>();
+				generateQuestModel.getQuestList().forEach(questModel -> {
+					insertQuestDtoList.add(new InsertQuestDto(
+							questModel.getQuestTitle(),
+							questModel.getQuestDescription(),
+							questModel.getDifficulty()
+					));
+				});
+
+				insertQuestDtoList.forEach(dto -> {
+					Quest quest = Quest.builder()
+							.name(dto.title())
+							.description(dto.description())
+							.club(club)
+							.difficulty(dto.difficulty())
+							.build();
+					questRepository.save(quest);
+				});
+
+				questsToday = questRepository.findByCreatedAtBetween(start, end).stream()
+						.filter(quest -> quest.getClub().getId() == club.getId())
+						.toList();
+			}
+
 			List<Quest> clubQuestsToday = questsToday.stream()
 					.filter(quest -> quest.getClub().getId() == club.getId())
 					.toList();
