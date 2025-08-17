@@ -24,7 +24,7 @@ public class CurQuestTotalModel {
 	private List<String> tag;
 	private String description;
 
-	public static CurQuestTotalModel of(final Quest quest, Map<Group, Club> groupClubMap) {
+	public static CurQuestTotalModel of(final Quest quest, Map<Group, Club> groupClubMap, boolean isSuccess) {
 		Group group = groupClubMap.keySet().iterator().next();
 		Club club = groupClubMap.values().iterator().next();
 
@@ -33,7 +33,7 @@ public class CurQuestTotalModel {
 				.quest(quest.getName())
 				.group(group.getName())
 				.club(club.getName())
-				.isSuccess(quest.isSuccess())
+				.isSuccess(isSuccess)
 				.tag(parseTags(quest.getTag()))
 				.description(quest.getDescription())
 				.build();

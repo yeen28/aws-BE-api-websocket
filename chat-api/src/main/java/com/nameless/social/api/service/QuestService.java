@@ -58,9 +58,18 @@ public class QuestService {
 			}
 		}
 
+		List<UserQuest> userQuests = userQuestRepository.findByIdUserId(user.getId());
+		Map<Long, UserQuest> userQuestMap = userQuests.stream()
+				.collect(Collectors.toMap(uq -> uq.getQuest().getId(), uq -> uq));
+
 		// 4. Quest -> CurQuestTotalModel 변환
 		List<CurQuestTotalModel> curQuestTotalModels = allQuests.stream()
-				.map(quest -> CurQuestTotalModel.of(quest, questMap.get(quest.getId())))
+				.filter(quest -> !Objects.isNull(userQuestMap.get(quest.getId())))
+				.map(quest -> {
+					UserQuest uq = userQuestMap.get(quest.getId());
+					boolean isSuccess = (uq != null) && uq.isSuccess();
+					return CurQuestTotalModel.of(quest, questMap.get(quest.getId()), isSuccess);
+				})
 				.toList();
 
 		return QuestModel.builder()
@@ -79,6 +88,10 @@ public class QuestService {
 		// 1. 유저 조회
 		User user = userRepository.findByEmail(email)
 				.orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+
+		List<UserQuest> userQuests = userQuestRepository.findByIdUserId(user.getId());
+		Map<Long, UserQuest> userQuestMapById = userQuests.stream()
+				.collect(Collectors.toMap(uq -> uq.getQuest().getId(), uq -> uq));
 
 		// 2. 유저가 속한 그룹과 클럽 → 퀘스트 목록 수집
 		List<Group> groups = userGroupRepository.findAllByIdUserId(user.getId())
@@ -114,11 +127,17 @@ public class QuestService {
 			List<Quest> questsInDay = questsByDay.getOrDefault(day, List.of());
 
 			long totalNum = questsInDay.size();
-			long successNum = questsInDay.stream().filter(Quest::isSuccess).count();
+			long successNum = questsInDay.stream().filter(q -> {
+				UserQuest uq = userQuestMapById.get(q.getId());
+				return uq != null && uq.isSuccess();
+			}).count();
 
 			// 그룹별 성공 퀘스트 수 집계
 			String bestGroup = questsInDay.stream()
-					.filter(Quest::isSuccess)
+					.filter(q -> {
+						UserQuest uq = userQuestMapById.get(q.getId());
+						return uq != null && uq.isSuccess();
+					})
 					.collect(Collectors.groupingBy(
 							q -> questMap.get(q.getId()).keySet().iterator().next().getName(),
 							Collectors.counting()
@@ -155,6 +174,10 @@ public class QuestService {
 		User user = userRepository.findByEmail(email)
 				.orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
+		List<UserQuest> userQuests = userQuestRepository.findByIdUserId(user.getId());
+		Map<Long, UserQuest> userQuestMapById = userQuests.stream()
+				.collect(Collectors.toMap(uq -> uq.getQuest().getId(), uq -> uq));
+
 		// 2. 오늘 날짜
 		LocalDate today = LocalDate.now();
 
@@ -173,12 +196,14 @@ public class QuestService {
 
 					// 오늘 날짜 제외
 					if (!createDate.isEqual(today)) {
+						UserQuest uq = userQuestMapById.get(quest.getId());
+						boolean isSuccess = (uq != null) && uq.isSuccess();
 						prevQuests.add(
 								QuestPrevTotalModel.builder()
 										.questId(quest.getId())
 										.quest(quest.getName())
 										.group(group.getName())
-										.isSuccess(quest.isSuccess())
+										.isSuccess(isSuccess)
 										.completeTime(createDate) // createTime → LocalDate
 										.build()
 						);
@@ -214,12 +239,6 @@ public class QuestService {
 		Quest quest = questRepository.findByName(dto.club())
 				.orElseThrow(() -> new CustomException(ErrorCode.QUEST_NOT_FOUND));
 
-		// 본인 소유 퀘스트인지 검증
-		if (quest.getUser().getId() != user.getId()) {
-			log.warn("다른 사용자의 퀘스트를 조작할 수 없습니다. - userId:{}, questId:{}", user.getId(), quest.getId());
-			throw new IllegalStateException("다른 사용자의 퀘스트를 수정할 수 없습니다.");
-		}
-
 		// userQuest의 successAt을 현재 시간으로 업데이트
 		UserQuestId userQuestId = new UserQuestId(user.getId(), quest.getId());
 		UserQuest userQuest = userQuestRepository.findById(userQuestId)
@@ -241,14 +260,22 @@ public class QuestService {
 		LocalDateTime thirtyDaysAgo = LocalDateTime.now().minusDays(30);
 		LocalDate yesterday = LocalDate.now().minusDays(1);
 
+		List<UserQuest> userQuests = userQuestRepository.findByIdUserId(user.getId());
+		Map<Long, UserQuest> userQuestMapById = userQuests.stream()
+				.collect(Collectors.toMap(uq -> uq.getQuest().getId(), uq -> uq));
+
 		// 30일 이내의 퀘스트만 필터링
-		List<Quest> recentQuests = user.getQuests().stream()
+		List<Quest> recentQuests = userQuests.stream()
+				.map(UserQuest::getQuest)
 				.filter(q -> q.getCreatedAt().isAfter(thirtyDaysAgo))
 				.toList();
 
 		long totalQuestNum = recentQuests.size();
 		long successQuestNum = recentQuests.stream()
-				.filter(Quest::isSuccess)
+				.filter(q -> {
+					UserQuest uq = userQuestMapById.get(q.getId());
+					return uq != null && uq.isSuccess();
+				})
 				.count();
 
 		// 연속 성공 일수 계산
@@ -258,7 +285,11 @@ public class QuestService {
 		while (continuousDays <= 30) {
 			LocalDate finalCurrentDate = currentDate;
 			boolean hasSuccessOnDay = recentQuests.stream()
-					.anyMatch(q -> q.isSuccess() && q.getCreatedAt().toLocalDate().isEqual(finalCurrentDate));
+					.anyMatch(q -> {
+						UserQuest uq = userQuestMapById.get(q.getId());
+						boolean success = uq != null && uq.isSuccess();
+						return success && q.getCreatedAt().toLocalDate().isEqual(finalCurrentDate);
+					});
 
 			if (hasSuccessOnDay) {
 				continuousDays++;
@@ -288,7 +319,6 @@ public class QuestService {
 			Quest quest = Quest.builder()
 					.name(dto.title())
 					.description(dto.description())
-					.isSuccess(false)
 					.club(club)
 					.difficulty(dto.difficulty())
 					.build();
