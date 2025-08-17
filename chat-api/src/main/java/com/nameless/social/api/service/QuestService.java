@@ -7,6 +7,7 @@ import com.nameless.social.api.model.*;
 import com.nameless.social.api.repository.ClubRepository;
 import com.nameless.social.api.repository.QuestRepository;
 import com.nameless.social.api.repository.UserGroupRepository;
+import com.nameless.social.api.repository.UserQuestRepository;
 import com.nameless.social.api.repository.user.UserRepository;
 import com.nameless.social.core.entity.*;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Transactional
 public class QuestService {
+	private final UserQuestRepository userQuestRepository;
 	private final ClubRepository clubRepository;
 	private final UserRepository userRepository;
 	private final UserGroupRepository userGroupRepository;
@@ -36,18 +38,14 @@ public class QuestService {
 	@Value("${services.ai.url}")
 	private String aiUrl;
 
-	public QuestModel getQuest(final String email) {
-		// 1. 유저 조회
-		User user = userRepository.findByEmail(email)
-				.orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-
-		// 2. 유저가 속한 그룹 리스트 조회
+	public QuestModel getQuest(final User user) {
+		// 유저가 속한 그룹 리스트 조회
 		List<Group> groups = userGroupRepository.findAllByIdUserId(user.getId())
 				.stream()
 				.map(UserGroup::getGroup)
 				.toList();
 
-		// 3. questMap: questId -> {Group, Club} 매핑, allQuests: 모든 Quest 수집
+		// questMap: questId -> {Group, Club} 매핑, allQuests: 모든 Quest 수집
 		Map<Long, Map<Group, Club>> questMap = new HashMap<>();
 		List<Quest> allQuests = new ArrayList<>();
 
@@ -66,7 +64,7 @@ public class QuestService {
 				.toList();
 
 		return QuestModel.builder()
-				.id(email)
+				.id(user.getEmail())
 				.curQuestTotalList(curQuestTotalModels)
 				.build();
 	}
@@ -222,7 +220,13 @@ public class QuestService {
 			throw new IllegalStateException("다른 사용자의 퀘스트를 수정할 수 없습니다.");
 		}
 
-		quest.setSuccess(true); // 변경 감지로 update 실행
+		// userQuest의 successAt을 현재 시간으로 업데이트
+		UserQuestId userQuestId = new UserQuestId(user.getId(), quest.getId());
+		UserQuest userQuest = userQuestRepository.findById(userQuestId)
+				.orElseThrow(() -> new CustomException(ErrorCode.USER_QUEST_NOT_FOUND));
+
+		userQuest.setSuccess(true);
+		userQuest.setSuccess_at(LocalDateTime.now());
 
 		sendFeedbackToAI(user, quest, dto);
 	}

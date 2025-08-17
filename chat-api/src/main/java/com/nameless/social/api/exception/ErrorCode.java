@@ -33,6 +33,9 @@ public enum ErrorCode {
 
 	// UserClub
 	USER_CLUB_NOT_FOUND(HttpStatus.NOT_FOUND, "UC001", "User is not a member of any club"),
+
+	// UserQuest
+	USER_QUEST_NOT_FOUND(HttpStatus.NOT_FOUND, "UQ001", "User Quest not found"),
 	;
 
 	private final HttpStatus status;

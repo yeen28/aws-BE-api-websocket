@@ -34,7 +34,7 @@ public class User extends BaseTimeEntity {
 	private List<UserGroup> userGroups = new ArrayList<>();
 
 	@OneToMany(mappedBy = "user")
-	private List<Quest> quests = new ArrayList<>();
+	private List<UserQuest> userQuests = new ArrayList<>();
 
 	// TODO test를 위해서만 사용 중. 실제 서비스에 사용하려면 사용 가능한지 확인 필요
 	@ConstructorProperties({"token", "name", "email"})

@@ -1,0 +1,11 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: yeeun
+      changes:
+        - dropColumn:
+            tableName: quest
+            columnName: is_success
+        - dropColumn:
+            tableName: quest
+            columnName: is_visible
