@@ -4,10 +4,7 @@ import com.nameless.social.api.dto.*;
 import com.nameless.social.api.exception.CustomException;
 import com.nameless.social.api.exception.ErrorCode;
 import com.nameless.social.api.model.user.*;
-import com.nameless.social.api.repository.ClubRepository;
-import com.nameless.social.api.repository.GroupRepository;
-import com.nameless.social.api.repository.UserClubRepository;
-import com.nameless.social.api.repository.UserGroupRepository;
+import com.nameless.social.api.repository.*;
 import com.nameless.social.api.repository.user.UserRepository;
 import com.nameless.social.core.model.UserInfoModel;
 import com.nameless.social.core.entity.*;
@@ -16,6 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -26,6 +25,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class UserService {
+	private final QuestRepository questRepository;
+	private final UserQuestRepository userQuestRepository;
 	private final UserRepository userRepository;
 	private final GroupRepository groupRepository;
 	private final UserGroupRepository userGroupRepository;
@@ -89,6 +90,8 @@ public class UserService {
 			userClubs.add(new UserClub(user, club));
 		}
 		userClubRepository.saveAll(userClubs);
+
+		addUserQuest(user, clubs);
 	}
 
 	@Transactional
@@ -160,5 +163,45 @@ public class UserService {
 		userClubRepository.deleteByIdUserId(deleteUserId);
 		userGroupRepository.deleteByIdUserId(deleteUserId);
 		userRepository.deleteById(deleteUserId);
+	}
+
+	/**
+	 * 사용자가 club에 가입하면 club에 해당하는 퀘스트들을 사용자에게 할당합니다.
+	 * 하지만 해당 club에서 이미 오늘 퀘스트를 받았던 사용자(오늘 탈퇴 후 바로 재가입)라면 퀘스트는 추가로 할당되지 않습니다.
+	 * @param user
+	 * @param clubs
+	 */
+	private void addUserQuest(final User user, final List<Club> clubs) {
+		LocalDate today = LocalDate.now();
+		LocalDateTime start = today.atStartOfDay();
+		LocalDateTime end = today.plusDays(1).atStartOfDay().minusNanos(1);
+
+		List<Quest> questsToday = questRepository.findByCreatedAtBetween(start, end);
+
+		clubs.forEach(club -> {
+			List<Quest> clubQuestsToday = questsToday.stream()
+					.filter(quest -> quest.getClub().getId() == club.getId())
+					.toList();
+
+			List<UserQuest> userQuestsToSave = new ArrayList<>();
+
+			for (Quest quest : clubQuestsToday) {
+				UserQuestId userQuestId = new UserQuestId(user.getId(), quest.getId());
+				Optional<UserQuest> existingUserQuestOpt = userQuestRepository.findById(userQuestId);
+
+				if (existingUserQuestOpt.isPresent()) {
+					UserQuest existingUserQuest = existingUserQuestOpt.get();
+					if (!existingUserQuest.isVisible()) {
+						existingUserQuest.setVisible(true);
+					}
+				} else {
+					userQuestsToSave.add(new UserQuest(user, quest));
+				}
+			}
+
+			if (!userQuestsToSave.isEmpty()) {
+				userQuestRepository.saveAll(userQuestsToSave);
+			}
+		});
 	}
 }

@@ -51,7 +51,7 @@ class GroupServiceTest {
 		user = new User("test token", "test", "test@test.com");
 		group = new Group(1L, "test Group", "[\"절약\", \"투자\", \"예산관리\", \"자동화\"]");
 		club = new Club(1L, "ClubA");
-		quest = new Quest(1L, "test Quest", false);
+		quest = Quest.builder().id(1L).name("test Quest").build();
 	}
 
 	@Test

@@ -27,7 +27,7 @@ public class QuestController {
 			@UserInfo final User user,
 			@RequestParam(value = "email", required = false) final String email
 	) {
-		return CommonResponse.success(questService.getQuest(user.getEmail()));
+		return CommonResponse.success(questService.getQuest(user));
 	}
 
 	@Operation(summary = "30일 기준으로 연속해서 성공하고 있는 퀘스트 수")
