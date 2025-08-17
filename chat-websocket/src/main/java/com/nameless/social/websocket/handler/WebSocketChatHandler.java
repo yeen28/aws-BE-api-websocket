@@ -43,24 +43,29 @@ public class WebSocketChatHandler {
 			imgType = MediaUtils.getType(chatPayloadDto.getMessage());
 		}
 
-		// JOIN, LEAVE가 아닐 때만 DynamoDB에 채팅 내역 저장
-		List<MessageType> notSaveTypes = List.of(MessageType.JOIN, MessageType.LEAVE);
-		if (!notSaveTypes.contains(chatPayloadDto.getType())) {
-			chatMessageService.save(
-					ChatMessage.builder()
-							.clubId(chatPayloadDto.getClubId())
-							.messageId(String.format("%s#%s", Instant.now().toString(), UUID.randomUUID()))
-							.senderEmail(chatPayloadDto.getSenderEmail())
-							.message(chatPayloadDto.getMessage())
-							.messageType(chatPayloadDto.getType().name())
-							.imageType(StringUtils.hasText(imgType) ? imgType : "")
-							.createdAt(LocalDateTime.now())
-							.build()
-			);
-		}
-
 		// 채팅방 구독자들에게 메시지 전송
 		messagingTemplate.convertAndSend("/topic/chatroom/" + chatPayloadDto.getClubId(), chatPayloadDto);
+
+		try {
+			// JOIN, LEAVE가 아닐 때만 DynamoDB에 채팅 내역 저장
+			List<MessageType> notSaveTypes = List.of(MessageType.JOIN, MessageType.LEAVE);
+			if (!notSaveTypes.contains(chatPayloadDto.getType())) {
+				chatMessageService.save(
+						ChatMessage.builder()
+								.clubId(chatPayloadDto.getClubId())
+								.messageId(String.format("%s#%s", Instant.now().toString(), UUID.randomUUID()))
+								.senderEmail(chatPayloadDto.getSenderEmail())
+								.message(chatPayloadDto.getMessage())
+								.messageType(chatPayloadDto.getType().name())
+								.imageType(StringUtils.hasText(imgType) ? imgType : "")
+								.createdAt(LocalDateTime.now())
+								.build()
+				);
+			}
+		} catch (Exception e) {
+			log.warn(e.getMessage());
+			log.warn("DynamoDB 저장 실패: {} {} {}", chatPayloadDto.getClubId(), chatPayloadDto.getSenderEmail(), chatPayloadDto.getMessage());
+		}
 	}
 
 	@MessageMapping("/chat.addUser")
