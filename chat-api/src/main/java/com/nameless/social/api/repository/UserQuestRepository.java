@@ -18,4 +18,5 @@ public interface UserQuestRepository extends JpaRepository<UserQuest, UserQuestI
 	int deleteByIdUserIdAndQuestId(long userId, long questId);
 
 	List<UserQuest> findByIdUserId(long userId);
+	List<UserQuest> findAllByIsSuccess(boolean flag);
 }

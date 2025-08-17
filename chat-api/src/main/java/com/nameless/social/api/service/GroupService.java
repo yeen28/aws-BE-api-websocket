@@ -4,10 +4,7 @@ import com.nameless.social.api.exception.CustomException;
 import com.nameless.social.api.exception.ErrorCode;
 import com.nameless.social.api.model.GroupInfoModel;
 import com.nameless.social.api.model.GroupModel;
-import com.nameless.social.api.repository.ClubRepository;
-import com.nameless.social.api.repository.GroupRepository;
-import com.nameless.social.api.repository.QuestRepository;
-import com.nameless.social.api.repository.UserGroupRepository;
+import com.nameless.social.api.repository.*;
 import com.nameless.social.api.repository.user.UserRepository;
 import com.nameless.social.core.entity.*;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +21,7 @@ import static com.nameless.social.api.utils.StrUtils.parseTags;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class GroupService {
+	private final UserQuestRepository userQuestRepository;
 	private final UserGroupRepository userGroupRepository;
 	private final QuestRepository questRepository;
 	private final ClubRepository clubRepository;
@@ -63,12 +61,17 @@ public class GroupService {
 		// quest는 없을 수도 있기 때문에 오류를 발생시키면 안됨.
 		List<Quest> quests = questRepository.findAll();
 
+		List<Long> questSuccessNum = userQuestRepository.findAllByIsSuccess(true).stream()
+				.map(userQuest -> userQuest.getQuest().getId())
+				.toList();
+
 		return GroupInfoModel.of(
 				group,
 				clubs,
 				memberCount,
 				quests,
-				parseTags(group.getTag())
+				parseTags(group.getTag()),
+				questSuccessNum
 		);
 	}
 
@@ -83,12 +86,17 @@ public class GroupService {
 					// quest는 없을 수도 있기 때문에 오류를 발생시키면 안됨.
 					List<Quest> quests = questRepository.findAll();
 
+					List<Long> questSuccessNum = userQuestRepository.findAllByIsSuccess(true).stream()
+							.map(userQuest -> userQuest.getQuest().getId())
+							.toList();
+
 					return GroupInfoModel.of(
 							group,
 							club,
 							memberCount,
 							quests,
-							parseTags(group.getTag())
+							parseTags(group.getTag()),
+							questSuccessNum
 					);
 				})
 				.toList();
