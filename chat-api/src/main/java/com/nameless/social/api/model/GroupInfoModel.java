@@ -30,7 +30,8 @@ public class GroupInfoModel {
 			final List<Club> clubs,
 			final long clubMemberNum,
 			final List<Quest> quests,
-			final List<String> tags
+			final List<String> tags,
+			final List<Long> questSuccessNum
 	) {
 		List<ClubGroupInfoModel> clubGroupInfoModels = clubs.stream()
 				.map(club -> ClubGroupInfoModel.builder()
@@ -52,9 +53,9 @@ public class GroupInfoModel {
 				.name(group.getName())
 				.description(group.getDescription())
 				.icon(group.getIcon())
-				.memberNum(10L) // TODO mock
+				.memberNum(clubMemberNum)
 				.questList(questNames)
-				.questSuccessNum(List.of(10L)) // TODO mock
+				.questSuccessNum(questSuccessNum)
 				.tag(tags)
 				.clubList(clubGroupInfoModels)
 //				.questCreateTime()
