@@ -1,7 +1,6 @@
 # Nameless Social Service
 
-## URL
-https://www.teamnameless.click
+#### URL : https://www.teamnameless.click
 
 ---
 
@@ -12,7 +11,7 @@ API와 WebSocket을 통해 클라이언트와 통신하며, 그룹, 클럽, 채�
 
 ---
 
-## 🏛️ 아키텍처
+## 모듈 구조
 
 본 프로젝트는 MSA(Microservice Architecture)를 지향하며, 기능별로 모듈이 분리되어 있습니다.
 
@@ -27,15 +26,15 @@ API와 WebSocket을 통해 클라이언트와 통신하며, 그룹, 클럽, 채�
 
 ## ⚙️ 기술 스택
 
-- **Backend**: Java 17, Spring Boot 3.x
+- Java 17, Spring Boot 3.x, JPA, JWT <!-- WebFlux -->
 - **Database**
   - **API**: MySQL
   - **Websocket**: AWS DynamoDB
 - **Database Migration**: Liquibase
 - **Authentication**: AWS Cognito
 - **Build Tool**: Gradle
-- **Containerization**: Docker
-- **CI/CD**: Jenkins, ArgoCD
+- **Containerization**: Docker, AWS ECR
+- **CI/CD**: Jenkins, Github Action, ArgoCD
 
 ## 📋 요구사항
 
