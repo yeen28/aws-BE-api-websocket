@@ -161,7 +161,7 @@ docker-compose down
 ---
 
 ## 기술 문서 & 트러블슈팅
-[WIKI](#https://github.com/yeen28/aws-backend-api-ws/wiki)
+[WIKI](https://github.com/yeen28/aws-backend-api-ws/wiki)
 
 ---
 
