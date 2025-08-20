@@ -19,7 +19,7 @@ public class StrUtils {
 		}
 
 		try {
-			return OBJECT_MAPPER.readValue(stringTags, new TypeReference<List<String>>() {});
+			return OBJECT_MAPPER.readValue(stringTags, new TypeReference<>() {});
 		} catch (JsonProcessingException e) {
 			log.warn("Json 파싱 오류 - {} {} {}", stringTags, ErrorCode.JSON_PROCESSING_EXCEPTION.getCode(), ErrorCode.JSON_PROCESSING_EXCEPTION.getMessage());
 			return List.of();

@@ -9,13 +9,20 @@ class StrUtilsTest {
 	@Test
 	void parseTagsTest() {
 		// given
-		String tags = "[\"tag1\", \"tag2\"]";
+		List<String> successTags = List.of(
+				"[\"tag1\", \"tag2\"]"
+		);
+		List<List<String>> expected = List.of(
+				List.of("tag1", "tag2")
+		);
 
-		// when
-		List<String> result = StrUtils.parseTags(tags);
+		for (int i = 0; i < successTags.size(); i++) {
+			// when
+			List<String> result = StrUtils.parseTags(successTags.get(i));
 
-		// then
-		assertEquals(List.of("tag1", "tag2"), result);
+			// then
+			assertEquals(expected.get(i), result);
+		}
 	}
 
 	@Test
@@ -23,11 +30,15 @@ class StrUtilsTest {
 		// given
 		List<String> failTags = List.of(
 				"",
-				"abcd"
+				"abcd",
+				"[\\\"tag1\\\", \\\"tag2\\\"]",
+				"{\\\"tag1\\\", \\\"tag2\\\"}",
+				"{\"tag1\", \"tag2\"}",
+				"{'tag1', 'tag2'}"
 		);
 
-		// when
 		failTags.forEach(failTag -> {
+			// when
 			List<String> result = StrUtils.parseTags(failTag);
 
 			// then
