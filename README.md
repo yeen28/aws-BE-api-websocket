@@ -4,12 +4,16 @@
 
 #### URL : https://www.teamnameless.click
 
+<br/>
+
 ---
 
 ## 개요
 
 실시간 채팅 및 개인 맞춤 퀘스트 제공 등 소셜 기능을 제공하는 서비스입니다.  
 API와 WebSocket을 통해 클라이언트와 통신하며, 그룹, 클럽, 채팅, 개인화된 퀘스트 제공으로 소셜 활동을 지원합니다.
+
+<br/>
 
 ---
 
@@ -23,6 +27,8 @@ API와 WebSocket을 통해 클라이언트와 통신하며, 그룹, 클럽, 채�
 - **`chat-api`**: API 서버로, 사용자인증, 그룹 관리, 퀘스트 관리 등 핵심 비즈니스 로직을 처리합니다.
 - **`chat-websocket`**: WebSocket 서버로, 실시간 채팅 및 이벤트 push 기능을 담당합니다.
 - **`chat-core`**: 공통으로 사용되는 데이터 모델(Entity) 및 유틸리티 클래스를 포함하는 모듈입니다.
+
+<br/>
 
 ---
 
@@ -45,11 +51,15 @@ API와 WebSocket을 통해 클라이언트와 통신하며, 그룹, 클럽, 채�
 - MySQL & AWS DynamoDB
 - AWS 계정 (Cognito, DynamoDB 사용을 위해)
 
+<br/>
+
 ---
 
 ## ERD
 
 ![image](readme-image/erd.png)
+
+<br/>
 
 ---
 
@@ -115,24 +125,7 @@ spring:
 - 원활한 토큰 검증을 위해 Cognito User Pool의 JWKS(JSON Web Key Set) URI가 공개적으로 접근 가능해야 합니다.
 -->
 
----
-
-### 프로젝트 빌드
-
-프로젝트 루트 디렉토리에서 아래 명령어를 실행하여 전체 프로젝트를 빌드합니다.
-
-```bash
-./gradlew clean build
-```
-
-### Docker로 빌드
-
-프로젝트 루트 디렉토리에 있는 `Dockerfile.api`와 `Dockerfile.websocket` 파일을 사용하여 API 서버와 WebSocket 서버를 Docker build 합니다.
-
-```bash
-docker build -f Dockerfile.api -t nameless-api .
-docker build -f Dockerfile.websocket -t nameless-ws .
-```
+<br/>
 
 <!-- 
 ```bash
@@ -148,8 +141,6 @@ docker-compose down
 ```                 
 -->
 
-> 본 프로젝트는 Jenkins를 통해 master branch에 commit하면 AWS ECR에 docker image를 push 한 뒤, AWS EKS 환경에서 실행하도록 구성했습니다.
-
 ---
 
 ## 🗄️ 데이터베이스
@@ -158,15 +149,28 @@ docker-compose down
 - `chat-api/src/main/resources/db/changelog` 디렉토리의 `db.changelog-master.yaml` 파일에 변경사항(Changeset)을 추가하여 스키마를 변경 및 관리합니다.
 - 애플리케이션 실행 시 Liquibase가 자동으로 변경사항을 감지하여 데이터베이스에 반영합니다.
 
+<br/>
+
+---
+
 ## 🔄 CI/CD
 
-- **GitHub Actions**: `.github/workflows/ci-build-test.yml`에 정의되어 있으며, Pull Request 시 자동으로 빌드 및 테스트를 수행합니다.
+> 본 프로젝트는 Jenkins를 통해 master branch에 commit하면 AWS ECR에 docker image를 push 한 뒤, AWS EKS 환경에서 실행하도록 구성했습니다.    
+> 추가로 Github Action CI도 구성했습니다.
+
+- **GitHub Actions**: `.github/workflows/ci-and-image-push.yml`에 정의되어 있으며, Github Action을 통해 `master` 또는 `release-`로 시작하는 branch에 commit하면 자동으로 Docker Hub에 docker image를 push 합니다.
+  - https://hub.docker.com/r/yestar28/aws-nameless-api/tags
+  - https://hub.docker.com/r/yestar28/aws-nameless-websocket/tags
 - **Jenkins**: `jenkinsfile`을 통해 ECR 빌드 및 배포 파이프라인을 구성했습니다.
+
+<br/>
 
 ---
 
 ## 기술 문서 & 트러블슈팅
 [WIKI](https://github.com/yeen28/aws-backend-api-ws/wiki)
+
+<br/>
 
 ---
 
