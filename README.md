@@ -1,5 +1,7 @@
 # Nameless Social Service
 
+#### 기간: 2025.07.28.~2025.08.18. (약 3주)
+
 #### URL : https://www.teamnameless.click
 
 ---
@@ -115,9 +117,7 @@ spring:
 
 ---
 
-## 🚀 시작하기
-
-### 1. 프로젝트 빌드
+### 프로젝트 빌드
 
 프로젝트 루트 디렉토리에서 아래 명령어를 실행하여 전체 프로젝트를 빌드합니다.
 
@@ -125,7 +125,7 @@ spring:
 ./gradlew clean build
 ```
 
-### 2. Docker로 빌드
+### Docker로 빌드
 
 프로젝트 루트 디렉토리에 있는 `Dockerfile.api`와 `Dockerfile.websocket` 파일을 사용하여 API 서버와 WebSocket 서버를 Docker build 합니다.
 
