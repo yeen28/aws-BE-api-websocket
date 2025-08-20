@@ -2,7 +2,7 @@
 
 #### 기간: 2025.07.28.~2025.08.18. (약 3주)
 
-#### URL : https://www.teamnameless.click
+#### 팀 구성: FE(1명), BE(1명), AI(1명), Infra(1명), QA&시연(1명)
 
 <br/>
 
