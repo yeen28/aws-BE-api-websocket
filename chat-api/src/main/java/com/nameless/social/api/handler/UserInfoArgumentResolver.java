@@ -46,21 +46,25 @@ public class UserInfoArgumentResolver implements HandlerMethodArgumentResolver {
 		int port = request.getServerPort();        // 예: 443
 		String scheme = request.getScheme();
 
+		// TODO local에서 테스트하는 경우는 자동 로그인. 실제 서비스할 때는 제거해야 함.
 		if (domain.startsWith("localhost")) {
 			return userRepository.findByEmail("admin@nameless.com").orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 		}
+
 		// Authorization 헤더 가져오기
 		String authHeader = webRequest.getHeader("Authorization");
 		if (StringUtils.isEmpty(authHeader) || !authHeader.startsWith("Bearer ")) {
-			// 인증 토큰이 없거나 형식이 맞지 않음
-			return null; // 또는 예외 처리
+			log.warn("인증 토큰이 없거나 형식이 맞지 않음");
+			throw new CustomException(ErrorCode.INVALID_TOKEN);
 		}
+
 		// "Bearer " 접두어 제거
 		String token = authHeader.substring(7);
 
 		// 토큰 검증 (예: CognitoTokenVerifier 사용)
 		boolean verify = cognitoTokenVerifier.verify(token);
 		if (!verify) {
+			log.warn("Cognito Token 검증 실패");
 			throw new CustomException(ErrorCode.INVALID_TOKEN);
 		}
 
@@ -70,7 +74,7 @@ public class UserInfoArgumentResolver implements HandlerMethodArgumentResolver {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if (authentication == null || !authentication.isAuthenticated()) {
 			log.warn("인증 객체에서 사용자 정보 확인 불가능");
-			return null; // or throw exception
+			throw new CustomException(ErrorCode.INVALID_TOKEN);
 		}
 
 		// TODO 사용자의 권한도 체크해야 함. ex) 관리자인지 일반 사용자인지 등등...

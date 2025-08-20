@@ -1,6 +1,5 @@
 package com.nameless.social.api.controller;
 
-import com.nameless.social.core.model.UserInfoModel;
 import com.nameless.social.api.dto.*;
 import com.nameless.social.api.handler.UserInfo;
 import com.nameless.social.api.response.CommonResponse;
@@ -8,84 +7,72 @@ import com.nameless.social.api.service.UserService;
 import com.nameless.social.core.entity.User;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+@Slf4j
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/users")
 @RequiredArgsConstructor
 public class UserController {
 	private final UserService userService;
 
 	@Operation(summary = "Cognito 서비스가 되지 않았을 때를 위한 캐시 업데이트용")
-	@GetMapping("/user/getUserCredentials")
-	public CommonResponse<Object> getUserCredentials(
-			@UserInfo final User user,
-			@RequestParam(value = "email", required = false) String email
-	) {
+	@GetMapping("/credentials")
+	public CommonResponse<Object> getUserCredentials(@UserInfo final User user) {
 		return CommonResponse.success(userService.getUserInfo(user.getEmail()));
 	}
 
-	@Operation(summary = "사용자 정보 조회")
-	@GetMapping("/user/getUserStatus")
-	public CommonResponse<Object> getUserInfo(
-			@UserInfo final User user,
-			@RequestParam(value = "email", required = false) final String email
-	) {
+	@Operation(summary = "내 정보 조회")
+	@GetMapping("/status")
+	public CommonResponse<Object> getUserInfo(@UserInfo final User user) {
 		return CommonResponse.success(userService.getUserInfo(user.getEmail()));
-	}
-
-	@Operation(summary = "Email로 사용자 정보 조회")
-	@GetMapping("/user")
-	public CommonResponse<UserInfoModel> getUserId(
-			@RequestParam("email") final String email
-	) {
-		return CommonResponse.success(userService.findUserInfo("admin@nameless.com"));
 	}
 
 	@Operation(summary = "사용자가 특정 클럽(소모임, 특정 그룹 내에 존재) 탈퇴")
-	@PostMapping("/user/leaveClub")
+	@DeleteMapping("/club/{clubId}")
 	public CommonResponse<Object> leaveClub(
 			@UserInfo final User user,
-			@RequestBody final LeaveClubDto leaveClubDto
+			@PathVariable("clubId") final long clubId
 	) {
-		userService.leaveClub(user, leaveClubDto);
+		userService.leaveClub(user, clubId);
 		return CommonResponse.success(HttpStatus.OK);
 	}
 
 	@Operation(summary = "사용자가 특정 그룹 탈퇴")
-	@PostMapping("/user/leaveGroup")
+	@DeleteMapping("/group/{groupId}")
 	public CommonResponse<Object> leaveGroup(
 			@UserInfo final User user,
-			@RequestBody final LeaveGroupDto leaveGroupDto
+			@PathVariable("groupId") final long groupId
 	) {
-		userService.leaveGroup(user, leaveGroupDto);
+		userService.leaveGroup(user, groupId);
 		return CommonResponse.success(HttpStatus.OK);
 	}
 
-	@Operation(summary = "사용자가 특정 클럽 가입")
-	@PostMapping("/user/joinClub")
-	public CommonResponse<Object> joinClub(
+	@Operation(summary = "사용자가 클럽(하나 또는 여러 개) 가입")
+	@PostMapping("/club")
+	public CommonResponse<Object> joinClubs(
 			@UserInfo final User user,
 			@RequestBody final JoinClubDto joinClubDto
 	) {
-		userService.joinClub(user, joinClubDto);
+		userService.joinClubs(user, joinClubDto);
 		return CommonResponse.success(HttpStatus.OK);
 	}
 
-	@Operation(summary = "사용자가 특정 Group 가입")
-	@PostMapping("/user/joinGroup")
+	@Operation(summary = "사용자가 하나의 Group 가입")
+	@PostMapping("/group/{grouopId}")
 	public CommonResponse<Object> joinGroup(
 			@UserInfo final User user,
-			@RequestBody final JoinGroupDto joinGroupDto
+			@PathVariable("groupId") final long groupId
 	) {
-		userService.joinGroup(user, joinGroupDto);
+		userService.joinGroup(user, groupId);
 		return CommonResponse.success(HttpStatus.OK);
 	}
 
 	@Operation(summary = "사용자 이름 수정")
-	@PostMapping("/user/setUsername")
+	@PutMapping("/name")
 	public CommonResponse<Object> setUsername(
 			@UserInfo final User user,
 			@RequestBody final UsernameDto usernameDto
@@ -95,13 +82,11 @@ public class UserController {
 	}
 
 	@Operation(summary = "사용자 아바타 이미지 업로드/수정")
-	@PostMapping("/user/setAvatar")
+	@PutMapping("/avatar")
 	public CommonResponse<Object> setAvatar(
 			@UserInfo final User user,
 			final MultipartHttpServletRequest multipartHttpServletRequest,
-			@RequestParam(value = "email", required = false) final String email
-//			User user,
-//			@RequestParam(value = "isDefault") boolean isDefault
+			@RequestParam(value = "isDefault") final boolean isDefault
 	) {
 //		try {
 		// TODO default image check

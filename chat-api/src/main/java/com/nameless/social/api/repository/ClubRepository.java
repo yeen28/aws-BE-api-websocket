@@ -16,4 +16,7 @@ public interface ClubRepository extends JpaRepository<Club, Long> {
 
 	@Query("SELECT c FROM Club c WHERE c.name IN :clubNames")
 	List<Club> findByNameList(@Param("clubNames") List<String> clubNames);
+
+	@Query("SELECT c FROM Club c WHERE c.id IN :ids")
+	List<Club> findByIds(@Param("ids") List<Long> clubIds);
 }

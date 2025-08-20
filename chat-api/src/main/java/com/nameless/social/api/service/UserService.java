@@ -84,11 +84,11 @@ public class UserService {
 	}
 
 	@Transactional
-	public void joinClub(final User user, final JoinClubDto dto) {
+	public void joinClubs(final User user, final JoinClubDto dto) {
 		// TODO group에 존재하는 user인지 유효성 검증하면 더 좋긴 함.
 //		Group group = groupRepository.findByName(dto.getGroup())
 //				.orElseThrow(() -> new CustomException(ErrorCode.GROUP_NOT_FOUND));
-		List<Club> clubs = clubRepository.findByNameList(dto.getClubList());
+		List<Club> clubs = clubRepository.findByIds(dto.getClubIds());
 		if (clubs.isEmpty()) {
 			log.warn("club is empty - {} {}", user.getId(), user.getEmail());
 			throw new CustomException(ErrorCode.CLUB_NOT_FOUND);
@@ -103,28 +103,27 @@ public class UserService {
 		addUserQuest(user, clubs);
 	}
 
+	/**
+	 * 하나의 그룹 가입
+	 * @param user
+	 * @param groupId
+	 */
 	@Transactional
-	public void joinGroup(final User user, final JoinGroupDto dto) {
+	public void joinGroup(final User user, final long groupId) {
 		// TODO group에 존재하는 user인지 유효성 검증하면 더 좋긴 함.
-		Group group = groupRepository.findByName(dto.getGroup())
-				.orElseThrow(() -> new CustomException(ErrorCode.GROUP_NOT_FOUND));
-		if (group == null) {
-			log.warn("group is empty - {} {}", user.getId(), user.getEmail());
-			throw new CustomException(ErrorCode.GROUP_NOT_FOUND);
-		}
+		Group group = groupRepository.findById(groupId)
+				.orElseThrow(() -> {
+					log.warn("group is empty - {} {}", user.getId(), user.getEmail());
+					return new CustomException(ErrorCode.GROUP_NOT_FOUND);
+				});
 
 		UserGroup userGroup = new UserGroup(user, group);
 		userGroupRepository.save(userGroup);
 	}
 
-	// TODO 좀 더 살펴보기
 	@Transactional
-	public void leaveGroup(final User user, final LeaveGroupDto dto) {
-		if (dto.getGroup() == null) {
-			throw new CustomException(ErrorCode.INVALID_INPUT_VALUE);
-		}
-
-		Group group = groupRepository.findByName(dto.getGroup())
+	public void leaveGroup(final User user, final long groupId) {
+		Group group = groupRepository.findById(groupId)
 				.orElseThrow(() -> new CustomException(ErrorCode.GROUP_NOT_FOUND));
 
 		UserGroupId userGroupId = new UserGroupId(user.getId(), group.getId());
@@ -145,8 +144,8 @@ public class UserService {
 	}
 
 	@Transactional
-	public void leaveClub(final User user, final LeaveClubDto leaveClubDto) {
-		Club club = clubRepository.findByName(leaveClubDto.getClub())
+	public void leaveClub(final User user, final long clubId) {
+		Club club = clubRepository.findById(clubId)
 				.orElseThrow(() -> new CustomException(ErrorCode.CLUB_NOT_FOUND));
 
 		// TODO 퀘스트에 delete flag 하나 있어야 함 -> 이유: 통계를 위해 컬럼은 있어야 하기 때문. 재가입을 해도 이전 퀘스트가 보임.

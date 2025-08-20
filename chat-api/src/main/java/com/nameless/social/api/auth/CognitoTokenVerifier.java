@@ -35,7 +35,7 @@ public class CognitoTokenVerifier {
 
 	/**
 	 * Cognito로 전달받은 JWT 토큰 검증
-	 * @param token
+	 * @param token idToken -> email 정보를 가져오기 위해서 AccessToken이 아니라 IdToken을 FE에서 전달받습니다.
 	 * @return true 인증 성공 | faLse 인증 실패
 	 */
 	public boolean verify(String token) {

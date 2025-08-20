@@ -10,7 +10,7 @@ import java.util.List;
 @Setter
 @Builder
 public class JoinClubDto {
-	private String user; // TODO 이전 사용자의 정보를 넘기는 것 같은데 user id를 전달하거나 token으로 확인해도 될듯..?
+	private String user;
 	private String group;
-	private List<String> clubList;
+	private List<Long> clubIds;
 }
