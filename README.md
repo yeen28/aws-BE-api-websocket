@@ -210,6 +210,12 @@ docker-compose down
 
 ![image](readme-image/group.png)
 
+![image](readme-image/quest-complete.png)
+
+퀘스트를 완료할 때 퀘스트에 대한 피드백을 전송하면, **AI는 다음 퀘스트 생성할 때 피드백 결과에 따라 개인화된 퀘스트를 생성합니다.**
+
+![image](readme-image/send-feedback.png)
+
 ### 6. Club 채팅 화면
 
 ![image](readme-image/chat.png)
