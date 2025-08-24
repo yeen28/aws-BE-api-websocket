@@ -9,6 +9,11 @@ jobs:
 
   gradle-build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - service: api
+          - service: websocket
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -25,14 +30,16 @@ jobs:
           path: |
             ~/.gradle/caches
             ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          key: ${{ runner.os }}-gradle-${{ matrix.service }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
-            ${{ runner.os }}-gradle-
+            ${{ runner.os }}-gradle-${{ matrix.service }}-
 
       - name: Grant execute permission for gradlew
+        working-directory: ./${{ matrix.service }}
         run: chmod +x gradlew
 
       - name: Build with Gradle
+        working-directory: ./${{ matrix.service }}
         run: ./gradlew build
 
   build-and-push-dockerhub:

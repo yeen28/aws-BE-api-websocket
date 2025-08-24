@@ -1,0 +1,118 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: __JOB_NAME__
+  namespace: cicd
+spec:
+  ttlSecondsAfterFinished: 300
+  backoffLimit: 0
+  template:
+    spec:
+      serviceAccountName: jenkins-sa
+      nodeSelector:
+        nodegroup-role: cicd
+      tolerations:
+        - key: workload               # ci-a의 taint와 일치
+          operator: Equal
+          value: ci
+          effect: NoSchedule
+      restartPolicy: Never
+      activeDeadlineSeconds: 1800
+
+      volumes:
+        - name: docker-config
+          emptyDir: {}
+        - name: workspace
+          emptyDir: {}
+
+      initContainers:
+        - name: ecr-login
+          image: amazon/aws-cli:2.17.0
+          imagePullPolicy: IfNotPresent
+          command: ["/bin/sh","-c"]
+          args:
+            - >
+              set -e;
+              ECR_REG="__ACCOUNT_ID__.dkr.ecr.__AWS_REGION__.amazonaws.com";
+              mkdir -p /kaniko/.docker;
+              PW=$(aws ecr get-login-password --region __AWS_REGION__);
+              printf '{"auths":{"%s":{"username":"AWS","password":"%s"}}}' "$ECR_REG" "$PW" > /kaniko/.docker/config.json;
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "1Gi"
+          volumeMounts:
+            - name: docker-config
+              mountPath: /kaniko/.docker
+
+        - name: fetch-source
+          image: alpine/git:2.43.0
+          imagePullPolicy: IfNotPresent
+          command: ["/bin/sh","-c"]
+          args:
+            - >
+              set -e;
+              printf "machine github.com\n  login %s\n  password %s\n" "${GITHUB_USER}" "${GITHUB_PASS}" > /root/.netrc;
+              chmod 600 /root/.netrc;
+              git clone https://github.com/__ORG__/__REPO__.git /workspace;
+              cd /workspace && git checkout __GIT_REF__;
+          env:
+            - name: GITHUB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: __GH_BASIC_SECRET__
+                  key: username
+            - name: GITHUB_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: __GH_BASIC_SECRET__
+                  key: password
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "512Mi"
+          volumeMounts:
+            - name: workspace
+              mountPath: /workspace
+
+      containers:
+        - name: kaniko
+          image: gcr.io/kaniko-project/executor:v1.23.2
+          imagePullPolicy: IfNotPresent
+          args:
+            - --context=__BUILD_CONTEXT__         # 보통 /workspace 로 치환
+            - --dockerfile=__DOCKERFILE__
+            - --destination=__ACCOUNT_ID__.dkr.ecr.__AWS_REGION__.amazonaws.com/__ECR_REPO__:__IMAGE_TAG__
+            - --destination=__ACCOUNT_ID__.dkr.ecr.__AWS_REGION__.amazonaws.com/__ECR_REPO__:latest
+            - --cache=true
+            - --cache-repo=__ACCOUNT_ID__.dkr.ecr.__AWS_REGION__.amazonaws.com/__ECR_REPO__:buildcache
+            - --snapshotMode=redo
+            - --verbosity=info
+          env:
+            - name: AWS_REGION
+              value: "__AWS_REGION__"
+            - name: ACCOUNT_ID
+              value: "__ACCOUNT_ID__"
+            - name: ECR_REPO
+              value: "__ECR_REPO__"
+            - name: IMAGE_TAG
+              value: "__IMAGE_TAG__"
+            - name: GIT_REF
+              value: "__GIT_REF__"
+            - name: JOB_NAME
+              value: "__JOB_NAME__"
+
+          resources:
+            requests:
+              cpu: "1000m"
+              memory: "4Gi"
+              ephemeral-storage: "10Gi"
+            limits:
+              cpu: "2000m"
+              memory: "16Gi"
+              ephemeral-storage: "40Gi"
+          volumeMounts:
+            - name: docker-config
+              mountPath: /kaniko/.docker
+            - name: workspace
+              mountPath: /workspace

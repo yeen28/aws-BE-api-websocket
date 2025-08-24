@@ -1,0 +1,168 @@
+.
+├── Dockerfile.websocket
+├── build-and-push-ecr.sh
+├── build.gradle
+├── chat-core
+│   ├── build.gradle
+│   ├── out
+│   │   └── production
+│   │       └── classes
+│   │           └── com
+│   │               └── nameless
+│   │                   └── social
+│   │                       └── core
+│   │                           ├── entity
+│   │                           │   ├── BaseTimeEntity.class
+│   │                           │   ├── ChatMessage$ChatMessageBuilder.class
+│   │                           │   ├── ChatMessage.class
+│   │                           │   ├── Club.class
+│   │                           │   ├── Group.class
+│   │                           │   ├── Quest$QuestBuilder.class
+│   │                           │   ├── Quest.class
+│   │                           │   ├── User.class
+│   │                           │   ├── UserClub.class
+│   │                           │   ├── UserClubId.class
+│   │                           │   ├── UserGroup.class
+│   │                           │   ├── UserGroupId.class
+│   │                           │   ├── UserQuest.class
+│   │                           │   └── UserQuestId.class
+│   │                           └── model
+│   │                               ├── UserInfoModel$UserInfoModelBuilder.class
+│   │                               └── UserInfoModel.class
+│   └── src
+│       └── main
+│           ├── generated
+│           └── java
+│               └── com
+│                   └── nameless
+│                       └── social
+│                           └── core
+│                               ├── entity
+│                               │   └── ChatMessage.java
+│                               └── model
+│                                   └── UserInfoModel.java
+├── chat-websocket
+│   ├── Jenkinsfile
+│   ├── build.gradle
+│   ├── out
+│   │   ├── production
+│   │   │   ├── classes
+│   │   │   │   └── com
+│   │   │   │       └── nameless
+│   │   │   │           └── social
+│   │   │   │               └── websocket
+│   │   │   │                   ├── ChatWebsocketApplication.class
+│   │   │   │                   ├── client
+│   │   │   │                   │   ├── ChatApiClient$1.class
+│   │   │   │                   │   └── ChatApiClient.class
+│   │   │   │                   ├── config
+│   │   │   │                   │   ├── DynamoDBConfig.class
+│   │   │   │                   │   ├── WebSocketConfig.class
+│   │   │   │                   │   └── repository
+│   │   │   │                   │       └── ChatMessageRepository.class
+│   │   │   │                   ├── controller
+│   │   │   │                   │   └── ChatHistoryController.class
+│   │   │   │                   ├── dto
+│   │   │   │                   │   ├── ChatPayloadDto$ChatPayloadDtoBuilder.class
+│   │   │   │                   │   ├── ChatPayloadDto.class
+│   │   │   │                   │   ├── GenerateQuestDto.class
+│   │   │   │                   │   ├── GenerateQuestModel.class
+│   │   │   │                   │   ├── InsertQuestDto.class
+│   │   │   │                   │   └── QuestDataDto.class
+│   │   │   │                   ├── enums
+│   │   │   │                   │   └── MessageType.class
+│   │   │   │                   ├── exception
+│   │   │   │                   │   ├── ErrorCode.class
+│   │   │   │                   │   └── ErrorResponse.class
+│   │   │   │                   ├── handler
+│   │   │   │                   │   ├── WebConfig.class
+│   │   │   │                   │   └── WebSocketChatHandler.class
+│   │   │   │                   ├── model
+│   │   │   │                   │   ├── MessageModel$MessageModelBuilder.class
+│   │   │   │                   │   └── MessageModel.class
+│   │   │   │                   ├── response
+│   │   │   │                   │   └── CommonResponse.class
+│   │   │   │                   ├── service
+│   │   │   │                   │   └── ChatMessageService.class
+│   │   │   │                   └── utils
+│   │   │   │                       └── MediaUtils.class
+│   │   │   └── resources
+│   │   │       ├── application.yaml
+│   │   │       └── override.yaml
+│   │   └── test
+│   │       └── classes
+│   │           ├── com
+│   │           │   └── nameless
+│   │           │       └── social
+│   │           │           └── websocket
+│   │           │               └── utils
+│   │           │                   └── MediaUtilsTest.class
+│   │           └── generated_tests
+│   └── src
+│       ├── main
+│       │   ├── generated
+│       │   ├── java
+│       │   │   └── com
+│       │   │       └── nameless
+│       │   │           └── social
+│       │   │               └── websocket
+│       │   │                   ├── ChatWebsocketApplication.java
+│       │   │                   ├── client
+│       │   │                   │   └── ChatApiClient.java
+│       │   │                   ├── config
+│       │   │                   │   ├── DynamoDBConfig.java
+│       │   │                   │   ├── WebSocketConfig.java
+│       │   │                   │   └── repository
+│       │   │                   │       └── ChatMessageRepository.java
+│       │   │                   ├── controller
+│       │   │                   │   └── ChatHistoryController.java
+│       │   │                   ├── dto
+│       │   │                   │   ├── ChatPayloadDto.java
+│       │   │                   │   ├── GenerateQuestDto.java
+│       │   │                   │   ├── GenerateQuestModel.java
+│       │   │                   │   ├── InsertQuestDto.java
+│       │   │                   │   └── QuestDataDto.java
+│       │   │                   ├── enums
+│       │   │                   │   └── MessageType.java
+│       │   │                   ├── exception
+│       │   │                   │   ├── ErrorCode.java
+│       │   │                   │   └── ErrorResponse.java
+│       │   │                   ├── handler
+│       │   │                   │   ├── WebConfig.java
+│       │   │                   │   └── WebSocketChatHandler.java
+│       │   │                   ├── model
+│       │   │                   │   └── MessageModel.java
+│       │   │                   ├── response
+│       │   │                   │   └── CommonResponse.java
+│       │   │                   ├── service
+│       │   │                   │   └── ChatMessageService.java
+│       │   │                   └── utils
+│       │   │                       └── MediaUtils.java
+│       │   └── resources
+│       │       ├── application.yaml
+│       │       └── override.yaml
+│       └── test
+│           └── java
+│               └── com
+│                   └── nameless
+│                       └── social
+│                           └── websocket
+│                               └── utils
+│                                   └── MediaUtilsTest.java
+├── gradle
+│   └── wrapper
+│       ├── gradle-wrapper.jar
+│       └── gradle-wrapper.properties
+├── gradlew
+├── gradlew.bat
+├── infra
+│   ├── ecr-readonly.json
+│   └── job-kaniko-template.yaml
+├── jenkinsfile
+├── job-kaniko-template.yaml
+├── settings.gradle
+├── tree-ws
+└── 복사본
+    └── Jenkinsfile
+
+82 directories, 84 files
