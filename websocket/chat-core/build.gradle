@@ -1,0 +1,8 @@
+plugins {
+	id 'java-library'
+}
+
+dependencies {
+	api platform('software.amazon.awssdk:bom:2.20.45')
+	api 'software.amazon.awssdk:dynamodb-enhanced'
+}
