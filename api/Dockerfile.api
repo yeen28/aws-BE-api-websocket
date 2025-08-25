@@ -3,12 +3,12 @@ FROM gradle:8.4-jdk17-alpine AS deps
 WORKDIR /app
 
 # Gradle 기본 설정 복사
-COPY build.gradle settings.gradle gradlew ./
-COPY gradle/ ./gradle
+COPY api/build.gradle api/settings.gradle api/gradlew ./
+COPY api/gradle/ ./gradle
 
 # 모듈별 build.gradle 복사
-COPY chat-core/build.gradle ./chat-core/
-COPY chat-api/build.gradle ./chat-api/
+COPY api/chat-core/build.gradle ./chat-core/
+COPY api/chat-api/build.gradle ./chat-api/
 
 # 종속성만 다운로드 (캐시 목적)
 RUN ./gradlew :chat-api:dependencies --no-daemon

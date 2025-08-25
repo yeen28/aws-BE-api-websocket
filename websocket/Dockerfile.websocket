@@ -3,12 +3,12 @@ FROM gradle:8.4-jdk17-alpine AS deps
 WORKDIR /app
 
 # Gradle 기본 설정 복사
-COPY build.gradle settings.gradle gradlew ./
-COPY gradle/ ./gradle/
+COPY websocket/build.gradle websocket/settings.gradle websocket/gradlew ./
+COPY websocket/gradle/ ./gradle/
 
 # 모듈별 build.gradle 복사
-COPY chat-core/build.gradle ./chat-core/
-COPY chat-websocket/build.gradle ./chat-websocket/
+COPY websocket/chat-core/build.gradle ./chat-core/
+COPY websocket/chat-websocket/build.gradle ./chat-websocket/
 
 # 종속성만 다운로드 (캐시 목적)
 RUN ./gradlew :chat-websocket:dependencies --no-daemon
