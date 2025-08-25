@@ -19,12 +19,6 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 public class UserController {
 	private final UserService userService;
 
-	@Operation(summary = "Cognito 서비스가 되지 않았을 때를 위한 캐시 업데이트용")
-	@GetMapping("/credentials")
-	public CommonResponse<Object> getUserCredentials(@UserInfo final User user) {
-		return CommonResponse.success(userService.getUserInfo(user.getEmail()));
-	}
-
 	@Operation(summary = "내 정보 조회")
 	@GetMapping("/status")
 	public CommonResponse<Object> getUserInfo(@UserInfo final User user) {
