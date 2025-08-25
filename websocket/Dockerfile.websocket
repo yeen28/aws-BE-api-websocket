@@ -21,7 +21,7 @@ WORKDIR /app
 COPY --from=deps /app ./
 
 # 전체 소스 복사 (멀티모듈 정상 동작 위해 반드시 필요)
-COPY . .
+COPY websocket/. .
 
 # chat-websocket 모듈 빌드 (테스트 제외)
 RUN ./gradlew :chat-websocket:build -x test --no-daemon
