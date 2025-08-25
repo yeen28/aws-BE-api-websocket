@@ -17,22 +17,31 @@ API와 WebSocket을 통해 클라이언트와 통신하며, 그룹, 클럽, 채�
 
 ---
 
-## 모듈 구조
+## 프로젝트 구조
 
-본 프로젝트는 MSA(Microservice Architecture)를 지향하며, 기능별로 모듈이 분리되어 있습니다.
+- 본 프로젝트는 MSA(Microservice Architecture)를 지향합니다.  
+- 본 프로젝트는 `api`, `websocket` 폴더로 구분되어 있으며, 관리 편의를 위해 Repository 분리가 아닌 폴더로 분리하였습니다.  
+- 각 폴더는 기능에 맞게 멀티모듈로 구성되어 있습니다.
 
-> chat-api와 chat-websocket은 현재는 모듈로 분리되어 있지만 조만간 각각의 Repository로 분리해서 관리할 목적으로 개발되었습니다.  
-> 추후 2개의 Repository로 분리할 예정입니다.
+<br/>
 
-- **`chat-api`**: API 서버로, 사용자인증, 그룹 관리, 퀘스트 관리 등 핵심 비즈니스 로직을 처리합니다.
-- **`chat-websocket`**: WebSocket 서버로, 실시간 채팅 및 이벤트 push 기능을 담당합니다.
-- **`chat-core`**: 공통으로 사용되는 데이터 모델(Entity) 및 유틸리티 클래스를 포함하는 모듈입니다.
+### **`api`**: API 서버
+**모듈 구조**
+- **`chat-api`**: 사용자인증, 그룹 관리, 퀘스트 관리 등 핵심 비즈니스 로직을 처리합니다.
+- **`chat-core`**: 공통으로 사용되는 데이터 모델(Entity) 클래스를 포함하는 모듈입니다.
+
+<br/>
+
+### **`websocket`**: WebSocket 서버
+**모듈 구조**
+- **`chat-websocket`**: 실시간 채팅 기능을 담당합니다.
+- **`chat-core`**: 공통으로 사용되는 데이터 모델(Entity) 클래스를 포함하는 모듈입니다.
 
 <br/>
 
 ---
 
-## ⚙️ 기술 스택
+## 기술 스택
 
 - Java 17, Spring Boot 3.x, JPA, JWT <!-- WebFlux -->
 - **Database**
@@ -44,7 +53,7 @@ API와 WebSocket을 통해 클라이언트와 통신하며, 그룹, 클럽, 채�
 - **Containerization**: Docker, AWS ECR
 - **CI/CD**: Jenkins, Github Action, ArgoCD
 
-## 📋 요구사항
+## 요구사항
 
 - Java 17 (Amazon Corretto 17 권장)
 - Spring Boot 3.x
@@ -63,17 +72,18 @@ API와 WebSocket을 통해 클라이언트와 통신하며, 그룹, 클럽, 채�
 
 ---
 
-## 🛠️ 환경 설정
+## 환경 설정
 
 프로젝트를 실행하기 위한 설정 방법입니다.
 
 ### 1. application.yaml 설정
 
-`chat-api`와 `chat-websocket` 모듈의 `src/main/resources/application.yaml` 파일을 열어 아래 항목들을 자신의 환경에 맞게 수정해야 합니다.
+`api` 폴더의 `chat-api` 모듈과 `websocket` 폴더의 `chat-websocket` 모듈의 `src/main/resources/application.yaml` 파일을 열어 아래 항목들을 자신의 환경에 맞게 수정해야 합니다.
 
 ```yaml
-# chat-api/src/main/resources/application.yaml 예시
+# api/chat-api/src/main/resources/application.yaml
 
+# DB 설정
 spring:
   datasource:
     url: ${SPRING_DATASOURCE_URL}
@@ -94,6 +104,15 @@ spring:
           issuer-uri: ${ISSUER_URI}
           jwk-set-uri: ${JWK_SET_URI}
         client-id: ${CLIENT_ID} # User Pool에 등록된 앱 클라이언트 ID
+
+
+# websocket/chat-websocket/src/main/resources/application.yaml
+
+services:
+  chat-api:
+    url: ${CHAT_API_URL} # API 서버 URL (위의 api 서버 URL)
+  ai:
+    url: ${AI_URL} # AI 서버 URL
 ```
 
 <!--
@@ -143,7 +162,7 @@ docker-compose down
 
 ---
 
-## 🗄️ 데이터베이스
+## 데이터베이스
 
 - 데이터베이스 스키마 관리는 **Liquibase**를 사용합니다.
 - `chat-api/src/main/resources/db/changelog` 디렉토리의 `db.changelog-master.yaml` 파일에 변경사항(Changeset)을 추가하여 스키마를 변경 및 관리합니다.
@@ -153,7 +172,7 @@ docker-compose down
 
 ---
 
-## 🔄 CI/CD
+## CI/CD
 
 > 본 프로젝트는 Jenkins를 통해 master branch에 commit하면 AWS ECR에 docker image를 push 한 뒤, AWS EKS 환경에서 실행하도록 구성했습니다.    
 > 추가로 Github Action CI도 구성했습니다.
@@ -174,7 +193,7 @@ docker-compose down
 
 ---
 
-## 🖼️ 데모 화면
+## 데모 화면
 
 <!-- 데모 화면 이미지를 여기에 추가하세요. 예: <img src="readme-image/demo1.png" width="400"/> -->
 
